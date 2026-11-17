@@ -1,0 +1,106 @@
+fpt-telecom-video-automation/
+├── assets/
+│   ├── audio-sources/
+│   ├── broll-images/
+│   ├── broll-library/
+│   ├── broll-user/
+│   ├── custom-music/
+│   ├── fonts/
+│   ├── illustrations/
+│   ├── reference-images/
+│   ├── references/
+│   ├── sfx/
+│   ├── sfx-tech/
+│   ├── sfx-user/
+│   ├── source-audio/
+│   └── source-videos/
+├── config/
+│   ├── approved_reference.json
+│   ├── media_aliases.json
+│   ├── paths.js
+│   └── speech_environment.yml
+├── docs/
+│   ├── change_history.md
+│   ├── cleanup_manifest.json
+│   ├── cleanup_result.json
+│   ├── integrity_report.json
+│   ├── migration_manifest.json
+│   ├── path_mapping.json
+│   ├── protected_environment.json
+│   ├── render_validation.json
+│   ├── restructuring_plan.md
+│   └── validation_report.json
+├── node_modules/
+├── output/
+│   └── .gitkeep
+├── public/
+│   └── index.html
+├── runtime/
+├── scripts/
+│   ├── align_audio.py
+│   ├── capcut_bridge.js
+│   ├── generate_brand_assets.ps1
+│   ├── generate_broll_cards.ps1
+│   ├── generate_tech_sfx.js
+│   ├── import_capcut_sfx.js
+│   ├── start_studio.cmd
+│   ├── start_studio.ps1
+│   └── validate_project.js
+├── skills/
+│   ├── broll-crawler/
+│   │   └── SKILL.md
+│   └── reference-editing/
+│       └── SKILL.md
+├── src/
+│   ├── core/
+│   │   ├── audio_assets.js
+│   │   ├── brand_rules.js
+│   │   ├── broll_compositor.js
+│   │   ├── broll_crawler.js
+│   │   ├── highlight_planner.js
+│   │   ├── quality_gate.js
+│   │   ├── reference_editor.js
+│   │   ├── render_inputs.js
+│   │   ├── resource_catalog.js
+│   │   ├── subtitle_generator.js
+│   │   ├── timeline_rules.js
+│   │   ├── transcript_formatter.js
+│   │   └── video_pipeline.js
+│   ├── integrations/
+│   │   ├── capcut_engine.js
+│   │   └── subtitle_aligner.js
+│   ├── renderers/
+│   │   ├── render_broll_cards.ps1
+│   │   └── render_typography.ps1
+│   └── server.js
+├── tests/
+│   ├── fixtures/
+│   │   ├── jobs/
+│   │   └── silent_video.mp4
+│   ├── api_creative.test.js
+│   ├── approved_reference.test.js
+│   ├── creative_broll.test.js
+│   ├── highlight_count.test.js
+│   ├── mandatory_rules.test.js
+│   ├── render_broll_smoke.js
+│   ├── render_highlight_count_smoke.js
+│   ├── render_pipeline_smoke.js
+│   ├── render_speech_broll_smoke.js
+│   ├── run_studio_smoke.js
+│   ├── subtext.test.js
+│   ├── ui_highlight_count_smoke.js
+│   ├── ui_render_direct_smoke.js
+│   ├── ui_render_mandatory_smoke.js
+│   ├── ui_studio_smoke.js
+│   └── ui_subtext_smoke.js
+├── var/
+│   ├── cache/
+│   └── logs/
+│       ├── studio_error.log
+│       └── studio.log
+├── .env.example
+├── .gitignore
+├── AGENTS.md
+├── package-lock.json
+├── package.json
+└── README.md

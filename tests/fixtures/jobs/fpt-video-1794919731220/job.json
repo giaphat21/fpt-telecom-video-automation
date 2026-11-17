@@ -1,0 +1,91 @@
+{
+  "projectName": "FPT_Video_1794919731220",
+  "disableBgm": false,
+  "bgmMode": "auto",
+  "bgmFromStart": false,
+  "customBgm": null,
+  "useOriginalVideoAudio": true,
+  "useBranding": true,
+  "voiceSpeed": 1.25,
+  "videoFiles": [
+    "uploaded_clip_1794890164492.mp4"
+  ],
+  "subtitles": [
+    {
+      "id": 1,
+      "start": 0.03,
+      "end": 5.4,
+      "text": "*Người thân*",
+      "words": [
+        {
+          "word": "*Người",
+          "text": "*Người ",
+          "startMs": 28,
+          "endMs": 2836,
+          "timestampMs": 1432,
+          "confidence": 0.99
+        },
+        {
+          "word": "thân*",
+          "text": "thân* ",
+          "startMs": 2836,
+          "endMs": 5396,
+          "timestampMs": 4116,
+          "confidence": 0.99
+        }
+      ],
+      "clipIdx": 0
+    }
+  ],
+  "highlights": [],
+  "illustrations": [],
+  "brollCutaways": [],
+  "autoBroll": true,
+  "allowedBrollIds": [
+    "stock_football",
+    "stock_wifi6",
+    "stock_camera",
+    "stock_fptplay",
+    "stock_gaming"
+  ],
+  "highlightY": 350,
+  "highlightScale": 1.4,
+  "clipWindows": [
+    {
+      "fileRef": "uploaded_clip_1794890164492.mp4",
+      "rawDur": 19.166667,
+      "trimStart": 0.255,
+      "trimEnd": 7.035,
+      "timelineStart": 0,
+      "timelineDur": 6.78
+    }
+  ],
+  "hook": {
+    "line1": "LẮP ĐẶT INTERNET",
+    "line2": "FPT TRANG BỊ NGAY",
+    "line3": "Wi-Fi 6 + FPT Play + Camera AI",
+    "line4": "CHỈ TỪ 195K / Tháng",
+    "y": 320,
+    "scale": 1.3
+  },
+  "outro": {
+    "line1": "ĐĂNG KÝ NGAY!",
+    "line2": "TẶNG THÊM 1 THÁNG CƯỚC",
+    "line3": "Chỉ từ 195K / Tháng",
+    "y": 320,
+    "scale": 1.3
+  },
+  "outroCta": "Chỉ từ 195K / Tháng",
+  "renderedHighlights": [
+    {
+      "file": "hl_outro.png",
+      "text": "Chỉ từ 195K / Tháng",
+      "y": 320,
+      "scale": 1.3,
+      "start": 3.5,
+      "dur": 1.93
+    }
+  ],
+  "totalDur": 5.43,
+  "safeName": "FPT_Video_1794919731220"
+}

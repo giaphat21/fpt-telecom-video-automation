@@ -1,0 +1,102 @@
+{
+  "outDir": "C:\\Users\\ADMIN\\Downloads\\Tool video tự động\\FPT_Telecom_Studio\\output\\FPT_Video_1794933728383\\overlays",
+  "width": 1080,
+  "height": 1920,
+  "hook": {
+    "line1": "LẮP ĐẶT INTERNET",
+    "line2": "FPT TRANG BỊ NGAY",
+    "line3": "MODEM WIFI 6 MỚI NHẤT",
+    "line4": "",
+    "y": 320,
+    "scale": 1.3
+  },
+  "outro": {
+    "line1": "ĐĂNG KÝ COMBO NGAY!",
+    "line2": "NHẬN ƯU ĐÃI LIỀN TAY",
+    "line3": "",
+    "y": 320,
+    "scale": 1.3
+  },
+  "highlights": [
+    {
+      "file": "hl_0.png",
+      "timingPolicy": "preserve_all",
+      "text": "Đi kèm 5 tài\nkhoản FPT Play",
+      "y": 350,
+      "scale": 1.4,
+      "typo": "fpt_price_burst",
+      "motion": "pop_bounce",
+      "sfx": "sfx_26",
+      "start": 3.532,
+      "dur": 1.488
+    },
+    {
+      "file": "hl_1.png",
+      "timingPolicy": "preserve_all",
+      "text": "thỏa sức xem bóng\nđá Ngoại hạng Anh",
+      "y": 350,
+      "scale": 1.4,
+      "typo": "fpt_neon_glass",
+      "motion": "slide_left",
+      "sfx": "ding_correct",
+      "start": 5.1,
+      "dur": 1.668
+    },
+    {
+      "file": "hl_2.png",
+      "timingPolicy": "preserve_all",
+      "text": "tặng ngay Camera AI",
+      "y": 350,
+      "scale": 1.4,
+      "typo": "fpt_voucher_3d",
+      "motion": "slam_drop",
+      "sfx": "bell_ring_ding",
+      "start": 7,
+      "dur": 1.32
+    },
+    {
+      "file": "hl_3.png",
+      "timingPolicy": "preserve_all",
+      "text": "đàm thoại 2 chiều",
+      "y": 350,
+      "scale": 1.4,
+      "typo": "fpt_green_badge",
+      "motion": "slide_right",
+      "sfx": "sfx_12",
+      "start": 8.4,
+      "dur": 1.096
+    },
+    {
+      "file": "hl_4.png",
+      "timingPolicy": "preserve_all",
+      "text": "Cực kỳ tiện lợi",
+      "y": 350,
+      "scale": 1.4,
+      "typo": "fpt_editorial_stack",
+      "motion": "pop_bounce",
+      "sfx": "cash_money",
+      "start": 9.576,
+      "dur": 0.728
+    },
+    {
+      "file": "hl_5.png",
+      "timingPolicy": "preserve_all",
+      "text": "Giá chỉ từ\nhơn 7.000 đồng/ngày",
+      "y": 350,
+      "scale": 1.4,
+      "typo": "fpt_football_match",
+      "motion": "slide_left",
+      "sfx": "bell_ring_ding",
+      "start": 10.384,
+      "dur": 1.532
+    },
+    {
+      "file": "hl_outro.png",
+      "text": "ĐĂNG KÝ COMBO NGAY!",
+      "y": 320,
+      "scale": 1.3,
+      "start": 12.4,
+      "dur": 2.4
+    }
+  ]
+}

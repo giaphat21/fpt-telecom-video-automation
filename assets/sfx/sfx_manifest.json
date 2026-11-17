@@ -1,0 +1,309 @@
+{
+  "count": 38,
+  "sfx": [
+    {
+      "id": "sfx_08",
+      "name": "🌪️ Cinematic Whoosh Chuyển Cảnh",
+      "file": "sfx_08.mp3",
+      "cat": "Transitions",
+      "url": "/assets/sfx/sfx_08.mp3",
+      "dur": 2.53
+    },
+    {
+      "id": "sfx_07",
+      "name": "🌊 Whoosh Deep Rise Dâng Trào",
+      "file": "sfx_07.mp3",
+      "cat": "Transitions",
+      "url": "/assets/sfx/sfx_07.mp3",
+      "dur": 3.34
+    },
+    {
+      "id": "sfx_12",
+      "name": "💨 Fast Whoosh Lướt Nhanh",
+      "file": "sfx_12.mp3",
+      "cat": "Transitions",
+      "url": "/assets/sfx/sfx_12.mp3",
+      "dur": 0.81
+    },
+    {
+      "id": "sfx_09",
+      "name": "🗡️ Metal Swish Lướt Sắc",
+      "file": "sfx_09.mp3",
+      "cat": "Transitions",
+      "url": "/assets/sfx/sfx_09.mp3",
+      "dur": 1.07
+    },
+    {
+      "id": "sfx_22",
+      "name": "⚡ Quick Swish Vút Nhẹ",
+      "file": "sfx_22.mp3",
+      "cat": "Transitions",
+      "url": "/assets/sfx/sfx_22.mp3",
+      "dur": 1.04
+    },
+    {
+      "id": "sfx_20",
+      "name": "💥 Heavy Transition Boom",
+      "file": "sfx_20.mp3",
+      "cat": "Transitions",
+      "url": "/assets/sfx/sfx_20.mp3",
+      "dur": 1.78
+    },
+    {
+      "id": "sfx_01",
+      "name": "🖱️ UI Click Nhẹ",
+      "file": "sfx_01.mp3",
+      "cat": "UI",
+      "url": "/assets/sfx/sfx_01.mp3",
+      "dur": 0.26
+    },
+    {
+      "id": "sfx_02",
+      "name": "🫧 UI Select Êm Ái",
+      "file": "sfx_02.mp3",
+      "cat": "UI",
+      "url": "/assets/sfx/sfx_02.mp3",
+      "dur": 0.44
+    },
+    {
+      "id": "sfx_04",
+      "name": "🔘 UI Snap Click",
+      "file": "sfx_04.mp3",
+      "cat": "UI",
+      "url": "/assets/sfx/sfx_04.mp3",
+      "dur": 0.24
+    },
+    {
+      "id": "sfx_06",
+      "name": "📲 UI Button Tap Nhấn Nút",
+      "file": "sfx_06.mp3",
+      "cat": "UI",
+      "url": "/assets/sfx/sfx_06.mp3",
+      "dur": 1.49
+    },
+    {
+      "id": "sfx_10",
+      "name": "⏱️ Micro Tick Tích Tắc",
+      "file": "sfx_10.mp3",
+      "cat": "UI",
+      "url": "/assets/sfx/sfx_10.mp3",
+      "dur": 0.16
+    },
+    {
+      "id": "sfx_11",
+      "name": "🎛️ UI Switch Bật Công Tắc",
+      "file": "sfx_11.mp3",
+      "cat": "UI",
+      "url": "/assets/sfx/sfx_11.mp3",
+      "dur": 0.26
+    },
+    {
+      "id": "sfx_15",
+      "name": "👾 SciFi Menu Mở Thực Đơn",
+      "file": "sfx_15.mp3",
+      "cat": "UI",
+      "url": "/assets/sfx/sfx_15.mp3",
+      "dur": 0.26
+    },
+    {
+      "id": "sfx_19",
+      "name": "💻 Digital Input Nhập Liệu",
+      "file": "sfx_19.mp3",
+      "cat": "UI",
+      "url": "/assets/sfx/sfx_19.mp3",
+      "dur": 0.31
+    },
+    {
+      "id": "sfx_21",
+      "name": "🎯 UI Select Soft Chọn Điểm",
+      "file": "sfx_21.mp3",
+      "cat": "UI",
+      "url": "/assets/sfx/sfx_21.mp3",
+      "dur": 1.65
+    },
+    {
+      "id": "sfx_25",
+      "name": "🔘 Button Soft Tap Nút Bấm",
+      "file": "sfx_25.mp3",
+      "cat": "UI",
+      "url": "/assets/sfx/sfx_25.mp3",
+      "dur": 0.47
+    },
+    {
+      "id": "sfx_16",
+      "name": "⌨️ Typing Ticking Gõ Phím Đều",
+      "file": "sfx_16.mp3",
+      "cat": "Typing",
+      "url": "/assets/sfx/sfx_16.mp3",
+      "dur": 0.37
+    },
+    {
+      "id": "sfx_18",
+      "name": "⌨️ Fast Keystroke Gõ Phím Nhanh",
+      "file": "sfx_18.mp3",
+      "cat": "Typing",
+      "url": "/assets/sfx/sfx_18.mp3",
+      "dur": 0.21
+    },
+    {
+      "id": "sfx_17",
+      "name": "📷 Mechanical Shutter Màn Trập",
+      "file": "sfx_17.mp3",
+      "cat": "Typing",
+      "url": "/assets/sfx/sfx_17.mp3",
+      "dur": 0.42
+    },
+    {
+      "id": "cash_register",
+      "name": "💵 Cash Register Typing Phím Két Tiền",
+      "file": "cash_register.mp3",
+      "cat": "Typing",
+      "url": "/assets/sfx/cash_register.mp3",
+      "dur": 6.29
+    },
+    {
+      "id": "flick_camera_flash",
+      "name": "📸 Camera Flash Flick Chớp Sáng",
+      "file": "flick_camera_flash.mp3",
+      "cat": "Flick",
+      "url": "/assets/sfx/flick_camera_flash.mp3",
+      "dur": 1.75
+    },
+    {
+      "id": "flick_flash_click",
+      "name": "⚡ Flash Click Nhấp Nháy",
+      "file": "flick_flash_click.mp3",
+      "cat": "Flick",
+      "url": "/assets/sfx/flick_flash_click.mp3",
+      "dur": 8.47
+    },
+    {
+      "id": "sfx_13",
+      "name": "⚡ Flash Punch Chớp Nổ",
+      "file": "sfx_13.mp3",
+      "cat": "Flick",
+      "url": "/assets/sfx/sfx_13.mp3",
+      "dur": 1.1
+    },
+    {
+      "id": "sfx_26",
+      "name": "🫰 Modern Snap Flick Búng Tay",
+      "file": "sfx_26.mp3",
+      "cat": "Flick",
+      "url": "/assets/sfx/sfx_26.mp3",
+      "dur": 0.42
+    },
+    {
+      "id": "cash_money",
+      "name": "💰 Cash Money Cha-Ching",
+      "file": "cash_money.mp3",
+      "cat": "Money & Deals",
+      "url": "/assets/sfx/cash_money.mp3",
+      "dur": 5.28
+    },
+    {
+      "id": "sfx_23",
+      "name": "🔢 Points Deal Đếm Số Ưu Đãi",
+      "file": "sfx_23.mp3",
+      "cat": "Money & Deals",
+      "url": "/assets/sfx/sfx_23.mp3",
+      "dur": 1.62
+    },
+    {
+      "id": "sfx_24",
+      "name": "🪙 Cash Coins Tiền Xu Rơi",
+      "file": "sfx_24.mp3",
+      "cat": "Money & Deals",
+      "url": "/assets/sfx/sfx_24.mp3",
+      "dur": 0.89
+    },
+    {
+      "id": "bell_ring_ding",
+      "name": "🛎️ Bell Ring \"Ding!\" CapCut",
+      "file": "bell_ring_ding.mp3",
+      "cat": "Chime & Ting",
+      "url": "/assets/sfx/bell_ring_ding.mp3",
+      "dur": 1.8
+    },
+    {
+      "id": "bellring",
+      "name": "🔔 Ting Bellring Chuông Sắc Nét",
+      "file": "bellring.mp3",
+      "cat": "Chime & Ting",
+      "url": "/assets/sfx/bellring.mp3",
+      "dur": 5.74
+    },
+    {
+      "id": "bellring_2",
+      "name": "🔔 Ting Bellring Vang 2",
+      "file": "bellring_2.mp3",
+      "cat": "Chime & Ting",
+      "url": "/assets/sfx/bellring_2.mp3",
+      "dur": 6.36
+    },
+    {
+      "id": "bell_bright",
+      "name": "🔔 Single Bell Bright Trong Trẻo",
+      "file": "bell_bright.mp3",
+      "cat": "Chime & Ting",
+      "url": "/assets/sfx/bell_bright.mp3",
+      "dur": 6.82
+    },
+    {
+      "id": "chime_ding",
+      "name": "✨ Chime Ding Đúng (41298)",
+      "file": "chime_ding.mp3",
+      "cat": "Chime & Ting",
+      "url": "/assets/sfx/chime_ding.mp3",
+      "dur": 1.63
+    },
+    {
+      "id": "ding_correct",
+      "name": "🎯 Ding Correct Hài Lòng (985629)",
+      "file": "ding_correct.mp3",
+      "cat": "Chime & Ting",
+      "url": "/assets/sfx/ding_correct.mp3",
+      "dur": 0.98
+    },
+    {
+      "id": "ding_complex_shine",
+      "name": "🌟 Ding Complex Shine Lấp Lánh",
+      "file": "ding_complex_shine.mp3",
+      "cat": "Chime & Ting",
+      "url": "/assets/sfx/ding_complex_shine.mp3",
+      "dur": 3.43
+    },
+    {
+      "id": "sfx_03",
+      "name": "🔔 Ting Opening Bell Mở Màn",
+      "file": "sfx_03.mp3",
+      "cat": "Chime & Ting",
+      "url": "/assets/sfx/sfx_03.mp3",
+      "dur": 0.71
+    },
+    {
+      "id": "sfx_05",
+      "name": "✨ Chime Highlight Điểm Nhấn",
+      "file": "sfx_05.mp3",
+      "cat": "Chime & Ting",
+      "url": "/assets/sfx/sfx_05.mp3",
+      "dur": 0.71
+    },
+    {
+      "id": "sfx_14",
+      "name": "💥 Bùm Impact Đấm Cực Mạnh",
+      "file": "sfx_14.mp3",
+      "cat": "Emphasis & Boom",
+      "url": "/assets/sfx/sfx_14.mp3",
+      "dur": 1.33
+    },
+    {
+      "id": "sfx_27",
+      "name": "💣 Heavy Reverse Hit Nổ Hồi Âm",
+      "file": "sfx_27.mp3",
+      "cat": "Emphasis & Boom",
+      "url": "/assets/sfx/sfx_27.mp3",
+      "dur": 0.73
+    }
+  ]
+}

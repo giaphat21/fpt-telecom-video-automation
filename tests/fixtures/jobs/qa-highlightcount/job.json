@@ -1,0 +1,1018 @@
+{
+  "projectName": "QA_HighlightCount",
+  "disableBgm": true,
+  "bgmMode": "auto",
+  "bgmFromStart": false,
+  "customBgm": null,
+  "useOriginalVideoAudio": true,
+  "useBranding": true,
+  "voiceSpeed": 1.25,
+  "videoFiles": [
+    "presenter_take_01.mp4",
+    "presenter_take_02.mp4",
+    "presenter_take_03.mp4",
+    "presenter_take_04.mp4"
+  ],
+  "subtitles": [
+    {
+      "id": 1,
+      "start": 0.02,
+      "end": 1.81,
+      "text": "Lắp đặt Internet, FPT",
+      "words": [
+        {
+          "word": "lắp",
+          "text": "lắp ",
+          "startMs": 16,
+          "endMs": 264,
+          "timestampMs": 140,
+          "confidence": 0.99
+        },
+        {
+          "word": "đặt",
+          "text": "đặt ",
+          "startMs": 264,
+          "endMs": 512,
+          "timestampMs": 388,
+          "confidence": 0.99
+        },
+        {
+          "word": "Internet,",
+          "text": "Internet, ",
+          "startMs": 512,
+          "endMs": 1336,
+          "timestampMs": 924,
+          "confidence": 0.99
+        },
+        {
+          "word": "FPT,",
+          "text": "FPT, ",
+          "startMs": 1336,
+          "endMs": 1808,
+          "timestampMs": 1572,
+          "confidence": 0.99
+        }
+      ],
+      "clipIdx": 0
+    },
+    {
+      "id": 2,
+      "start": 1.81,
+      "end": 2.34,
+      "text": "Trang bị ngay",
+      "words": [
+        {
+          "word": "trang",
+          "text": "trang ",
+          "startMs": 1808,
+          "endMs": 1888,
+          "timestampMs": 1848,
+          "confidence": 0.99
+        },
+        {
+          "word": "bị",
+          "text": "bị ",
+          "startMs": 1888,
+          "endMs": 2000,
+          "timestampMs": 1944,
+          "confidence": 0.99
+        },
+        {
+          "word": "ngay,",
+          "text": "ngay, ",
+          "startMs": 2000,
+          "endMs": 2336,
+          "timestampMs": 2168,
+          "confidence": 0.99
+        }
+      ],
+      "clipIdx": 0
+    },
+    {
+      "id": 3,
+      "start": 2.34,
+      "end": 3.57,
+      "text": "Modem Wi-Fi 6 mới nhất",
+      "words": [
+        {
+          "word": "Modem",
+          "text": "Modem ",
+          "startMs": 2336,
+          "endMs": 2624,
+          "timestampMs": 2480,
+          "confidence": 0.99
+        },
+        {
+          "word": "Wi-Fi",
+          "text": "Wi-Fi ",
+          "startMs": 2624,
+          "endMs": 2904,
+          "timestampMs": 2764,
+          "confidence": 0.99
+        },
+        {
+          "word": "6",
+          "text": "6 ",
+          "startMs": 2904,
+          "endMs": 3080,
+          "timestampMs": 2992,
+          "confidence": 0.99
+        },
+        {
+          "word": "mới",
+          "text": "mới ",
+          "startMs": 3080,
+          "endMs": 3256,
+          "timestampMs": 3168,
+          "confidence": 0.99
+        },
+        {
+          "word": "nhất",
+          "text": "nhất ",
+          "startMs": 3256,
+          "endMs": 3568,
+          "timestampMs": 3412,
+          "confidence": 0.99
+        }
+      ],
+      "clipIdx": 0
+    },
+    {
+      "id": 4,
+      "start": 3.61,
+      "end": 4.69,
+      "text": "Đi kèm 5 tài khoản",
+      "words": [
+        {
+          "word": "Đi",
+          "text": "Đi ",
+          "startMs": 3612,
+          "endMs": 3692,
+          "timestampMs": 3652,
+          "confidence": 0.99
+        },
+        {
+          "word": "kèm",
+          "text": "kèm ",
+          "startMs": 3660,
+          "endMs": 3860,
+          "timestampMs": 3760,
+          "confidence": 0.99
+        },
+        {
+          "word": "5",
+          "text": "5 ",
+          "startMs": 3860,
+          "endMs": 4060,
+          "timestampMs": 3960,
+          "confidence": 0.99
+        },
+        {
+          "word": "tài",
+          "text": "tài ",
+          "startMs": 4060,
+          "endMs": 4276,
+          "timestampMs": 4168,
+          "confidence": 0.99
+        },
+        {
+          "word": "khoản",
+          "text": "khoản ",
+          "startMs": 4276,
+          "endMs": 4692,
+          "timestampMs": 4484,
+          "confidence": 0.99
+        }
+      ],
+      "clipIdx": 1
+    },
+    {
+      "id": 5,
+      "start": 4.69,
+      "end": 5.98,
+      "text": "FPT Play, thỏa sức xem bóng",
+      "words": [
+        {
+          "word": "FPT",
+          "text": "FPT ",
+          "startMs": 4692,
+          "endMs": 4892,
+          "timestampMs": 4792,
+          "confidence": 0.99
+        },
+        {
+          "word": "Play,",
+          "text": "Play, ",
+          "startMs": 4892,
+          "endMs": 5316,
+          "timestampMs": 5104,
+          "confidence": 0.99
+        },
+        {
+          "word": "thỏa",
+          "text": "thỏa ",
+          "startMs": 5316,
+          "endMs": 5476,
+          "timestampMs": 5396,
+          "confidence": 0.99
+        },
+        {
+          "word": "sức",
+          "text": "sức ",
+          "startMs": 5476,
+          "endMs": 5700,
+          "timestampMs": 5588,
+          "confidence": 0.99
+        },
+        {
+          "word": "xem",
+          "text": "xem ",
+          "startMs": 5700,
+          "endMs": 5780,
+          "timestampMs": 5740,
+          "confidence": 0.99
+        },
+        {
+          "word": "bóng",
+          "text": "bóng ",
+          "startMs": 5756,
+          "endMs": 5980,
+          "timestampMs": 5868,
+          "confidence": 0.99
+        }
+      ],
+      "clipIdx": 1
+    },
+    {
+      "id": 6,
+      "start": 5.98,
+      "end": 6.88,
+      "text": "Đá Ngoại hạng Anh",
+      "words": [
+        {
+          "word": "đá",
+          "text": "đá ",
+          "startMs": 5980,
+          "endMs": 6204,
+          "timestampMs": 6092,
+          "confidence": 0.99
+        },
+        {
+          "word": "Ngoại",
+          "text": "Ngoại ",
+          "startMs": 6204,
+          "endMs": 6516,
+          "timestampMs": 6360,
+          "confidence": 0.99
+        },
+        {
+          "word": "hạng",
+          "text": "hạng ",
+          "startMs": 6516,
+          "endMs": 6708,
+          "timestampMs": 6612,
+          "confidence": 0.99
+        },
+        {
+          "word": "Anh",
+          "text": "Anh ",
+          "startMs": 6708,
+          "endMs": 6876,
+          "timestampMs": 6792,
+          "confidence": 0.99
+        }
+      ],
+      "clipIdx": 1
+    },
+    {
+      "id": 7,
+      "start": 6.91,
+      "end": 8.15,
+      "text": "Tạng ngay Camera AI đam",
+      "words": [
+        {
+          "word": "Tạng",
+          "text": "Tạng ",
+          "startMs": 6912,
+          "endMs": 7160,
+          "timestampMs": 7036,
+          "confidence": 0.99
+        },
+        {
+          "word": "ngay",
+          "text": "ngay ",
+          "startMs": 7160,
+          "endMs": 7424,
+          "timestampMs": 7292,
+          "confidence": 0.99
+        },
+        {
+          "word": "Camera",
+          "text": "Camera ",
+          "startMs": 7424,
+          "endMs": 7824,
+          "timestampMs": 7624,
+          "confidence": 0.99
+        },
+        {
+          "word": "AI",
+          "text": "AI ",
+          "startMs": 7824,
+          "endMs": 7960,
+          "timestampMs": 7892,
+          "confidence": 0.99
+        },
+        {
+          "word": "đam",
+          "text": "đam ",
+          "startMs": 7960,
+          "endMs": 8152,
+          "timestampMs": 8056,
+          "confidence": 0.99
+        }
+      ],
+      "clipIdx": 2
+    },
+    {
+      "id": 8,
+      "start": 8.15,
+      "end": 9.59,
+      "text": "Thoại hai chiều cực kỳ",
+      "words": [
+        {
+          "word": "thoại",
+          "text": "thoại ",
+          "startMs": 8152,
+          "endMs": 8480,
+          "timestampMs": 8316,
+          "confidence": 0.99
+        },
+        {
+          "word": "hai",
+          "text": "hai ",
+          "startMs": 8480,
+          "endMs": 8680,
+          "timestampMs": 8580,
+          "confidence": 0.99
+        },
+        {
+          "word": "chiều",
+          "text": "chiều ",
+          "startMs": 8680,
+          "endMs": 9008,
+          "timestampMs": 8844,
+          "confidence": 0.99
+        },
+        {
+          "word": "cực",
+          "text": "cực ",
+          "startMs": 9008,
+          "endMs": 9336,
+          "timestampMs": 9172,
+          "confidence": 0.99
+        },
+        {
+          "word": "kỳ",
+          "text": "kỳ ",
+          "startMs": 9336,
+          "endMs": 9592,
+          "timestampMs": 9464,
+          "confidence": 0.99
+        }
+      ],
+      "clipIdx": 2
+    },
+    {
+      "id": 9,
+      "start": 9.59,
+      "end": 10.64,
+      "text": "Tuyện lợi giá chỉ",
+      "words": [
+        {
+          "word": "tuyện",
+          "text": "tuyện ",
+          "startMs": 9592,
+          "endMs": 9920,
+          "timestampMs": 9756,
+          "confidence": 0.99
+        },
+        {
+          "word": "lợi",
+          "text": "lợi ",
+          "startMs": 9920,
+          "endMs": 10256,
+          "timestampMs": 10088,
+          "confidence": 0.99
+        },
+        {
+          "word": "giá",
+          "text": "giá ",
+          "startMs": 10256,
+          "endMs": 10408,
+          "timestampMs": 10332,
+          "confidence": 0.99
+        },
+        {
+          "word": "chỉ",
+          "text": "chỉ ",
+          "startMs": 10408,
+          "endMs": 10640,
+          "timestampMs": 10524,
+          "confidence": 0.99
+        }
+      ],
+      "clipIdx": 2
+    },
+    {
+      "id": 10,
+      "start": 10.64,
+      "end": 12.12,
+      "text": "Từ hơn 7k đồng một ngày",
+      "words": [
+        {
+          "word": "từ",
+          "text": "từ ",
+          "startMs": 10640,
+          "endMs": 10720,
+          "timestampMs": 10680,
+          "confidence": 0.99
+        },
+        {
+          "word": "hơn",
+          "text": "hơn ",
+          "startMs": 10712,
+          "endMs": 10896,
+          "timestampMs": 10804,
+          "confidence": 0.99
+        },
+        {
+          "word": "7k",
+          "text": "7k ",
+          "startMs": 10896,
+          "endMs": 11136,
+          "timestampMs": 11016,
+          "confidence": 0.99
+        },
+        {
+          "word": "đồng",
+          "text": "đồng ",
+          "startMs": 11136,
+          "endMs": 11400,
+          "timestampMs": 11268,
+          "confidence": 0.99
+        },
+        {
+          "word": "một",
+          "text": "một ",
+          "startMs": 11400,
+          "endMs": 11704,
+          "timestampMs": 11552,
+          "confidence": 0.99
+        },
+        {
+          "word": "ngày",
+          "text": "ngày ",
+          "startMs": 11704,
+          "endMs": 12120,
+          "timestampMs": 11912,
+          "confidence": 0.99
+        }
+      ],
+      "clipIdx": 2
+    },
+    {
+      "id": 11,
+      "start": 12.16,
+      "end": 13.51,
+      "text": "Đăng ký combo ngay",
+      "words": [
+        {
+          "word": "Đăng",
+          "text": "Đăng ",
+          "startMs": 12156,
+          "endMs": 12668,
+          "timestampMs": 12412,
+          "confidence": 0.99
+        },
+        {
+          "word": "ký",
+          "text": "ký ",
+          "startMs": 12468,
+          "endMs": 12868,
+          "timestampMs": 12668,
+          "confidence": 0.99
+        },
+        {
+          "word": "combo",
+          "text": "combo ",
+          "startMs": 12668,
+          "endMs": 13028,
+          "timestampMs": 12848,
+          "confidence": 0.99
+        },
+        {
+          "word": "ngay,",
+          "text": "ngay, ",
+          "startMs": 12868,
+          "endMs": 13508,
+          "timestampMs": 13188,
+          "confidence": 0.99
+        }
+      ],
+      "clipIdx": 3
+    },
+    {
+      "id": 12,
+      "start": 13.03,
+      "end": 14.84,
+      "text": "Nhận ưu đãi liền tay",
+      "words": [
+        {
+          "word": "nhận",
+          "text": "nhận ",
+          "startMs": 13028,
+          "endMs": 13828,
+          "timestampMs": 13428,
+          "confidence": 0.99
+        },
+        {
+          "word": "ưu",
+          "text": "ưu ",
+          "startMs": 13508,
+          "endMs": 13988,
+          "timestampMs": 13748,
+          "confidence": 0.99
+        },
+        {
+          "word": "đãi",
+          "text": "đãi ",
+          "startMs": 13828,
+          "endMs": 14228,
+          "timestampMs": 14028,
+          "confidence": 0.99
+        },
+        {
+          "word": "liền",
+          "text": "liền ",
+          "startMs": 13988,
+          "endMs": 14532,
+          "timestampMs": 14260,
+          "confidence": 0.99
+        },
+        {
+          "word": "tay",
+          "text": "tay ",
+          "startMs": 14228,
+          "endMs": 14836,
+          "timestampMs": 14532,
+          "confidence": 0.99
+        }
+      ],
+      "clipIdx": 3
+    }
+  ],
+  "highlights": [
+    {
+      "text": "lắp đặt Internet, FPT",
+      "start": 0.016,
+      "end": 1.728,
+      "topic": "speed",
+      "y": 350,
+      "scale": 1.4,
+      "typo": "fpt_tricolor_slab",
+      "motion": "pop_bounce",
+      "sfx": "sfx_12",
+      "priority": 2,
+      "timingSource": "word",
+      "autoDetected": false,
+      "id": 1,
+      "requestLine": 1,
+      "timingPolicy": "preserve_all",
+      "shortDuration": true
+    },
+    {
+      "text": "trang bị ngay",
+      "start": 1.808,
+      "end": 2.256,
+      "topic": "general",
+      "y": 350,
+      "scale": 1.4,
+      "typo": "fpt_split_kicker",
+      "motion": "slide_right",
+      "sfx": "sfx_26",
+      "priority": 1,
+      "timingSource": "word",
+      "autoDetected": false,
+      "id": 2,
+      "requestLine": 2,
+      "timingPolicy": "preserve_all",
+      "shortDuration": true
+    },
+    {
+      "text": "Modem Wi-Fi 6 mới nhất",
+      "start": 2.336,
+      "end": 3.532,
+      "topic": "speed",
+      "y": 350,
+      "scale": 1.4,
+      "typo": "fpt_tricolor_slab",
+      "motion": "slide_left",
+      "sfx": "sfx_12",
+      "priority": 2,
+      "timingSource": "word",
+      "autoDetected": false,
+      "id": 3,
+      "requestLine": 3,
+      "timingPolicy": "preserve_all",
+      "shortDuration": true
+    },
+    {
+      "text": "Đi kèm 5 tài khoản",
+      "start": 3.612,
+      "end": 4.612,
+      "topic": "general",
+      "y": 350,
+      "scale": 1.4,
+      "typo": "fpt_split_kicker",
+      "motion": "slide_right",
+      "sfx": "sfx_26",
+      "priority": 1,
+      "timingSource": "word",
+      "autoDetected": false,
+      "id": 4,
+      "requestLine": 4,
+      "timingPolicy": "preserve_all",
+      "shortDuration": true
+    },
+    {
+      "text": "FPT Play, thỏa sức xem bóng",
+      "start": 4.692,
+      "end": 5.9,
+      "topic": "entertainment",
+      "y": 350,
+      "scale": 1.4,
+      "typo": "fpt_neon_glass",
+      "motion": "slide_left",
+      "sfx": "sfx_04",
+      "priority": 2,
+      "timingSource": "word",
+      "autoDetected": false,
+      "id": 5,
+      "requestLine": 5,
+      "timingPolicy": "preserve_all",
+      "shortDuration": true
+    },
+    {
+      "text": "đá Ngoại hạng Anh",
+      "start": 5.98,
+      "end": 6.832,
+      "topic": "football",
+      "y": 350,
+      "scale": 1.4,
+      "typo": "fpt_orange_block",
+      "motion": "slide_right",
+      "sfx": "sfx_04",
+      "priority": 2,
+      "timingSource": "word",
+      "autoDetected": false,
+      "id": 6,
+      "requestLine": 6,
+      "timingPolicy": "preserve_all",
+      "shortDuration": true
+    },
+    {
+      "text": "Tạng ngay Camera AI đam",
+      "start": 6.912,
+      "end": 8.072,
+      "topic": "offer",
+      "y": 350,
+      "scale": 1.4,
+      "typo": "fpt_price_burst",
+      "motion": "slide_left",
+      "sfx": "cash_money",
+      "priority": 3,
+      "timingSource": "word",
+      "autoDetected": false,
+      "id": 7,
+      "requestLine": 7,
+      "timingPolicy": "preserve_all",
+      "shortDuration": true
+    },
+    {
+      "text": "thoại hai chiều cực kỳ",
+      "start": 8.152,
+      "end": 9.512,
+      "topic": "general",
+      "y": 350,
+      "scale": 1.4,
+      "typo": "fpt_split_kicker",
+      "motion": "slide_left",
+      "sfx": "sfx_12",
+      "priority": 1,
+      "timingSource": "word",
+      "autoDetected": false,
+      "id": 8,
+      "requestLine": 8,
+      "timingPolicy": "preserve_all",
+      "shortDuration": true
+    },
+    {
+      "text": "tuyện lợi giá chỉ",
+      "start": 9.592,
+      "end": 10.56,
+      "topic": "offer",
+      "y": 350,
+      "scale": 1.4,
+      "typo": "fpt_voucher_3d",
+      "motion": "slide_left",
+      "sfx": "bell_ring_ding",
+      "priority": 3,
+      "timingSource": "word",
+      "autoDetected": false,
+      "id": 9,
+      "requestLine": 9,
+      "timingPolicy": "preserve_all",
+      "shortDuration": true
+    },
+    {
+      "text": "từ hơn 7k đồng một ngày",
+      "start": 10.64,
+      "end": 12.076,
+      "topic": "offer",
+      "y": 350,
+      "scale": 1.4,
+      "typo": "fpt_voucher_3d",
+      "motion": "pop_bounce",
+      "sfx": "cash_money",
+      "priority": 3,
+      "timingSource": "word",
+      "autoDetected": false,
+      "id": 10,
+      "requestLine": 10,
+      "timingPolicy": "preserve_all",
+      "shortDuration": true
+    },
+    {
+      "text": "Đăng ký combo ngay",
+      "start": 12.156,
+      "end": 12.948,
+      "topic": "general",
+      "y": 350,
+      "scale": 1.4,
+      "typo": "fpt_stack_outline",
+      "motion": "slide_left",
+      "sfx": "sfx_26",
+      "priority": 1,
+      "timingSource": "word",
+      "autoDetected": false,
+      "id": 11,
+      "requestLine": 11,
+      "timingPolicy": "preserve_all",
+      "shortDuration": true
+    },
+    {
+      "text": "nhận ưu đãi liền tay",
+      "start": 13.028,
+      "end": 14.864,
+      "topic": "offer",
+      "y": 350,
+      "scale": 1.4,
+      "typo": "fpt_price_burst",
+      "motion": "slide_right",
+      "sfx": "bell_ring_ding",
+      "priority": 3,
+      "timingSource": "word",
+      "autoDetected": false,
+      "id": 12,
+      "requestLine": 12,
+      "timingPolicy": "preserve_all",
+      "shortDuration": true
+    }
+  ],
+  "illustrations": [],
+  "brollCutaways": [
+    {
+      "brollId": "stock_football",
+      "name": "Ngoại Hạng Anh (broll NHA)",
+      "icon": "⚽",
+      "file": "C:\\Users\\ADMIN\\Downloads\\Tool video tự động\\FPT_Telecom_Studio\\assets\\broll-user\\premier_league.mp4",
+      "layout": "top_half",
+      "start": 5.756,
+      "end": 9.556,
+      "duration": 3.8,
+      "autoDetected": true,
+      "matchedKeyword": "bóng đá",
+      "timingSource": "word",
+      "hostFocusY": 0.55
+    }
+  ],
+  "highlightY": 350,
+  "highlightScale": 1.4,
+  "clipWindows": [
+    {
+      "fileRef": "presenter_take_01.mp4",
+      "rawDur": 5.633333,
+      "trimStart": 0,
+      "trimEnd": 4.495,
+      "timelineStart": 0,
+      "timelineDur": 3.596
+    },
+    {
+      "fileRef": "presenter_take_02.mp4",
+      "rawDur": 5,
+      "trimStart": 0,
+      "trimEnd": 4.135,
+      "timelineStart": 3.596,
+      "timelineDur": 3.308
+    },
+    {
+      "fileRef": "presenter_take_03.mp4",
+      "rawDur": 6.8,
+      "trimStart": 0,
+      "trimEnd": 6.555,
+      "timelineStart": 6.904,
+      "timelineDur": 5.244
+    },
+    {
+      "fileRef": "presenter_take_04.mp4",
+      "rawDur": 4.040272,
+      "trimStart": 0,
+      "trimEnd": 3.395,
+      "timelineStart": 12.148,
+      "timelineDur": 2.716
+    }
+  ],
+  "hook": {
+    "line1": "COMBO FPT",
+    "line2": "",
+    "line3": "",
+    "line4": "",
+    "y": 320,
+    "scale": 1.3
+  },
+  "outro": {
+    "line1": "ĐĂNG KÝ NGAY",
+    "line2": "",
+    "line3": "",
+    "y": 320,
+    "scale": 1.3
+  },
+  "outroCta": "Chỉ từ 7K",
+  "totalDur": 14.94,
+  "safeName": "QA_HighlightCount",
+  "exportCapcut": false,
+  "renderedHighlights": [
+    {
+      "file": "hl_0.png",
+      "timingPolicy": "preserve_all",
+      "text": "lắp đặt Internet, FPT",
+      "y": 350,
+      "scale": 1.4,
+      "typo": "fpt_tricolor_slab",
+      "motion": "pop_bounce",
+      "sfx": "sfx_12",
+      "start": 0.016,
+      "dur": 1.712
+    },
+    {
+      "file": "hl_1.png",
+      "timingPolicy": "preserve_all",
+      "text": "trang bị ngay",
+      "y": 350,
+      "scale": 1.4,
+      "typo": "fpt_split_kicker",
+      "motion": "slide_right",
+      "sfx": "sfx_26",
+      "start": 1.808,
+      "dur": 0.448
+    },
+    {
+      "file": "hl_2.png",
+      "timingPolicy": "preserve_all",
+      "text": "Modem Wi-Fi 6 mới nhất",
+      "y": 350,
+      "scale": 1.4,
+      "typo": "fpt_tricolor_slab",
+      "motion": "slide_left",
+      "sfx": "sfx_12",
+      "start": 2.336,
+      "dur": 1.196
+    },
+    {
+      "file": "hl_3.png",
+      "timingPolicy": "preserve_all",
+      "text": "Đi kèm 5 tài khoản",
+      "y": 350,
+      "scale": 1.4,
+      "typo": "fpt_split_kicker",
+      "motion": "slide_right",
+      "sfx": "sfx_26",
+      "start": 3.612,
+      "dur": 1
+    },
+    {
+      "file": "hl_4.png",
+      "timingPolicy": "preserve_all",
+      "text": "FPT Play, thỏa\nsức xem bóng",
+      "y": 350,
+      "scale": 1.4,
+      "typo": "fpt_neon_glass",
+      "motion": "slide_left",
+      "sfx": "sfx_04",
+      "start": 4.692,
+      "dur": 1.208
+    },
+    {
+      "file": "hl_5.png",
+      "timingPolicy": "preserve_all",
+      "text": "đá Ngoại hạng Anh",
+      "y": 350,
+      "scale": 1.4,
+      "typo": "fpt_orange_block",
+      "motion": "slide_right",
+      "sfx": "sfx_04",
+      "start": 5.98,
+      "dur": 0.852
+    },
+    {
+      "file": "hl_6.png",
+      "timingPolicy": "preserve_all",
+      "text": "Tạng ngay Camera\nAI đam",
+      "y": 350,
+      "scale": 1.4,
+      "typo": "fpt_price_burst",
+      "motion": "slide_left",
+      "sfx": "cash_money",
+      "start": 6.912,
+      "dur": 1.16
+    },
+    {
+      "file": "hl_7.png",
+      "timingPolicy": "preserve_all",
+      "text": "thoại hai chiều cực kỳ",
+      "y": 350,
+      "scale": 1.4,
+      "typo": "fpt_split_kicker",
+      "motion": "slide_left",
+      "sfx": "sfx_12",
+      "start": 8.152,
+      "dur": 1.36
+    },
+    {
+      "file": "hl_8.png",
+      "timingPolicy": "preserve_all",
+      "text": "tuyện lợi giá chỉ",
+      "y": 350,
+      "scale": 1.4,
+      "typo": "fpt_voucher_3d",
+      "motion": "slide_left",
+      "sfx": "bell_ring_ding",
+      "start": 9.592,
+      "dur": 0.968
+    },
+    {
+      "file": "hl_9.png",
+      "timingPolicy": "preserve_all",
+      "text": "từ hơn 7k\nđồng một ngày",
+      "y": 350,
+      "scale": 1.4,
+      "typo": "fpt_voucher_3d",
+      "motion": "pop_bounce",
+      "sfx": "cash_money",
+      "start": 10.64,
+      "dur": 1.436
+    },
+    {
+      "file": "hl_10.png",
+      "timingPolicy": "preserve_all",
+      "text": "Đăng ký combo ngay",
+      "y": 350,
+      "scale": 1.4,
+      "typo": "fpt_stack_outline",
+      "motion": "slide_left",
+      "sfx": "sfx_26",
+      "start": 12.156,
+      "dur": 0.792
+    },
+    {
+      "file": "hl_11.png",
+      "timingPolicy": "preserve_all",
+      "text": "nhận ưu đãi liền tay",
+      "y": 350,
+      "scale": 1.4,
+      "typo": "fpt_price_burst",
+      "motion": "slide_right",
+      "sfx": "bell_ring_ding",
+      "start": 13.028,
+      "dur": 1.836
+    },
+    {
+      "file": "hl_outro.png",
+      "text": "ĐĂNG KÝ NGAY",
+      "y": 320,
+      "scale": 1.3,
+      "start": 12.54,
+      "dur": 2.4
+    }
+  ]
+}

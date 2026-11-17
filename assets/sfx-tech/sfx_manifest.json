@@ -1,0 +1,450 @@
+[
+  {
+    "id": "sfx_cyber_whoosh_fast",
+    "name": "Whip Cyber Whoosh",
+    "cat": "Whoosh & Chuyển Cảnh",
+    "dur": 0.35,
+    "file": "sfx_cyber_whoosh_fast.mp3",
+    "url": "/assets/sfx-tech/sfx_cyber_whoosh_fast.mp3"
+  },
+  {
+    "id": "sfx-tech_swoosh_high",
+    "name": "Tech Swoosh High",
+    "cat": "Whoosh & Chuyển Cảnh",
+    "dur": 0.42,
+    "file": "sfx-tech_swoosh_high.mp3",
+    "url": "/assets/sfx-tech/sfx-tech_swoosh_high.mp3"
+  },
+  {
+    "id": "sfx_fiber_optic_pass",
+    "name": "Fiber Optic Pass",
+    "cat": "Whoosh & Chuyển Cảnh",
+    "dur": 0.5,
+    "file": "sfx_fiber_optic_pass.mp3",
+    "url": "/assets/sfx-tech/sfx_fiber_optic_pass.mp3"
+  },
+  {
+    "id": "sfx_data_warp_speed",
+    "name": "Data Warp Speed",
+    "cat": "Whoosh & Chuyển Cảnh",
+    "dur": 0.45,
+    "file": "sfx_data_warp_speed.mp3",
+    "url": "/assets/sfx-tech/sfx_data_warp_speed.mp3"
+  },
+  {
+    "id": "sfx_quantum_slide",
+    "name": "Quantum Slide",
+    "cat": "Whoosh & Chuyển Cảnh",
+    "dur": 0.38,
+    "file": "sfx_quantum_slide.mp3",
+    "url": "/assets/sfx-tech/sfx_quantum_slide.mp3"
+  },
+  {
+    "id": "sfx_hologram_open",
+    "name": "Hologram Open",
+    "cat": "Whoosh & Chuyển Cảnh",
+    "dur": 0.4,
+    "file": "sfx_hologram_open.mp3",
+    "url": "/assets/sfx-tech/sfx_hologram_open.mp3"
+  },
+  {
+    "id": "sfx_hologram_close",
+    "name": "Hologram Close",
+    "cat": "Whoosh & Chuyển Cảnh",
+    "dur": 0.32,
+    "file": "sfx_hologram_close.mp3",
+    "url": "/assets/sfx-tech/sfx_hologram_close.mp3"
+  },
+  {
+    "id": "sfx_air_whip_tech",
+    "name": "Air Whip Tech",
+    "cat": "Whoosh & Chuyển Cảnh",
+    "dur": 0.28,
+    "file": "sfx_air_whip_tech.mp3",
+    "url": "/assets/sfx-tech/sfx_air_whip_tech.mp3"
+  },
+  {
+    "id": "sfx_ui_pop_bright",
+    "name": "UI Pop Bright",
+    "cat": "UI Click & Pop",
+    "dur": 0.14,
+    "file": "sfx_ui_pop_bright.mp3",
+    "url": "/assets/sfx-tech/sfx_ui_pop_bright.mp3"
+  },
+  {
+    "id": "sfx_ui_click_glass",
+    "name": "Glass UI Tap",
+    "cat": "UI Click & Pop",
+    "dur": 0.08,
+    "file": "sfx_ui_click_glass.mp3",
+    "url": "/assets/sfx-tech/sfx_ui_click_glass.mp3"
+  },
+  {
+    "id": "sfx_digital_tap",
+    "name": "Digital Soft Tap",
+    "cat": "UI Click & Pop",
+    "dur": 0.09,
+    "file": "sfx_digital_tap.mp3",
+    "url": "/assets/sfx-tech/sfx_digital_tap.mp3"
+  },
+  {
+    "id": "sfx_subtle_tick",
+    "name": "Subtle Metronome Tick",
+    "cat": "UI Click & Pop",
+    "dur": 0.06,
+    "file": "sfx_subtle_tick.mp3",
+    "url": "/assets/sfx-tech/sfx_subtle_tick.mp3"
+  },
+  {
+    "id": "sfx_bubble_pop_tech",
+    "name": "Bubble Pop Tech",
+    "cat": "UI Click & Pop",
+    "dur": 0.16,
+    "file": "sfx_bubble_pop_tech.mp3",
+    "url": "/assets/sfx-tech/sfx_bubble_pop_tech.mp3"
+  },
+  {
+    "id": "sfx_button_confirm",
+    "name": "Button Confirm",
+    "cat": "UI Click & Pop",
+    "dur": 0.18,
+    "file": "sfx_button_confirm.mp3",
+    "url": "/assets/sfx-tech/sfx_button_confirm.mp3"
+  },
+  {
+    "id": "sfx_toggle_switch",
+    "name": "Cyber Toggle Switch",
+    "cat": "UI Click & Pop",
+    "dur": 0.12,
+    "file": "sfx_toggle_switch.mp3",
+    "url": "/assets/sfx-tech/sfx_toggle_switch.mp3"
+  },
+  {
+    "id": "sfx_card_flip",
+    "name": "Card Flip Micro",
+    "cat": "UI Click & Pop",
+    "dur": 0.15,
+    "file": "sfx_card_flip.mp3",
+    "url": "/assets/sfx-tech/sfx_card_flip.mp3"
+  },
+  {
+    "id": "sfx_data_stream_typing",
+    "name": "Data Stream Rapid Typing",
+    "cat": "Data & Scan Laser",
+    "dur": 0.65,
+    "file": "sfx_data_stream_typing.mp3",
+    "url": "/assets/sfx-tech/sfx_data_stream_typing.mp3"
+  },
+  {
+    "id": "sfx_ai_scan_beam",
+    "name": "AI Camera Scan Beam",
+    "cat": "Data & Scan Laser",
+    "dur": 0.55,
+    "file": "sfx_ai_scan_beam.mp3",
+    "url": "/assets/sfx-tech/sfx_ai_scan_beam.mp3"
+  },
+  {
+    "id": "sfx_laser_hud_ping",
+    "name": "Laser HUD Ping",
+    "cat": "Data & Scan Laser",
+    "dur": 0.22,
+    "file": "sfx_laser_hud_ping.mp3",
+    "url": "/assets/sfx-tech/sfx_laser_hud_ping.mp3"
+  },
+  {
+    "id": "sfx_barcode_scan_success",
+    "name": "Scan Success Beep",
+    "cat": "Data & Scan Laser",
+    "dur": 0.15,
+    "file": "sfx_barcode_scan_success.mp3",
+    "url": "/assets/sfx-tech/sfx_barcode_scan_success.mp3"
+  },
+  {
+    "id": "sfx_biometric_face_scan",
+    "name": "Biometric Face Scan",
+    "cat": "Data & Scan Laser",
+    "dur": 0.6,
+    "file": "sfx_biometric_face_scan.mp3",
+    "url": "/assets/sfx-tech/sfx_biometric_face_scan.mp3"
+  },
+  {
+    "id": "sfx_radar_pulse",
+    "name": "Radar Sonar Pulse",
+    "cat": "Data & Scan Laser",
+    "dur": 0.5,
+    "file": "sfx_radar_pulse.mp3",
+    "url": "/assets/sfx-tech/sfx_radar_pulse.mp3"
+  },
+  {
+    "id": "sfx_modem_handshake_blip",
+    "name": "Wi-Fi 6 Modem Handshake",
+    "cat": "Data & Scan Laser",
+    "dur": 0.35,
+    "file": "sfx_modem_handshake_blip.mp3",
+    "url": "/assets/sfx-tech/sfx_modem_handshake_blip.mp3"
+  },
+  {
+    "id": "sfx_glitch_digital_byte",
+    "name": "Digital Glitch Byte",
+    "cat": "Data & Scan Laser",
+    "dur": 0.26,
+    "file": "sfx_glitch_digital_byte.mp3",
+    "url": "/assets/sfx-tech/sfx_glitch_digital_byte.mp3"
+  },
+  {
+    "id": "sfx_cash_register_ting",
+    "name": "Cash Register Ting (Báo Giá)",
+    "cat": "Thông Báo & Chime",
+    "dur": 0.55,
+    "file": "sfx_cash_register_ting.mp3",
+    "url": "/assets/sfx-tech/sfx_cash_register_ting.mp3"
+  },
+  {
+    "id": "sfx_smart_bell_ding",
+    "name": "Smart Bell Ding",
+    "cat": "Thông Báo & Chime",
+    "dur": 0.65,
+    "file": "sfx_smart_bell_ding.mp3",
+    "url": "/assets/sfx-tech/sfx_smart_bell_ding.mp3"
+  },
+  {
+    "id": "sfx_success_tech_chime",
+    "name": "Success Tech Chime",
+    "cat": "Thông Báo & Chime",
+    "dur": 0.6,
+    "file": "sfx_success_tech_chime.mp3",
+    "url": "/assets/sfx-tech/sfx_success_tech_chime.mp3"
+  },
+  {
+    "id": "sfx_reply_notification",
+    "name": "TikTok Reply Notification",
+    "cat": "Thông Báo & Chime",
+    "dur": 0.28,
+    "file": "sfx_reply_notification.mp3",
+    "url": "/assets/sfx-tech/sfx_reply_notification.mp3"
+  },
+  {
+    "id": "sfx_gift_unlocked_sparkle",
+    "name": "Gift Unlocked Sparkle",
+    "cat": "Thông Báo & Chime",
+    "dur": 0.7,
+    "file": "sfx_gift_unlocked_sparkle.mp3",
+    "url": "/assets/sfx-tech/sfx_gift_unlocked_sparkle.mp3"
+  },
+  {
+    "id": "sfx_high_priority_alert",
+    "name": "High Priority Alert",
+    "cat": "Thông Báo & Chime",
+    "dur": 0.4,
+    "file": "sfx_high_priority_alert.mp3",
+    "url": "/assets/sfx-tech/sfx_high_priority_alert.mp3"
+  },
+  {
+    "id": "sfx_camera_shutter_ai",
+    "name": "FPT Camera AI Shutter",
+    "cat": "Thông Báo & Chime",
+    "dur": 0.25,
+    "file": "sfx_camera_shutter_ai.mp3",
+    "url": "/assets/sfx-tech/sfx_camera_shutter_ai.mp3"
+  },
+  {
+    "id": "sfx_dual_tone_beep",
+    "name": "Dual Tone Beep",
+    "cat": "Thông Báo & Chime",
+    "dur": 0.24,
+    "file": "sfx_dual_tone_beep.mp3",
+    "url": "/assets/sfx-tech/sfx_dual_tone_beep.mp3"
+  },
+  {
+    "id": "sfx-tech_riser_1s",
+    "name": "Cyber Tech Riser",
+    "cat": "Riser & Impact",
+    "dur": 0.85,
+    "file": "sfx-tech_riser_1s.mp3",
+    "url": "/assets/sfx-tech/sfx-tech_riser_1s.mp3"
+  },
+  {
+    "id": "sfx_cyber_charge_up",
+    "name": "Energy Charge Up",
+    "cat": "Riser & Impact",
+    "dur": 0.75,
+    "file": "sfx_cyber_charge_up.mp3",
+    "url": "/assets/sfx-tech/sfx_cyber_charge_up.mp3"
+  },
+  {
+    "id": "sfx_sub_bass_drop",
+    "name": "Sub Bass Drop",
+    "cat": "Riser & Impact",
+    "dur": 0.7,
+    "file": "sfx_sub_bass_drop.mp3",
+    "url": "/assets/sfx-tech/sfx_sub_bass_drop.mp3"
+  },
+  {
+    "id": "sfx_matrix_impact",
+    "name": "Matrix Slam Impact",
+    "cat": "Riser & Impact",
+    "dur": 0.6,
+    "file": "sfx_matrix_impact.mp3",
+    "url": "/assets/sfx-tech/sfx_matrix_impact.mp3"
+  },
+  {
+    "id": "sfx_power_on_surge",
+    "name": "System Power Surge",
+    "cat": "Riser & Impact",
+    "dur": 0.65,
+    "file": "sfx_power_on_surge.mp3",
+    "url": "/assets/sfx-tech/sfx_power_on_surge.mp3"
+  },
+  {
+    "id": "sfx_record_scratch_fx",
+    "name": "Record Scratch Cut",
+    "cat": "Riser & Impact",
+    "dur": 0.45,
+    "file": "sfx_record_scratch_fx.mp3",
+    "url": "/assets/sfx-tech/sfx_record_scratch_fx.mp3"
+  },
+  {
+    "id": "sfx_party_confetti_boom",
+    "name": "Party Confetti Popper",
+    "cat": "Riser & Impact",
+    "dur": 0.55,
+    "file": "sfx_party_confetti_boom.mp3",
+    "url": "/assets/sfx-tech/sfx_party_confetti_boom.mp3"
+  },
+  {
+    "id": "sfx_whoosh_impact_slam",
+    "name": "Whoosh Slam Impact",
+    "cat": "Riser & Impact",
+    "dur": 0.58,
+    "file": "sfx_whoosh_impact_slam.mp3",
+    "url": "/assets/sfx-tech/sfx_whoosh_impact_slam.mp3"
+  },
+  {
+    "id": "sfx_wifi6_gigabit_burst",
+    "name": "Wi-Fi 6 Gigabit Burst",
+    "cat": "Network & Cloud",
+    "dur": 0.5,
+    "file": "sfx_wifi6_gigabit_burst.mp3",
+    "url": "/assets/sfx-tech/sfx_wifi6_gigabit_burst.mp3"
+  },
+  {
+    "id": "sfx_mesh_node_link",
+    "name": "Mesh Node Linked",
+    "cat": "Network & Cloud",
+    "dur": 0.42,
+    "file": "sfx_mesh_node_link.mp3",
+    "url": "/assets/sfx-tech/sfx_mesh_node_link.mp3"
+  },
+  {
+    "id": "sfx_cloud_sync_done",
+    "name": "Cloud FPT Synced",
+    "cat": "Network & Cloud",
+    "dur": 0.48,
+    "file": "sfx_cloud_sync_done.mp3",
+    "url": "/assets/sfx-tech/sfx_cloud_sync_done.mp3"
+  },
+  {
+    "id": "sfx_fiber_core_glow",
+    "name": "Fiber Core Optical Beam",
+    "cat": "Network & Cloud",
+    "dur": 0.55,
+    "file": "sfx_fiber_core_glow.mp3",
+    "url": "/assets/sfx-tech/sfx_fiber_core_glow.mp3"
+  },
+  {
+    "id": "sfx_security_shield_lock",
+    "name": "Security Shield Lock",
+    "cat": "Network & Cloud",
+    "dur": 0.38,
+    "file": "sfx_security_shield_lock.mp3",
+    "url": "/assets/sfx-tech/sfx_security_shield_lock.mp3"
+  },
+  {
+    "id": "sfx_low_ping_beep",
+    "name": "Ping 2ms Ultra Low",
+    "cat": "Network & Cloud",
+    "dur": 0.14,
+    "file": "sfx_low_ping_beep.mp3",
+    "url": "/assets/sfx-tech/sfx_low_ping_beep.mp3"
+  },
+  {
+    "id": "sfx_packet_transfer_fast",
+    "name": "Packet Transfer Fast",
+    "cat": "Network & Cloud",
+    "dur": 0.32,
+    "file": "sfx_packet_transfer_fast.mp3",
+    "url": "/assets/sfx-tech/sfx_packet_transfer_fast.mp3"
+  },
+  {
+    "id": "sfx_download_complete",
+    "name": "Download Complete Ding",
+    "cat": "Network & Cloud",
+    "dur": 0.5,
+    "file": "sfx_download_complete.mp3",
+    "url": "/assets/sfx-tech/sfx_download_complete.mp3"
+  },
+  {
+    "id": "sfx_esports_score_ting",
+    "name": "eSports Score Ring",
+    "cat": "Gaming & Giải Trí",
+    "dur": 0.55,
+    "file": "sfx_esports_score_ting.mp3",
+    "url": "/assets/sfx-tech/sfx_esports_score_ting.mp3"
+  },
+  {
+    "id": "sfx_cinema_4k_whoosh",
+    "name": "FPT Play 4K Cinematic Intro",
+    "cat": "Gaming & Giải Trí",
+    "dur": 0.65,
+    "file": "sfx_cinema_4k_whoosh.mp3",
+    "url": "/assets/sfx-tech/sfx_cinema_4k_whoosh.mp3"
+  },
+  {
+    "id": "sfx_stadium_cheer_burst",
+    "name": "Ngoại Hạng Anh Stadium Burst",
+    "cat": "Gaming & Giải Trí",
+    "dur": 0.75,
+    "file": "sfx_stadium_cheer_burst.mp3",
+    "url": "/assets/sfx-tech/sfx_stadium_cheer_burst.mp3"
+  },
+  {
+    "id": "sfx_level_up_tech",
+    "name": "Level Up Tech Arp",
+    "cat": "Gaming & Giải Trí",
+    "dur": 0.55,
+    "file": "sfx_level_up_tech.mp3",
+    "url": "/assets/sfx-tech/sfx_level_up_tech.mp3"
+  },
+  {
+    "id": "sfx_ultra_speed_turbo",
+    "name": "Turbo Boost Speed",
+    "cat": "Gaming & Giải Trí",
+    "dur": 0.5,
+    "file": "sfx_ultra_speed_turbo.mp3",
+    "url": "/assets/sfx-tech/sfx_ultra_speed_turbo.mp3"
+  },
+  {
+    "id": "sfx_game_zero_lag_hit",
+    "name": "Zero Lag Crisp Hit",
+    "cat": "Gaming & Giải Trí",
+    "dur": 0.22,
+    "file": "sfx_game_zero_lag_hit.mp3",
+    "url": "/assets/sfx-tech/sfx_game_zero_lag_hit.mp3"
+  },
+  {
+    "id": "sfx_digital_applause",
+    "name": "Digital Mini Applause",
+    "cat": "Gaming & Giải Trí",
+    "dur": 0.6,
+    "file": "sfx_digital_applause.mp3",
+    "url": "/assets/sfx-tech/sfx_digital_applause.mp3"
+  },
+  {
+    "id": "sfx_futuristic_logo_sting",
+    "name": "FPT Futuristic Sting",
+    "cat": "Gaming & Giải Trí",
+    "dur": 0.7,
+    "file": "sfx_futuristic_logo_sting.mp3",
+    "url": "/assets/sfx-tech/sfx_futuristic_logo_sting.mp3"
+  }
+]

@@ -1,0 +1,90 @@
+{
+  "id": "fpt-approved-1794933728383-v1",
+  "approvedBy": "user",
+  "source": {
+    "path": "assets/references/approved-video/reference.mp4",
+    "sha256": "7aaff1859d430bbc111c6e70150f0c7cedffe0a452d6932c966262963c306493"
+  },
+  "video": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "pixelFormat": "yuv420p",
+    "crf": 19,
+    "voiceSpeed": 1.25
+  },
+  "hook": {
+    "duration": 3.5,
+    "y": 320,
+    "scale": 1.3
+  },
+  "outro": {
+    "referenceDuration": 2.4,
+    "y": 320,
+    "scale": 1.3,
+    "alignTo": "spoken_cta",
+    "fixedDuration": false,
+    "withoutSpokenCta": "none"
+  },
+  "highlight": {
+    "y": 350,
+    "scale": 1.4,
+    "gap": 0.08,
+    "avoidHookAndOutro": true,
+    "styleSequence": [
+      "fpt_price_burst",
+      "fpt_neon_glass",
+      "fpt_voucher_3d",
+      "fpt_green_badge",
+      "fpt_editorial_stack",
+      "fpt_football_match"
+    ],
+    "sfxSequence": [
+      "sfx_26",
+      "ding_correct",
+      "bell_ring_ding",
+      "sfx_12",
+      "cash_money",
+      "bell_ring_ding"
+    ],
+    "referenceCount": 6,
+    "referenceDurationRange": [
+      0.728,
+      1.668
+    ],
+    "fixedCount": false
+  },
+  "broll": {
+    "hostFocusY": 0.55,
+    "alignTo": "spoken_context",
+    "startAt": "first word of relevant spoken context",
+    "endAt": "last word of relevant spoken context",
+    "fixedDuration": false,
+    "fixedGap": false,
+    "referenceObservedDuration": 1.9,
+    "adjacentTransition": "cut_on_spoken_boundary"
+  },
+  "audio": {
+    "voiceGain": 1.32,
+    "bgmWithVoice": 0.18,
+    "bgmWithoutVoice": 0.65,
+    "sfxHighlight": 0.38,
+    "openerBell": 0.45,
+    "openerWhoosh": 0.4,
+    "transition": 0.32,
+    "cta": 0.45,
+    "minGap": 0.95,
+    "repeatCooldown": 3.5,
+    "defaultBgm": "background_music_01.mp4",
+    "referenceIntegratedLUFS": -11.4,
+    "referenceTruePeakDb": -0.09,
+    "referenceLra": 1.2
+  },
+  "reference": {
+    "duration": 14.8,
+    "highlights": 6,
+    "brolls": 1,
+    "sfx": 9,
+    "allowUserTextEdits": true
+  }
+}

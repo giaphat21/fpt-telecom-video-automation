@@ -1,0 +1,26 @@
+{
+  "broll_stock_wifi6.mp4": {
+    "status": "needs_replacement",
+    "reason": "Clip cũ là người đeo kính trước màn hình mã, không phải modem Wi-Fi 6."
+  },
+  "broll_stock_camera.mp4": {
+    "status": "needs_replacement",
+    "reason": "Clip cũ là người gọi điện, không phải camera giám sát."
+  },
+  "broll_stock_fptplay.mp4": {
+    "status": "needs_replacement",
+    "reason": "Clip cũ là màn hình nhiễu, không phải giao diện FPT Play."
+  },
+  "broll_stock_gaming.mp4": {
+    "topic": "gaming",
+    "file": "broll_stock_gaming.mp4",
+    "title": "Three friends having fun playing video games",
+    "status": "metadata_verified",
+    "sourcePage": "https://mixkit.co/free-stock-video/three-friends-having-fun-playing-video-games-42672/",
+    "sourceUrl": "https://assets.mixkit.co/videos/42672/42672-720.mp4",
+    "license": "Free",
+    "licenseUrl": "https://mixkit.co/license/#videoFree",
+    "downloadedAt": "2026-11-17T14:49:01.733Z",
+    "fileSize": 2258008
+  }
+}

@@ -1,0 +1,16 @@
+__DOMAIN__ {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        X-Content-Type-Options nosniff
+        X-Frame-Options DENY
+        Referrer-Policy same-origin
+        -Server
+    }
+    reverse_proxy 127.0.0.1:3457 {
+        transport http {
+            dial_timeout 10s
+            response_header_timeout 65m
+        }
+    }
+}

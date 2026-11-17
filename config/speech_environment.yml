@@ -1,0 +1,15 @@
+name: ai-video-stt
+channels:
+  - pytorch
+  - nvidia
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - ffmpeg
+  - pip
+  - pip:
+      - torch>=2.1.0
+      - torchaudio>=2.1.0
+      - faster-whisper>=1.0.0
+      - git+https://github.com/m-bain/whisperX.git

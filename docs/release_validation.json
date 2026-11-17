@@ -1,0 +1,44 @@
+{
+  "checkedAt": "2026-11-17T18:12:34.194Z",
+  "unitAndIntegration": {
+    "passed": 55,
+    "failed": 0
+  },
+  "uiToRender": {
+    "passed": true,
+    "details": "render_validation.json"
+  },
+  "inputFormatsTested": [
+    "landscape MP4",
+    "square MOV",
+    "portrait MKV",
+    "WebM VP9",
+    "HDR PQ 10-bit HEVC",
+    "rotation display matrix"
+  ],
+  "webChecks": [
+    "authentication",
+    "cross-site POST rejection",
+    "upload size/extension/probe",
+    "path confinement",
+    "byte-range playback",
+    "HTTP responsive during real Whisper"
+  ],
+  "deploymentChecks": {
+    "powershell": "parser passed",
+    "caddy": "2.11.9 config validation passed",
+    "vpsInstalled": false,
+    "publicHttpsVerified": false
+  },
+  "quality": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "codec": "h264",
+    "crf": 17,
+    "preset": "fast",
+    "pixelFormat": "yuv420p",
+    "audio": "AAC stereo 48 kHz"
+  },
+  "referenceSha256": "7aaff1859d430bbc111c6e70150f0c7cedffe0a452d6932c966262963c306493"
+}

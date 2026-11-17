@@ -1,0 +1,51 @@
+{
+  "passed": true,
+  "launchedFrom": "C:\\Users\\ADMIN\\AppData\\Local\\Temp",
+  "quality": {
+    "preflight": {
+      "profile": "fpt-approved-1794933728383-v1",
+      "passed": true,
+      "errors": [],
+      "warnings": [],
+      "counts": {
+        "highlights": 6,
+        "brolls": 1,
+        "sfx": 9
+      }
+    },
+    "output": {
+      "passed": true,
+      "errors": [],
+      "width": 1080,
+      "height": 1920,
+      "codec": "h264",
+      "pixelFormat": "yuv420p",
+      "encoding": {
+        "crf": 17,
+        "preset": "fast",
+        "resampling": "lanczos"
+      },
+      "fps": 30,
+      "duration": 14.8,
+      "audio": "aac"
+    },
+    "passed": true
+  },
+  "ui": {
+    "passed": true,
+    "video": "C:\\Users\\ADMIN\\Downloads\\Tool video tự động\\fpt-telecom-video-automation\\var\\qa\\rendered\\QA_FPT_Direct\\QA_FPT_Direct.mp4",
+    "subtitles": 12,
+    "highlights": 6,
+    "styles": [
+      "fpt_price_burst",
+      "fpt_neon_glass",
+      "fpt_voucher_3d",
+      "fpt_green_badge",
+      "fpt_editorial_stack",
+      "fpt_football_match"
+    ],
+    "brolls": 1,
+    "sfx": 9,
+    "errors": []
+  }
+}

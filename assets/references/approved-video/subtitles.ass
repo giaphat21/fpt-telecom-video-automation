@@ -1,0 +1,26 @@
+[Script Info]
+Title: FPT_Video_1794933728383
+ScriptType: v4.00+
+WrapStyle: 0
+ScaledBorderAndShadow: yes
+YCbCr Matrix: TV.709
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: FptRunning,Montserrat-Bold,48,&H00FFFFFF,&H0000FFEF,&H000166FC,&H64000000,-1,0,0,0,100,100,0,0,1,8,4,2,190,190,340,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.02,0:00:01.81,FptRunning,,0,0,0,,{\an2\pos(540,1580)\b1\bord9\shad4\fscx70\fscy70\t(0,85,\fscx118\fscy118)\t(85,175,\fscx100\fscy100)}⚡ lắp đặt {\1c&H0000FFFF&\3c&H000166FC&\bord11\shad5\fscx120\fscy120}Internet{\1c&H00FFFFFF&\3c&H000166FC&\bord8\shad4\fscx100\fscy100}, {\1c&H0000FFFF&\3c&H000166FC&\bord11\shad5\fscx120\fscy120}FPT{\1c&H00FFFFFF&\3c&H000166FC&\bord8\shad4\fscx100\fscy100}
+Dialogue: 0,0:00:01.81,0:00:02.33,FptRunning,,0,0,0,,{\an2\pos(540,1580)\b1\bord9\shad4\fscx70\fscy70\t(0,85,\fscx118\fscy118)\t(85,175,\fscx100\fscy100)}trang bị ngay
+Dialogue: 0,0:00:02.33,0:00:03.49,FptRunning,,0,0,0,,{\an2\pos(540,1580)\b1\bord9\shad4\fscx70\fscy70\t(0,85,\fscx118\fscy118)\t(85,175,\fscx100\fscy100)}⚡ {\1c&H0000FFFF&\3c&H000166FC&\bord11\shad5\fscx120\fscy120}Modem{\1c&H00FFFFFF&\3c&H000166FC&\bord8\shad4\fscx100\fscy100} {\1c&H0000FFFF&\3c&H000166FC&\bord11\shad5\fscx120\fscy120}Wi-Fi 6{\1c&H00FFFFFF&\3c&H000166FC&\bord8\shad4\fscx100\fscy100} mới nhất
+Dialogue: 0,0:00:03.53,0:00:04.61,FptRunning,,0,0,0,,{\an2\pos(540,1580)\b1\bord9\shad4\fscx70\fscy70\t(0,85,\fscx118\fscy118)\t(85,175,\fscx100\fscy100)}Đi kèm {\1c&H0000FFFF&\3c&H000166FC&\bord11\shad5\fscx120\fscy120}5 tài khoản{\1c&H00FFFFFF&\3c&H000166FC&\bord8\shad4\fscx100\fscy100}
+Dialogue: 0,0:00:04.61,0:00:05.62,FptRunning,,0,0,0,,{\an2\pos(540,1580)\b1\bord9\shad4\fscx70\fscy70\t(0,85,\fscx118\fscy118)\t(85,175,\fscx100\fscy100)}⚽ {\1c&H0000FFFF&\3c&H000166FC&\bord11\shad5\fscx120\fscy120}FPT Play{\1c&H00FFFFFF&\3c&H000166FC&\bord8\shad4\fscx100\fscy100}, thỏa sức
+Dialogue: 0,0:00:05.62,0:00:06.81,FptRunning,,0,0,0,,{\an2\pos(540,1580)\b1\bord9\shad4\fscx70\fscy70\t(0,85,\fscx118\fscy118)\t(85,175,\fscx100\fscy100)}⚽ xem bóng đá {\1c&H0000FFFF&\3c&H000166FC&\bord11\shad5\fscx120\fscy120}Ngoại hạng Anh{\1c&H00FFFFFF&\3c&H000166FC&\bord8\shad4\fscx100\fscy100}
+Dialogue: 0,0:00:07.00,0:00:08.40,FptRunning,,0,0,0,,{\an2\pos(540,1580)\b1\bord9\shad4\fscx70\fscy70\t(0,85,\fscx118\fscy118)\t(85,175,\fscx100\fscy100)}👁️ tặng ngay {\1c&H0000FFFF&\3c&H000166FC&\bord11\shad5\fscx120\fscy120}Camera AI{\1c&H00FFFFFF&\3c&H000166FC&\bord8\shad4\fscx100\fscy100}
+Dialogue: 0,0:00:08.40,0:00:09.58,FptRunning,,0,0,0,,{\an2\pos(540,1580)\b1\bord9\shad4\fscx70\fscy70\t(0,85,\fscx118\fscy118)\t(85,175,\fscx100\fscy100)}👁️ đàm thoại 2 chiều cực kỳ
+Dialogue: 0,0:00:09.58,0:00:10.38,FptRunning,,0,0,0,,{\an2\pos(540,1580)\b1\bord9\shad4\fscx70\fscy70\t(0,85,\fscx118\fscy118)\t(85,175,\fscx100\fscy100)}💰 Tiện lợi giá chỉ
+Dialogue: 0,0:00:10.38,0:00:11.96,FptRunning,,0,0,0,,{\an2\pos(540,1580)\b1\bord9\shad4\fscx70\fscy70\t(0,85,\fscx118\fscy118)\t(85,175,\fscx100\fscy100)}💰 Từ hơn 7.000 đồng một ngày
+Dialogue: 0,0:00:12.00,0:00:13.35,FptRunning,,0,0,0,,{\an2\pos(540,1580)\b1\bord9\shad4\fscx70\fscy70\t(0,85,\fscx118\fscy118)\t(85,175,\fscx100\fscy100)}🎁 Đăng ký {\1c&H0000FFFF&\3c&H000166FC&\bord11\shad5\fscx120\fscy120}combo{\1c&H00FFFFFF&\3c&H000166FC&\bord8\shad4\fscx100\fscy100} ngay

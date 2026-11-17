@@ -1,0 +1,33 @@
+{
+  "name": "fpt-telecom-video-automation",
+  "version": "1.0.0",
+  "private": true,
+  "description": "FPT Telecom speech-synchronized video automation studio",
+  "type": "commonjs",
+  "main": "src/server.js",
+  "engines": {
+    "node": ">=22.16"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "doctor": "node scripts/validate_project.js",
+    "test": "node --test tests/*.test.js",
+    "test:ui": "node tests/run_studio_smoke.js",
+    "test:broll": "node tests/render_speech_broll_smoke.js",
+    "generate:assets": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/generate_brand_assets.ps1",
+    "generate:broll-cards": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/generate_broll_cards.ps1",
+    "generate:audio": "node src/core/audio_assets.js",
+    "capcut:list": "node scripts/capcut_bridge.js --list"
+  },
+  "dependencies": {
+    "capcut-cli": "0.34.0",
+    "ffmpeg-static": "5.3.0",
+    "ffprobe-static": "3.1.0",
+    "google-tts-api": "2.0.2",
+    "msedge-tts": "2.1.1",
+    "@remotion/captions": "4.0.543",
+    "@remotion/layout-utils": "4.0.543",
+    "react": "18.3.1",
+    "remotion": "4.0.543"
+  }
+}
