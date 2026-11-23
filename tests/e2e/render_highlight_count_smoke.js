@@ -23,14 +23,13 @@ const { boundaries } = require('../../src/editing/timeline_rules');
     voiceSpeed: speed, clipWindows: windows, highlights: plan.highlights, brollCutaways: brolls,
     hook: { line1: 'COMBO FPT', line2: '', line3: '', line4: '', y: 320, scale: 1.3 },
     outro: { line1: 'ĐĂNG KÝ NGAY', line2: '', line3: '', y: 320, scale: 1.3 },
-    illustrations: [], customBgm: null, disableBgm: true, exportCapcut: false },
+    illustrations: [], customBgm: null, disableBgm: true },
     console.log, (p, label) => console.log(p + '% ' + label));
   assert.ok(fs.statSync(result.outMp4).size > 100000);
   const saved = JSON.parse(fs.readFileSync(path.join(PATHS.output,'QA_HighlightCount/job.json'), 'utf8'));
   assert.equal(saved.renderedHighlights.filter(h => h.file !== 'hl_outro.png').length, suggestions.length);
   console.log('PASS rendered count: ' + suggestions.length + '/' + suggestions.length);
   assert.ok(saved.renderedHighlights.length); assert.ok(saved.brollCutaways.length);
-  assert.equal(result.capcutSuccess, false);
   for (const h of saved.renderedHighlights.filter(h => h.file !== 'hl_outro.png'))
     assert.ok(plan.highlights.some(x => Math.abs(x.start - h.start) < 0.001));
   console.log('PASS full pipeline:', result.outMp4);

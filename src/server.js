@@ -208,7 +208,7 @@ const server=http.createServer(async(req,res)=>{
         const jobId=crypto.randomUUID(),job={...payload,...media};
         if(WEB){
           job.projectName=(String(job.projectName||'FPT_Video').replace(/[^a-zA-Z0-9_-]/g,'_').slice(0,64))+'_'+jobId.slice(0,8);
-          job.exportCapcut=false;job.useBranding=true;
+          job.useBranding=true;
         }
         const state={status:'queued',progress:0,progressLabel:'Đang chờ xử lý...',logs:[],result:null,error:null};
         if(jobs.size>=100){for(const [id,old]of jobs){if(['done','error'].includes(old.status)){jobs.delete(id);break;}}}

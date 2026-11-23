@@ -148,7 +148,7 @@ async function produce(job, onLog, onProgress) {
 
   // 2. Picture and voice on the 30 fps grid
   let voiceLevel = referenceProfile.audio.voiceGain;
-  let singleMasterVoice = null, totalDur = 25, capcutScenes = [], rawConcat = path.join(tempDir, 'raw_concat.mp4');
+  let singleMasterVoice = null, totalDur = 25, sceneList = [], rawConcat = path.join(tempDir, 'raw_concat.mp4');
   if (aList.length === 0 && useOriginalVideoAudio) {
     onProgress(22, 'Đang ghép cảnh và đồng bộ giọng nói…');
     const base = await prepareBase({ windows: clipWindows, voiceSpeed, profileFor, hasAudio: win => hasAudioStream(win.srcPath), fx: job.fx || {} });
@@ -156,7 +156,7 @@ async function produce(job, onLog, onProgress) {
     rawConcat = base.raw; singleMasterVoice = base.voice; totalDur = base.totalDur;
     voiceLevel = voiceGain(base.voiceLUFS, referenceProfile.audio);
     let cursor = 0;
-    capcutScenes = base.clips.map((file, idx) => { const scene = { file, start: Math.round(cursor / 30 * 1000) / 1000, duration: base.frames[idx] / 30 }; cursor += base.frames[idx]; return scene; });
+    sceneList = base.clips.map((file, idx) => { const scene = { file, start: Math.round(cursor / 30 * 1000) / 1000, duration: base.frames[idx] / 30 }; cursor += base.frames[idx]; return scene; });
   } else {
     // Separate voiceFiles or muted video mode
     if (aList.length > 0) {
@@ -198,7 +198,7 @@ async function produce(job, onLog, onProgress) {
     const concatTxt = path.join(tempDir, 'concat.txt');
     fs.writeFileSync(concatTxt, clipFiles.map(c => `file '${c.replace(/\\/g, '/').replace(/'/g, "'\\''")}'`).join('\n'), 'utf8');
     await runFfAsync(['-y', '-f', 'concat', '-safe', '0', '-i', concatTxt, '-c', 'copy', rawConcat]);
-    capcutScenes = clipFiles.map((file, i) => ({ file, start: i * perClipDur, duration: perClipDur }));
+    sceneList = clipFiles.map((file, i) => ({ file, start: i * perClipDur, duration: perClipDur }));
   }
 
   // 3. The plan
@@ -206,7 +206,7 @@ async function produce(job, onLog, onProgress) {
   const content = prepareContent(job, { subtitles, highlights: Array.isArray(job.highlights) ? job.highlights : [], totalDur });
   subtitles = content.subtitles;
   const illustrations = illustrationSpecs(job, 3.5);
-  const plan = createEditPlan({ job, seed, subtitles, highlights: content.highlights, totalDur, scenes: capcutScenes, illustrations, autoOutroCta, strictSpeech });
+  const plan = createEditPlan({ job, seed, subtitles, highlights: content.highlights, totalDur, scenes: sceneList, illustrations, autoOutroCta, strictSpeech });
   const { hookDur, outroStart } = plan, hlSpecs = plan.hlSpecs, sfxHits = plan.sfx;
   const spelling = reviewTexts(subtitles).map(r => ({ code: 'spelling', text: 'Kiểm tra chính tả: "' + r.word + '" trong "' + r.text + '"' }));
   const mediaWarnings = [...inputWarnings, ...speechWarnings, ...getBrollWarnings(subtitles), ...spelling];
@@ -345,96 +345,12 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
     hook: plan.hook, outroCta: plan.outroCta, totalDur, outMp4, thumbPath, safeName }, null, 2), 'utf8');
   remember({ project: seed, at: new Date().toISOString(), hookStyle: plan.hook.style, outroStyle: plan.hasOutro ? plan.outro.style : null, sfx: sfxHits.map(sx => sx.id), typos: hlSpecs.map(h => h.typo).filter(Boolean) });
 
-  const outroCtaRaw = plan.outroCta;
-  // 7. Auto-Create Native CapCut Desktop Draft ("khi xuất phải xuất luôn vào capcut 1 bản")
-  let capcutDraftName = safeName;
-  let capcutDraftDir = null;
-  let capcutSuccess = false;
-  if (job.exportCapcut !== false) {
-  try {
-    log(`[6/6] Đồng bộ tự động 1 bản nháp đầy đủ Track vào CapCut Desktop...`);
-    const capcutEngine = require('../integrations/capcut_engine');
-    
-    // Build clean storyboard for CapCut Desktop
-    const capcutStoryboard = {
-      title: safeName,
-      ratio: '9:16',
-      fps: 30,
-      bgm: (activeBgm && fs.existsSync(activeBgm)) ? activeBgm : null,
-      bgmVolume: 0.22,
-      scenes: []
-    };
-
-    // Add video clips
-    const voiceInsideClips = !aList.length && useOriginalVideoAudio;
-    // The shared base may be replaced later; a draft keeps its own copy of the clips.
-    const keepDir = path.join(workDir, 'temp');
-    capcutScenes = capcutScenes.map((scene, idx) => { const own = path.join(keepDir, 'scene_' + (idx + 1) + path.extname(scene.file)); if (path.resolve(own) !== path.resolve(scene.file)) fs.copyFileSync(scene.file, own); return { ...scene, file: own }; });
-    capcutScenes.forEach((scene, idx) => {
-      capcutStoryboard.scenes.push({ id: idx + 1, startTime: scene.start, duration: scene.duration, video: scene.file });
-    });
-    if (!voiceInsideClips && singleMasterVoice) capcutStoryboard.scenes.push({ id: 90, startTime: 0, duration: totalDur, audio: singleMasterVoice, audioVolume: 1.0 });
-
-    // Add subtitles as text segments in CapCut (starts after Intro Hook)
-    subtitles.forEach((sb, sIdx) => {
-      const st = Math.max(0, Number(sb.start) || 0);
-      if (st < hookDur) return;
-      const en = Math.min(totalDur, Math.max(st + 0.2, Number(sb.end) || st + 1.2));
-      capcutStoryboard.scenes.push({
-        id: 100 + sIdx,
-        startTime: st,
-        duration: Number((en - st).toFixed(2)),
-        subtitle: sb.text,
-        fontSize: 7.5,
-        textColor: '#F37021',
-        y: -0.64
-      });
-    });
-
-    const capcutRes = capcutEngine.compileStoryboard(capcutStoryboard, { ratio: '9:16', fps: 30 });
-    if (capcutRes && capcutRes.draft_dir) {
-      capcutDraftDir = capcutRes.draft_dir;
-      capcutDraftName = capcutRes.draft_name;
-      capcutSuccess = true;
-      log(`   -> [CAPCUT DESKTOP] Đã tạo thành công bản nháp "${capcutDraftName}" tại: ${capcutDraftDir}`);
-
-      // Đồng bộ trực tiếp các mốc SFX điểm nhấn vào CapCut Desktop timeline
-      try {
-        const topSfx = sfxHits.slice(0, 16);
-        topSfx.forEach((sx) => {
-          if (fs.existsSync(sx.file)) {
-            // The draft gets the same trimmed hit as the MP4, not the whole source file.
-            const early = Math.max(0, sx.lead - sx.start), dur = Math.max(0.1, sx.duration - early);
-            const clip = path.join(workDir, 'sfx', `${sx.id}.wav`);
-            fs.mkdirSync(path.dirname(clip), { recursive: true });
-            execFileSync(FFMPEG, ['-y', '-loglevel', 'error', '-ss', (sx.from + early).toFixed(3), '-t', dur.toFixed(3), '-i', sx.file, '-ar', '48000', '-ac', '2', '-c:a', 'pcm_s16le', clip], { windowsHide: true });
-            capcutEngine.addAudioSegment(capcutDraftDir, {
-              filePath: clip,
-              startSec: Math.max(0, sx.start - sx.lead),
-              durationSec: dur,
-              volume: Math.min(2, sx.gain * sx.vol),
-              trackName: 'SFX Track'
-            });
-          }
-        });
-        log(`   -> [CAPCUT DESKTOP] Đã chèn thành công ${topSfx.length} hiệu ứng SFX vào track âm thanh.`);
-      } catch (sfxErr) {
-        log(`   -> [CAPCUT SFX LƯU Ý] ${sfxErr.message}`);
-      }
-    }
-  } catch (capcutErr) {
-    log(`   -> [CAPCUT DESKTOP CẢNH BÁO] ${capcutErr.message}`);
-  }
-
-  }
-
-
-  if (!capcutSuccess) for (const dir of [tempDir, overlayDir, voiceWorkDir]) {
+  for (const dir of [tempDir, overlayDir, voiceWorkDir]) {
     try { fs.rmSync(dir, { recursive: true, force: true }); } catch (_) {}
   }
   onProgress(100, 'Hoàn tất 100%!');
   log(`>>> HOÀN TẤT! Video FPT Telecom: ${outMp4}`);
   return { outMp4, thumbPath, safeName, styleSeed: seed, totalDur, subtitles, highlights, clipWindows, brollCutaways: userBrollSpecs, hook: plan.hook, hookStyle: plan.hook.style, outroStyle: plan.outro.style,
-    outro: plan.outro, capcutDraftName, capcutDraftDir, capcutSuccess, mediaWarnings, qualityReport };
+    outro: plan.outro, mediaWarnings, qualityReport };
 }
 module.exports = { runFptPipeline, chooseMusic, musicStart, musicSegments };

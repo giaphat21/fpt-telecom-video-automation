@@ -62,7 +62,7 @@ const BUILT_IN_BROLLS = [
       'đàm thoại 2 chiều', 'đàm thoại', 'dam thoai', 'chống trộm', 'chong trom', 'cctv', 'cloud', 'bảo vệ', 'bao ve', 'quan sát', 'quan sat'
     ],
     file: 'broll_stock_camera.mp4',
-    productFile: 'broll_product_camera.mp4',
+    productFile: 'mg_camera_ai.mp4',
     thumb: 'thumb_stock_camera.jpg',
     defaultLayout: 'pip',
     duration: 3.5,

@@ -157,7 +157,7 @@ test('Problem looks and premium titles stay inside the frame and keep compounds 
 });
 test('Motion-graphic B-roll: every topic has a verified clip and the spoken topic picks it',()=>{
   const b=require('../../src/broll/broll_compositor'),cat=b.getBrollCatalog();
-  for(const id of ['stock_wifi6','stock_fptplay','mg_signal','mg_wall','mg_mesh','mg_speed','mg_lag']){const c=cat.find(x=>x.id===id);assert.ok(c&&c.autoEligible&&c.available,id);assert.equal(c.defaultLayout,'pip',id);}
+  for(const id of ['stock_wifi6','stock_fptplay','stock_camera','mg_signal','mg_wall','mg_mesh','mg_speed','mg_lag']){const c=cat.find(x=>x.id===id);assert.ok(c&&c.autoEligible&&c.available,id);assert.equal(c.defaultLayout,'pip',id);}
   const sub=(text,start)=>{const w=text.split(' ');return {text,start,end:start+w.length*.3,words:w.map((x,i)=>({word:x,startMs:Math.round((start+i*.3)*1000),endMs:Math.round((start+i*.3+.25)*1000)}))};};
   const got=b.autoDetectBrollFromSubtitles([sub('vì có quá nhiều bức tường ngăn cản',4),sub('xem video thì quay vòng mãi',8),sub('lắp thêm Mesh phủ sóng mọi góc',12),sub('sóng 5G cũng không bằng',16)],3.5,30).map(s=>s.brollId);
   assert.deepEqual(got,['mg_wall','mg_lag','mg_mesh','mg_signal']);

@@ -109,7 +109,7 @@ input[type=range]{padding:0;accent-color:var(--fpt-orange)}
       <div class="highlight-section">
         <div class="section-heading">
           <label for="bulkHighlightInput" class="section-label">Text Highlight</label>
-          <button type="button" id="suggestKeywordsBtn" class="btn btn-quiet btn-sm" onclick="suggestStudioKeywords()">Gợi ý từ Sub</button>
+          <button type="button" id="suggestKeywordsBtn" class="btn btn-sm" onclick="suggestStudioKeywords()">Gợi ý từ Sub</button>
         </div>
         <textarea id="bulkHighlightInput" rows="4" placeholder="Mỗi dòng một cụm cần nhấn mạnh…" oninput="updateKeywordCount()"></textarea>
         <div class="section-heading highlight-actions">
@@ -154,7 +154,7 @@ input[type=range]{padding:0;accent-color:var(--fpt-orange)}
         </div>
       </details>
     </section>
-<div class="music-upload-bar"><label class="file-upload btn btn-sec btn-sm"><span id="musicUploadLabel">Thêm nhạc nền</span><input id="customBgmInput" type="file" accept="audio/*" onchange="uploadCustomBgm(this.files[0])" aria-label="Tải nhạc nền từ máy" /></label><div id="customBgmInfo" class="music-file-name" style="display:none" aria-live="polite"></div></div>
+<div class="music-upload-bar"><label class="file-upload btn btn-sm"><span id="musicUploadLabel">Thêm nhạc nền</span><input id="customBgmInput" type="file" accept="audio/*" onchange="uploadCustomBgm(this.files[0])" aria-label="Tải nhạc nền từ máy" /></label><div id="customBgmInfo" class="music-file-name" style="display:none" aria-live="polite"></div></div>
   </div>
 
   <aside class="monitor-wrap" aria-label="Xem trước và xuất video">
@@ -176,7 +176,6 @@ input[type=range]{padding:0;accent-color:var(--fpt-orange)}
       <div id="progressWrap" class="progress-panel" style="display:none" role="status">
         <span id="progressPct">0%</span><span id="progressText">Đang bắt đầu…</span>
       </div>
-      <div id="capcutDraftAlert" class="status" style="display:none"></div>
       <div id="resultArea" class="results" style="display:none">
         <a id="downloadVideo" class="btn btn-sm" download>Tải MP4</a>
         <a id="downloadThumb" class="btn btn-sec btn-sm" download>Ảnh bìa</a>
@@ -668,7 +667,7 @@ input[type=range]{padding:0;accent-color:var(--fpt-orange)}
     async function init() {
       const appConfig=await fetch('/api/config').then(r=>r.json()).catch(()=>({webMode:false}));
       if(appConfig.webMode){
-        document.querySelectorAll('[onclick*="openOutputFolder"],[onclick*="openCapcut"],[onclick*="openRenderFolder"]').forEach(e=>e.hidden=true);
+        document.querySelectorAll('[onclick*="openOutputFolder"],[onclick*="openRenderFolder"]').forEach(e=>e.hidden=true);
         document.querySelectorAll('.output-path').forEach(e=>e.hidden=true);
       }
       initPersistentSliders();
@@ -1380,8 +1379,6 @@ input[type=range]{padding:0;accent-color:var(--fpt-orange)}
       document.querySelector('.workspace').inert=true;
       document.getElementById('timelineCard').inert=true;
       document.getElementById('resultArea').style.display = 'none';
-      const capcutAlert = document.getElementById('capcutDraftAlert');
-      if (capcutAlert) capcutAlert.style.display = 'none';
       document.getElementById('progressWrap').style.display = 'flex';
 
       const payload = {...buildRenderPayload(),projectName:'FPT_Video_'+Date.now()};
@@ -1420,7 +1417,6 @@ input[type=range]{padding:0;accent-color:var(--fpt-orange)}
           document.getElementById('downloadVideo').href=st.result.videoUrl;
           document.getElementById('downloadThumb').href=st.result.thumbUrl;
           document.getElementById('outputPathDisplay').textContent=st.result.outMp4||st.result.safeName;
-          if(st.result.capcutSuccess && st.result.capcutDraftName){capcutAlert.style.display='block';capcutAlert.textContent='Bản nháp CapCut: '+st.result.capcutDraftName;}
           btn2.textContent='Tải MP4';
           if(autoDownload)document.getElementById('downloadVideo').click();
           break;

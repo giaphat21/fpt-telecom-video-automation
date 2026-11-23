@@ -34,7 +34,6 @@ Mở http://localhost:3457. Yêu cầu Windows 10/11 64-bit, Node.js 22.16 trở
 │   ├── broll/               Kho B-roll, bố cục, né mặt VJ
 │   ├── audio/               Bộ điều phối SFX
 │   ├── media/               Đọc và chuẩn hóa video nguồn
-│   └── integrations/        CapCut
 ├── public/                  Giao diện Studio; studio/ là timeline và xem trước trực tiếp
 ├── config/                  Đường dẫn, thư viện SFX, từ điển chính tả, chuẩn tham chiếu
 ├── assets/
@@ -54,7 +53,7 @@ Mở http://localhost:3457. Yêu cầu Windows 10/11 64-bit, Node.js 22.16 trở
 │   ├── build/               Kiểm tra, đóng gói, bảng kiểu chữ
 │   ├── assets/              Dựng tài nguyên hình
 │   ├── server/              Cài và chạy máy chủ web
-│   └── tools/               CapCut, căn lời nói
+│   └── tools/               căn lời nói
 ├── tests/
 │   ├── unit/                Kiểm thử nhanh
 │   ├── e2e/                 Dựng thật: FFmpeg, API, giao diện
@@ -67,7 +66,7 @@ Mở http://localhost:3457. Yêu cầu Windows 10/11 64-bit, Node.js 22.16 trở
 └── dist/                    Gói phát hành (không vào git)
 ```
 
-Luồng xử lý: **media → lời nói và khoảng lặng → Sub, Highlight, B-roll → chữ động → phối hình và tiếng → cổng chất lượng → MP4/CapCut**. `output/<dự án>/` chỉ giữ MP4, ảnh đại diện, `job.json`, `subtitles.ass`, `overlay_config.json` và `quality_report.json`; tệp trung gian tự xóa khi không có nháp CapCut.
+Luồng xử lý: **media → lời nói và khoảng lặng → Sub, Highlight, B-roll → chữ động → phối hình và tiếng → cổng chất lượng → MP4**. `output/<dự án>/` chỉ giữ MP4, ảnh đại diện, `job.json`, `subtitles.ass`, `overlay_config.json` và `quality_report.json`; tệp trung gian tự xóa khi không có nháp CapCut.
 
 ## Lệnh
 

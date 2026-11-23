@@ -1,6 +1,6 @@
 {
   "name": "fpt-telecom-video-automation",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "private": true,
   "description": "FPT Telecom speech-synchronized video automation studio",
   "type": "commonjs",
@@ -15,7 +15,6 @@
     "test:ui": "node tests/e2e/run_studio_smoke.js",
     "test:broll": "node tests/e2e/render_speech_broll_smoke.js",
     "generate:broll-cards": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/assets/generate_broll_cards.ps1",
-    "capcut:list": "node scripts/tools/capcut_bridge.js --list",
     "verify": "npm run doctor && npm test && node tests/e2e/render_broll_smoke.js && npm run test:broll && npm run test:ui",
     "generate:product-broll": "node scripts/assets/generate_product_broll.js",
     "docs:typography": "node scripts/build/typography_catalog.js",
@@ -24,7 +23,6 @@
   },
   "dependencies": {
     "@napi-rs/canvas": "1.2.0",
-    "capcut-cli": "0.34.0",
     "ffmpeg-static": "5.3.0",
     "ffprobe-static": "3.1.0"
   }

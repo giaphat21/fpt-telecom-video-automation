@@ -101,6 +101,7 @@ Theo xác nhận mới nhất của người dùng, quy tắc này ưu tiên hơ
 - Xuất MP4 H.264 1080×1920, 30 fps, yuv420p, CRF 17/preset fast, resize Lanczos; kiểm decode và âm thanh trước khi báo thành công. Không gọi upscale là khôi phục chi tiết bị mất.
 - Nhận các container video thông dụng mà FFmpeg giải mã được; kiểm metadata trước khi render, chuẩn hóa xoay/HDR. Video ngang/vuông giữ nguyên bố cục trên nền mờ. Media hỏng hoặc không có lời nói phải báo lỗi rõ ràng.
 - Chạy web bằng FPT_WEB_MODE=1 sau HTTPS proxy, bật mật khẩu hash, giới hạn upload và đường dẫn media; không khởi chạy Explorer/CapCut trên server. FFmpeg/Whisper chạy trong worker để UI luôn phản hồi.
+- Không còn xuất bản nháp CapCut (người dùng bỏ 23/11/2026): chỉ xuất MP4.
 - GitHub repo công khai (người dùng chuyển Public 23/11/2026). Không commit token, .env, cache, log hoặc video output; binary/model/video gốc dùng Git LFS.
 
 # 8. BỘ QUY TẮC PHÁT HÀNH CHUNG (áp dụng cho MỌI video, hiệu lực cao nhất)
@@ -127,7 +128,8 @@ Theo xác nhận mới nhất của người dùng, quy tắc này ưu tiên hơ
 
 ## 8.2. B-roll sinh động, đặt chính giữa
 - ✔ Khung minh họa sản phẩm (Camera AI, modem…) đặt **chính giữa** theo chiều ngang, dưới Highlight và trên Sub; tự dời khi sẽ che mặt VJ, đo lại ở từng cảnh trong lúc B-roll hiện. Không đặt góc phải.
-- ✔ Bộ B-roll đồ họa động vẽ bằng code (`scripts/assets/generate_motion_graphics.js`, 10 giây, 1280×720, chỉ màu FPT): modem Wi-Fi 6, FPT Play trên TV (logo FPT Play người dùng gửi), sóng 4G/5G, tường chặn sóng, Mesh phủ sóng cả nhà, tốc độ cao, giật lag. Chỉ có tên sản phẩm, không vẽ giá, tốc độ hay số liệu. Lời nói nhắc chủ đề nào thì tự chèn clip đó ở khung chính giữa; người dùng gán clip thật thì clip thật được ưu tiên. FPT Play dùng khung giữa khi phát đồ họa, toàn màn hình khi người dùng gán clip.
+- ✔ Bộ B-roll đồ họa động vẽ bằng code (`scripts/assets/generate_motion_graphics.js`, 10 giây, 1280×720, chỉ màu FPT): modem Wi-Fi 6, FPT Play kiểu video SaaS (giao diện TV với ô danh mục, rồi TV, laptop, điện thoại cùng phát; logo FPT Play người dùng gửi), Camera AI (camera FPT xoay quét, ứng dụng đóng khung người, thông báo), sóng 4G/5G, tường chặn sóng, Mesh phủ sóng cả nhà, tốc độ cao, giật lag. Chỉ có tên sản phẩm, không vẽ giá, tốc độ hay số liệu. Lời nói nhắc chủ đề nào thì tự chèn clip đó ở khung chính giữa; người dùng gán clip thật thì clip thật được ưu tiên. FPT Play dùng khung giữa khi phát đồ họa, toàn màn hình khi người dùng gán clip.
+- Chuẩn chuyển động B-roll đồ họa (người dùng nhấn mạnh 23/11/2026: "cực kì quan trọng, cần chuyên nghiệp"): máy quay luôn trôi và đẩy nhẹ trên mọi clip; các lớp ở độ sâu khác nhau lệch nhau; phần tử vào theo thứ tự với lò xo và vệt chuyển động; clip SaaS có con trỏ đi theo đường cong có gia tốc, rê thì thẻ nổi lên, bấm có gợn sóng, chuyển cảnh bằng cú lao vào phần vừa bấm; vòng lặp trở về đúng trạng thái đầu. Ý chính phải đọc được trong 0,5 giây đầu vì cảnh B-roll thường chỉ 1–3 giây. Xem từng khung (đầu, giữa, chỗ nối vòng) trước khi dùng.
 - ✔ B-roll giữ khi lời nói còn nhắc chủ đề (câu gọi tên và câu nói tiếp trong 2,4 giây); nhắc lại thì hiện lại, không treo suốt video dài.
 - Mọi B-roll có chuyển động vào, đẩy máy nhẹ trong cảnh và chuyển động ra; cảnh chia đôi kết thúc bằng cắt thẳng.
 - ✔ Bắt đầu/kết thúc theo đoạn lời nói liên quan, không chồng nhau, không lấn Hook/Outro.
@@ -135,7 +137,7 @@ Theo xác nhận mới nhất của người dùng, quy tắc này ưu tiên hơ
 
 ## 8.3. Hook mở đầu sáng tạo
 - ✔ 22 phong cách Hook/Outro trong `HOOKS` của `src/typography/kinetic_core.js` (dải nghiêng, khối logo, chữ lớn viền, thẻ kính, ruy băng, tín hiệu, vé, sợi quang, gõ chữ, đóng dấu, thẻ đung đưa, mở rèm, nhiễu sóng, nhảy sóng, khung góc, xoay vào, lao tới, ba khối nối mạng, neon phát sáng, chữ khối 3D, mở đôi, tia sáng quét), mỗi kiểu có bố cục, chuyển động và công thức SFX riêng.
-- ✔ Hook/Outro cao cấp hơn Highlight: lóe sáng khi vào, quầng tối nhẹ sau chữ cho dễ đọc, chữ viền có khối nổi navy, tia sáng quét qua từng dòng, hạt màu FPT bung ra khi mỗi dòng đáp, sao lấp lánh khi đã đứng yên.
+- ✔ Hook/Outro cao cấp hơn Highlight: lóe sáng khi vào (không để lại nền hay khung sau chữ), chữ viền có khối nổi navy, tia sáng quét qua từng dòng, hạt màu FPT bung ra khi mỗi dòng đáp, sao lấp lánh khi đã đứng yên.
 - ✔ Luân phiên giữa các video: luôn chọn kiểu lâu chưa dùng nhất (`src/editing/style_history.js`). Xuất lại cùng dự án giữ nguyên kiểu; có thể chỉ định `hookStyle`.
 - ✔ Hook có chữ ngay khung hình đầu, y320, scale 1.3. Outro dùng phong cách khác Hook.
 - ✔ Mỗi dòng Hook vào hình đều có âm thanh; dòng nào được VJ nói tới thì nhấn lại.

@@ -579,13 +579,12 @@ const DECO={
 };
 // ---- premium title layers: a flare on entry, a soft halo for contrast, sparks as each line lands ----------------
 function premiumBack(ctx,cue,t){
-  const b=cue.box,cx=b.x+b.w/2,cy=b.y+b.h/2,r=Math.max(b.w,b.h)*.78;
-  ctx.save();
-  const halo=ctx.createRadialGradient(cx,cy,r*.1,cx,cy,r);halo.addColorStop(0,'rgba(11,31,63,'+(.26+.04*Math.sin(t*2.4))+')');halo.addColorStop(1,'rgba(11,31,63,0)');
-  ctx.globalAlpha*=clamp(t/.25);ctx.fillStyle=halo;ctx.fillRect(Math.max(0,cx-r),cy-r,Math.min(W,2*r),2*r);
-  const p=t/.6;if(p<1){const f=ctx.createRadialGradient(cx,cy,0,cx,cy,r*(.5+.9*p));f.addColorStop(0,'rgba(255,240,225,'+(.7*(1-p))+')');f.addColorStop(.45,'rgba(243,112,33,'+(.35*(1-p))+')');f.addColorStop(1,'rgba(243,112,33,0)');
-    ctx.globalAlpha=1;ctx.fillStyle=f;ctx.fillRect(0,cy-r*1.5,W,r*3);}
-  ctx.restore();
+  // Only a short flare on entry. It stays inside the drawing area: a gradient cut by the area's edge reads as a box.
+  const p=t/.5;if(p>=1)return;
+  const b=cue.box,cx=b.x+b.w/2,cy=b.y+b.h/2,room=Math.min(cy-TOP,TOP+H-cy,cx,W-cx)-4,r=Math.min(room,Math.max(b.w,b.h)*.6*(.6+.6*p));
+  if(r<=10)return;
+  const g=ctx.createRadialGradient(cx,cy,0,cx,cy,r);g.addColorStop(0,'rgba(255,240,225,'+(.6*(1-p))+')');g.addColorStop(.5,'rgba(243,112,33,'+(.28*(1-p))+')');g.addColorStop(1,'rgba(243,112,33,0)');
+  ctx.save();ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fill();ctx.restore();
 }
 const SPARK=[C.orange,C.white,C.blueL,C.greenL,C.peach];
 function premiumFront(ctx,cue,t){

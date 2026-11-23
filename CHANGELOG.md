@@ -1,5 +1,14 @@
 # Nhật ký thay đổi
 
+## Phiên bản 1.7.1 — 23/11/2026
+
+- FPT Play dựng lại theo kiểu video SaaS: giao diện TV với hàng thẻ nội dung và ô danh mục, con trỏ chọn từng ô; sau đó TV, laptop, điện thoại cùng phát.
+- Chuyển động chuyên nghiệp cho toàn bộ B-roll đồ họa: máy quay trôi và đẩy nhẹ, lớp trước sau lệch nhau. FPT Play: con trỏ rê qua thẻ (thẻ nổi lên, hiện nút phát), bấm ô "thể thao", máy quay lao vào ô rồi chuyển sang TV, laptop, điện thoại. Camera AI: camera xoay theo người, khóa mục tiêu, dữ liệu chạy sang điện thoại, thanh nhận diện đầy dần, chuông rung; người rời đi để vòng lặp nối liền.
+- Camera AI đồ họa động mới: camera FPT xoay quét, người đi vào khung hình được AI đóng khung, thông báo bật lên.
+- Bỏ tính năng xuất bản nháp CapCut; chỉ xuất MP4.
+- Nút "Gợi ý từ Sub" và "Thêm nhạc nền" dùng màu cam như các nút khác.
+- Bỏ khung xanh mờ sau chữ Hook/Outro.
+
 ## Phiên bản 1.7.0 — 23/11/2026
 
 - Bộ B-roll đồ họa động mới, vẽ bằng code theo màu FPT: modem Wi-Fi 6, FPT Play trên TV, sóng 4G/5G, tường chặn sóng, Mesh phủ sóng cả nhà, tốc độ cao, giật lag. Tự chèn khi lời nói nhắc chủ đề.

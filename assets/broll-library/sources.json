@@ -41,42 +41,48 @@
     "status": "brand_motion_graphic",
     "title": "Modem Wi-Fi 6 FPT — đồ họa động",
     "generator": "scripts/assets/generate_motion_graphics.js",
-    "fileSize": 2972239
+    "fileSize": 3945032
   },
   "mg_signal_5g.mp4": {
     "status": "brand_motion_graphic",
     "title": "Sóng di động 4G/5G — đồ họa động",
     "generator": "scripts/assets/generate_motion_graphics.js",
-    "fileSize": 3791820
+    "fileSize": 4408891
   },
   "mg_wall_block.mp4": {
     "status": "brand_motion_graphic",
     "title": "Bức tường chặn sóng Wi-Fi — đồ họa động",
     "generator": "scripts/assets/generate_motion_graphics.js",
-    "fileSize": 1034440
+    "fileSize": 2151126
   },
   "mg_mesh_cover.mp4": {
     "status": "brand_motion_graphic",
     "title": "Wi-Fi Mesh phủ sóng cả nhà — đồ họa động",
     "generator": "scripts/assets/generate_motion_graphics.js",
-    "fileSize": 2929510
+    "fileSize": 3587805
   },
   "mg_fptplay.mp4": {
     "status": "brand_motion_graphic",
-    "title": "FPT Play trên TV — đồ họa động",
+    "title": "FPT Play — giao diện và đa thiết bị, đồ họa động",
     "generator": "scripts/assets/generate_motion_graphics.js",
-    "fileSize": 581789
+    "fileSize": 2436633
   },
   "mg_speed_gauge.mp4": {
     "status": "brand_motion_graphic",
     "title": "Tốc độ cao — đồ họa động",
     "generator": "scripts/assets/generate_motion_graphics.js",
-    "fileSize": 1671912
+    "fileSize": 2061573
   },
   "mg_lag_buffer.mp4": {
     "status": "brand_motion_graphic",
     "title": "Mạng giật lag, quay vòng — đồ họa động",
     "generator": "scripts/assets/generate_motion_graphics.js",
-    "fileSize": 445624
+    "fileSize": 796077
+  },
+  "mg_camera_ai.mp4": {
+    "status": "brand_motion_graphic",
+    "title": "Camera AI FPT — nhận diện và cảnh báo, đồ họa động",
+    "generator": "scripts/assets/generate_motion_graphics.js",
+    "fileSize": 2674585
   }
 }

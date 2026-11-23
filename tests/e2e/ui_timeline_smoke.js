@@ -183,7 +183,7 @@ function connect(url){return new Promise((resolve,reject)=>{
     assert.notEqual(look.hook,look2.hook,'Hook phải đổi');assert.ok(look2.typos.filter((t,i)=>t!==look.typos[i]).length>=4,'Kiểu chữ phải đổi: '+JSON.stringify([look,look2]));
     // 11. export uses exactly this plan
     const expected=await run('({hook:studioPlan.hook.style,outro:studioPlan.outro.style,hl:studioPlan.highlights.map(h=>[h.text,h.typo,h.motion,h.start]),sfx:studioPlan.sfx.map(s=>[s.anchor,s.id,s.start,s.vol])})');
-    t0=Date.now();await run('(()=>{const f=window.fetch;window.fetch=(u,o)=>{if(u==="/api/render"){const p=JSON.parse(o.body);p.projectName="QA_Timeline";p.exportCapcut=false;o={...o,body:JSON.stringify(p)}}return f(u,o)}})();startRender()');
+    t0=Date.now();await run('(()=>{const f=window.fetch;window.fetch=(u,o)=>{if(u==="/api/render"){const p=JSON.parse(o.body);p.projectName="QA_Timeline";o={...o,body:JSON.stringify(p)}}return f(u,o)}})();startRender()');
     timing.render=Date.now()-t0;
     assert.deepEqual(await run('qaAlerts'),[]);
     const job=JSON.parse(fs.readFileSync(path.join(PATHS.output,'QA_Timeline/job.json'),'utf8'));

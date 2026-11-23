@@ -67,10 +67,10 @@ function connect(url) {
     await click('#videoPoolWrap > summary');
     assert.equal(await evaluate('selectedVideos.length'),4);
     const expected=0;
-    // Leave every production field intact; only disable CapCut export in QA and choose an isolated output name.
+    // Leave every production field intact; only choose an isolated output name.
     await evaluate(`window.qaFetch=window.fetch;window.fetch=(url,options)=>{
       if(url==='/api/render'){
-        const payload=JSON.parse(options.body);payload.exportCapcut=false;payload.projectName='QA_FPT_Direct';
+        const payload=JSON.parse(options.body);payload.projectName='QA_FPT_Direct';
         window.qaPayload=payload;return qaFetch(url,{...options,body:JSON.stringify(payload)});
       }
       return qaFetch(url,options);
