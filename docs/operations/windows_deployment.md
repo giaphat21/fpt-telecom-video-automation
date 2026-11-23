@@ -15,7 +15,7 @@ Nguồn: [Azure Dsv5](https://learn.microsoft.com/en-us/azure/virtual-machines/s
 ## Cài đặt
 
 1. Cài Git for Windows có Git LFS và Node.js 24 LTS toàn hệ thống trên VPS. Dùng đường dẫn ngắn như C:\apps. Tạo DNS A cho tên miền về IP VPS; mở TCP 80/443 ở firewall cloud. Giới hạn RDP theo IP quản trị.
-2. Clone repository private bằng đăng nhập Git Credential Manager hoặc deploy key. Không đưa access token vào URL, script hoặc file cấu hình.
+2. Clone repository (công khai, cần Git LFS: `git lfs install` trước khi clone). Không đưa access token vào URL, script hoặc file cấu hình.
 
 ~~~powershell
 git clone https://github.com/giaphat21/fpt-telecom-video-automation.git C:\apps\fpt-telecom-video-automation

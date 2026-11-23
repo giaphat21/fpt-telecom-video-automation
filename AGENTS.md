@@ -101,7 +101,7 @@ Theo xác nhận mới nhất của người dùng, quy tắc này ưu tiên hơ
 - Xuất MP4 H.264 1080×1920, 30 fps, yuv420p, CRF 17/preset fast, resize Lanczos; kiểm decode và âm thanh trước khi báo thành công. Không gọi upscale là khôi phục chi tiết bị mất.
 - Nhận các container video thông dụng mà FFmpeg giải mã được; kiểm metadata trước khi render, chuẩn hóa xoay/HDR. Video ngang/vuông giữ nguyên bố cục trên nền mờ. Media hỏng hoặc không có lời nói phải báo lỗi rõ ràng.
 - Chạy web bằng FPT_WEB_MODE=1 sau HTTPS proxy, bật mật khẩu hash, giới hạn upload và đường dẫn media; không khởi chạy Explorer/CapCut trên server. FFmpeg/Whisper chạy trong worker để UI luôn phản hồi.
-- GitHub repo giữ private. Không commit token, .env, cache, log hoặc video output; binary/model/video gốc dùng Git LFS.
+- GitHub repo công khai (người dùng chuyển Public 23/11/2026). Không commit token, .env, cache, log hoặc video output; binary/model/video gốc dùng Git LFS.
 
 # 8. BỘ QUY TẮC PHÁT HÀNH CHUNG (áp dụng cho MỌI video, hiệu lực cao nhất)
 
