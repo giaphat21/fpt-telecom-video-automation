@@ -73,8 +73,8 @@ test('Display lines keep compounds and numbers with their unit',()=>{
   assert.ok(!lines('giá chỉ từ hơn 7.000 đồng một ngày').some(l=>/7\.000$/.test(l)));
   assert.deepEqual(meaningfulWords('mà cái này thì'.split(' ').map(raw=>({raw}))),[]);
 });
-test('All 24 styles: only the requested words, no line collision, inside the frame',()=>{
-  assert.equal(Object.keys(STYLES).length,24);
+test('All 32 styles (24 + 8 for problems): only the requested words, no line collision, inside the frame',()=>{
+  assert.equal(Object.keys(STYLES).length,32);
   for(const typo of Object.keys(STYLES))for(const text of phrases){
     const [cue]=buildCues({totalDur:4,highlights:[{text,typo,start:0,dur:2,y:350,scale:1.4}]});
     const shown=cue.lines.flatMap(l=>l.words.map(w=>w.word)).join(' ');

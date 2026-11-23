@@ -7,7 +7,7 @@
 const {splitLines}=require('../editing/phrase_rules');
 
 const C={orange:'#F37021',orangeL:'#FF9550',peach:'#FFD9BF',blue:'#0066B3',blueL:'#1B86D6',sky:'#7CC4F5',green:'#00A651',greenL:'#19C46F',
-  greenD:'#007F3E',mint:'#A6EBC5',navy:'#0B1F3F',navyL:'#17356A',white:'#FFFFFF'};
+  greenD:'#007F3E',mint:'#A6EBC5',navy:'#0B1F3F',navyL:'#17356A',navyM:'#2C4370',navyG:'#5A6E92',white:'#FFFFFF'};
 const W=1080,TOP=150,H=700,CX=540,FPS=30,MAX_W=900;
 const HEAD='FptHead',BODY='FptBody';
 const FONTS=[['Montserrat-Bold.ttf',HEAD],['BeVietnamPro-Black.ttf',BODY]];
@@ -96,9 +96,9 @@ function buildBlocks(spec,y,scale){
 }
 function buildLine(spec,y,scale){
   if(spec.blocks)return buildBlocks(spec,y,scale);
-  const padX=spec.box?(spec.padX??26)*scale:0,padY=spec.box?(spec.padY??13)*scale:0,stroke=(spec.strokeW||0)*scale,slant=spec.box==='slab'?30:0;
+  const padX=spec.box?(spec.padX??26)*scale:0,padY=spec.box?(spec.padY??13)*scale:0,stroke=(spec.strokeW||0)*scale,slant=spec.box==='slab'?30:0,halo=spec.glow?24*scale:0;
   const m=fitLine(spec.words,spec.family||HEAD,spec.size*scale,MAX_W-2*padX-stroke-slant-(spec.reserve||0)*scale);
-  const x=CX-m.width/2,baseline=y+m.ascent,h=m.ascent+m.descent,S=Math.ceil(stroke/2+14);
+  const x=CX-m.width/2,baseline=y+m.ascent,h=m.ascent+m.descent,S=Math.ceil(stroke/2+14+halo);
   // Optically centre capitals; accents and the dot below only need a small clearance.
   const top=Math.max(m.cap+padY,m.ascent+padY*.45),bottom=Math.max(padY,m.descent+padY*.45);
   const box=spec.box?{x:x-padX,y:baseline-top,w:m.width+2*padX,h:top+bottom}:{x:x-stroke/2,y:y-stroke/2,w:m.width+stroke,h:h+stroke};
@@ -113,7 +113,8 @@ function buildLine(spec,y,scale){
         ctx.strokeStyle=spec.stroke;ctx.lineWidth=stroke;ctx.strokeText(word,tx,ty);
       }else{
         ctx.fillStyle=gradient(ctx,spec.fill,S,h);
-        if(!spec.box&&!stroke){ctx.shadowColor='rgba(4,12,28,.6)';ctx.shadowBlur=12;ctx.shadowOffsetY=6;}
+        if(spec.glow){ctx.shadowColor=spec.glow;ctx.shadowBlur=halo;ctx.fillText(word,tx,ty);ctx.shadowBlur=halo*.4;}
+        else if(!spec.box&&!stroke){ctx.shadowColor='rgba(4,12,28,.6)';ctx.shadowBlur=12;ctx.shadowOffsetY=6;}
         ctx.fillText(word,tx,ty);
       }
     });
@@ -135,7 +136,7 @@ function buildLine(spec,y,scale){
   return line;
 }
 // ---- styles -------------------------------------------------------------------------------------------
-const OG=[C.orangeL,C.orange],BG=[C.blueL,C.blue],GG=[C.greenL,C.green],NG=[C.navyL,C.navy],WG=[C.white,C.peach];
+const OG=[C.orangeL,C.orange],BG=[C.blueL,C.blue],GG=[C.greenL,C.green],NG=[C.navyL,C.navy],WG=[C.white,C.peach],MG=[C.navyG,C.navyM];
 const pill=(bg,fill=C.white,border=C.white,extra={})=>({family:BODY,size:40,box:'pill',bg,fill,border,padX:26,padY:12,...extra});
 const slab=(bg,fill=C.white,border=C.white,extra={})=>({size:70,box:'slab',bg,fill,border,padX:32,padY:17,...extra});
 const outline=(fill,stroke,strokeW=15,extra={})=>({size:86,fill,stroke,strokeW,...extra});
@@ -166,7 +167,17 @@ const STYLES={
   fpt_router_led:{lead:pill(GG),main:card(WG,C.navy,C.blue,{size:68,padY:34,borderW:6}),deco:['led']},
   fpt_data_stream:{lead:slab(BG,C.white,C.sky,{family:BODY,size:40,padX:26,padY:12}),main:outline([C.sky,C.blue],C.white,16,{size:90}),deco:['stream']},
   fpt_speed_gauge:{lead:pill(NG,C.white,C.orange),main:outline(OG,C.white,16,{size:90}),deco:['gauge']},
-  fpt_connect_nodes:{lead:pill(BG),main:slab(GG,C.white,C.white,{size:68,reserve:60}),deco:['nodes']}
+  fpt_connect_nodes:{lead:pill(BG),main:slab(GG,C.white,C.white,{size:68,reserve:60}),deco:['nodes']},
+  // Problem set: only on phrases about a problem ("bị bức tường ngăn", "sóng yếu", "giật lag"). Dimmed navy, orange
+  // warnings, and motion that hesitates: a bump against a wall, a flicker, a glitch, a sink.
+  neg_wall_block:{neg:true,lead:pill(MG,C.white,C.navyG),main:slab([C.navyM,C.navy],C.white,C.orange,{size:70,reserve:96}),deco:['wall'],after:'bump'},
+  neg_weak_signal:{neg:true,lead:pill(OG),main:outline(C.white,C.navyM,14,{size:86,reserve:92}),deco:['weakbars'],after:'flicker'},
+  neg_lag_glitch:{neg:true,lead:slab(NG,C.white,C.navyG,{family:BODY,size:40,padX:24,padY:11}),main:outline(C.white,C.navy,15,{size:88,reserve:96}),deco:['buffer'],after:'jitter'},
+  neg_strike_cross:{neg:true,lead:pill(MG,C.white,C.white),main:outline(C.white,C.navyM,14,{size:86,reserve:70}),deco:['strike','xmark']},
+  neg_warning_tape:{neg:true,lead:slab(OG,C.white,C.white,{family:BODY,size:40,padX:26,padY:12}),main:card(NG,C.white,C.orange,{size:64,reserve:96,borderW:6}),deco:['tape','warn']},
+  neg_crack_sink:{neg:true,lead:outline(C.white,C.navyM,10,{family:BODY,size:50}),main:slab(MG,C.white,C.white,{size:70}),deco:['crack'],after:'sink'},
+  neg_wifi_off:{neg:true,lead:pill(NG,C.white,C.orange),main:slab(MG,C.white,C.white,{box:'pill',size:62,padX:40,padY:19,reserve:120}),deco:['wifioff'],after:'flicker'},
+  neg_down_trend:{neg:true,lead:pill(MG),main:outline(C.white,C.orange,14,{size:86}),deco:['decline'],after:'sink'}
 };
 // Hook looks. Each has its own layout, entrance and sound recipe; the pipeline rotates them between videos.
 const HOOKS={
@@ -205,7 +216,15 @@ const HOOKS={
   arrow_rush:{enter:'rush',lines:()=>[slab(BG,C.white,C.white,{box:'ribbon',size:58,padX:32,padY:16,reserve:60}),slab(WG,C.orange,C.orange,{size:46,padX:30,padY:13}),slab(OG,C.white,C.white,{box:'ribbon',family:BODY,size:38,padX:28,padY:12,reserve:60}),pill(GG,C.white,C.white,{size:34})],
     deco:['speed','stripe'],shine:true,sfx:{open:['whoosh','impact'],line:'whoosh',land:'pop'}},
   tri_blocks:{enter:'drop',lines:()=>[{size:54,blocks:true,fill:C.white},card(WG,C.navy,C.orange,{size:46,padY:14,borderW:6}),{size:36,blocks:true,fill:C.white,shift:2,family:BODY},pill(NG,C.white,C.white,{size:34})],
-    deco:['nodes'],sfx:{open:['pop','bell'],line:'pop',land:'impact'}}
+    deco:['nodes'],sfx:{open:['pop','bell'],line:'pop',land:'impact'}},
+  neon_glow:{enter:'neon',lines:()=>[outline(C.white,C.orange,11,{size:76,glow:'rgba(255,149,80,.95)'}),outline(C.white,C.blue,10,{size:56,glow:'rgba(124,196,245,.95)'}),pill(NG,C.white,C.sky,{size:38}),pill(OG,C.white,C.white,{size:34})],
+    deco:['ring'],sfx:{open:['tone','impact'],line:'tone',land:'bell'}},
+  extrude_pop:{enter:'zoom',lines:()=>[outline(OG,C.white,16,{size:82,extrude:7}),outline(C.white,C.blue,13,{size:58,extrude:5}),outline(C.white,C.green,11,{family:BODY,size:44,extrude:4}),pill(NG,C.white,C.orange,{size:36})],
+    deco:['burst','sparkle'],sfx:{open:['impact','whoosh'],line:'impact',land:'bell'}},
+  split_open:{enter:'split',lines:()=>[slab(NG,C.white,C.orange,{size:60,padX:34,padY:16,borderW:6}),outline(C.white,C.orange,14,{size:58}),slab(BG,C.white,C.white,{family:BODY,size:38,padX:28,padY:12}),pill(GG,C.white,C.white,{size:34})],
+    deco:['stripe','sparkle'],shine:true,sfx:{open:['riser','impact'],line:'whoosh',land:'bell'}},
+  light_beam:{enter:'beam',lines:()=>[outline(C.white,C.blue,15,{size:74,extrude:4}),slab(OG,C.white,C.white,{size:46,padX:30,padY:13}),outline(C.white,C.navy,11,{family:BODY,size:42}),pill(BG,C.white,C.white,{size:34})],
+    deco:['underline'],shine:true,sfx:{open:['whoosh','tone'],line:'whoosh',land:'pop'}}
 };
 function layout(lineSpecs,baseY,scale,gapPx){
   let y=baseY;const lines=[];
@@ -260,7 +279,7 @@ function buildTitle(kind,cfg,start,end){
     line.landed=line.words.at(-1).at+.2;
     line.spokenAt=cfg.spokenAt?.[texts[i].slot];
   });
-  return {kind,start,end,dur:end-start,motion:'pop_bounce',enter:hook.enter,style:{deco:hook.deco,shine:hook.shine,main:{}},sfx:hook.sfx,...built};
+  return {kind,start,end,dur:end-start,motion:'pop_bounce',enter:hook.enter,style:{deco:hook.deco,shine:hook.shine,main:{},premium:true},sfx:hook.sfx,...built};
 }
 // ---- drawing ------------------------------------------------------------------------------------------
 function at(ctx,cx,cy,{sx=1,sy=sx,rot=0,dx=0,dy=0,alpha=1},draw){
@@ -293,11 +312,16 @@ function drawLine(ctx,line,t,cue){
   else if(cue.enter==='rise'){entrance.dy=150*Math.pow(1-q,3);entrance.alpha=clamp(p/.12);}
   else if(cue.enter==='spin'){entrance.rot=-1.1*Math.pow(1-q,3);entrance.sx=emphasis*(.35+.65*outBack(q,1.5));entrance.alpha=clamp(p/.08);}
   else if(cue.enter==='rush'){const k=Math.pow(1-clamp(p/.22),3);entrance.dx=-700*k+(p>.22&&p<.5?16*Math.sin((p-.22)*22)*Math.exp(-(p-.22)*11):0);entrance.sx=emphasis*(1+.25*k);}
+  else if(cue.enter==='neon'&&p<.5){const step=Math.floor(p*30);entrance.alpha=[1,.15,1,.3,.9,1,.2,1][step%8];entrance.sx=emphasis*(1+.08*Math.pow(1-q,2));}
+  else if(cue.enter==='split'){entrance.dy=-12*Math.pow(1-q,3);}
   else if(cue.enter==='glitch'&&p<.36){const step=Math.floor(p*38);entrance.dx=((step*53)%31-15)*(1-p/.36)*1.6;entrance.alpha=step%5===3?.6:1;}
   if(entrance.sx>1){const limit=Math.min(520/Math.max(1,540-line.box.x),520/Math.max(1,line.box.x+line.box.w-540));entrance.sx=Math.min(entrance.sx,Math.max(1,limit));}
   ctx.save();
   if(cue.enter==='curtain'&&q<1){const half=(line.box.w/2+50)*outCubic(q);ctx.beginPath();ctx.rect(bx-half,line.box.y-40,half*2,line.box.h+80);ctx.clip();}
   if(cue.enter==='mask'&&q<1){ctx.beginPath();ctx.rect(0,line.box.y-40,W,line.box.h+80);ctx.clip();entrance.dy=(line.box.h+40)*Math.pow(1-q,3);}
+  if(cue.enter==='split'&&q<1){const half=(line.box.h/2+46)*outCubic(q);ctx.beginPath();ctx.rect(0,by-half,W,half*2);ctx.clip();}
+  const beam=cue.enter==='beam'?clamp(p/.42):1;
+  if(beam<1){const bx2=line.box.x-50+(line.box.w+100)*outCubic(beam);ctx.beginPath();ctx.rect(0,line.box.y-60,bx2,line.box.h+120);ctx.clip();}
   at(ctx,bx,by,entrance,()=>{
     if(line.boxSprite){
       const grow=cue.enter?1:outBack(p/.22,1.5);
@@ -312,11 +336,18 @@ function drawLine(ctx,line,t,cue){
         ctx.save();ctx.globalAlpha*=.95;ctx.translate(k*6*line.scale*spread,k*6*line.scale*spread);drawWord(ctx,w,t,'stroke',color);ctx.restore();
       }
     }
+    // Premium titles: outline words get a navy extrusion for depth.
+    const depth=cue.kind!=='highlight'?(s.extrude??3):0;
+    if(depth)for(let k=depth;k>=1;k--)for(const w of visible)if(w.stroke){ctx.save();ctx.translate(k*1.6*line.scale,k*2.1*line.scale);drawWord(ctx,w,t,'stroke',k===depth?'#06122A':C.navy);ctx.restore();}
+    // Problem set: brief blue/orange split now and then, like a picture that stutters.
+    if(cue.style.after==='jitter'){const ph=(t*2.6)%1;if(ph<.14)for(const [side,color] of [[-1,C.blue],[1,C.orange]])for(const w of visible)if(w.stroke){ctx.save();ctx.globalAlpha*=.8;ctx.translate(side*9*(1-ph/.14),0);drawWord(ctx,w,t,'stroke',color);ctx.restore();}}
     for(const w of visible)if(w.stroke)drawWord(ctx,w,t,'stroke');
     for(const w of visible)drawWord(ctx,w,t,'fill');
     if(cue.enter==='type'&&visible.length){const last=visible.at(-1),done=t>(line.landed??0)+.9;if(!done&&Math.sin(t*16)>-.3){ctx.fillStyle=line.spec.box?line.spec.fill:C.white;const k=clamp((t-last.at)/Math.max(.08,last.word.length*.035));ctx.fillRect(last.x+last.S+(last.w-2*last.S)*k+8,line.box.y+line.box.h*.2,7,line.box.h*.6);}}
   });
   ctx.restore();
+  if(beam<1&&beam>0){const bx2=line.box.x-50+(line.box.w+100)*outCubic(beam),g=ctx.createLinearGradient(bx2-60,0,bx2+30,0);g.addColorStop(0,'rgba(255,255,255,0)');g.addColorStop(.75,'rgba(255,255,255,.9)');g.addColorStop(1,'rgba(255,255,255,0)');
+    ctx.save();ctx.globalAlpha*=Math.sin(Math.PI*beam);ctx.fillStyle=g;ctx.fillRect(bx2-60,line.box.y-50,90,line.box.h+100);ctx.restore();}
 }
 function drawWord(ctx,w,t,layer,tint){
   const p=t-w.at,img=layer==='stroke'?w.stroke:w.fill;if(!img)return;
@@ -334,11 +365,12 @@ function drawWord(ctx,w,t,layer,tint){
   at(ctx,cx,cy,{sx:z*(1+.065*hit),dy:wave-7*hit+26*(1-outCubic(p/.18)),rot:(1-outCubic(p/.2))*-.07,alpha:p/.06+.15},()=>ctx.drawImage(source,w.x,w.y));
 }
 function shine(ctx,cue,t){
-  const main=cue.lines.at(-1),begin=(main.landed??.35)+.04,period=cue.kind==='highlight'?2.2:1.7,p=((t-begin)%period)/.42;
-  if(t<begin||p<0||p>1)return;
-  for(const line of cue.kind==='highlight'?[main]:cue.lines.slice(0,1)){
+  const main=cue.lines.at(-1),begin=(main.landed??.35)+.04,period=cue.kind==='highlight'?2.2:2.1,p=((t-begin)%period)/.42;
+  if(t<begin||p<0||p>1+(cue.kind==='highlight'?0:cue.lines.length*.22))return;
+  for(const [li,line] of (cue.kind==='highlight'?[main]:cue.lines).entries()){
     if(!line.boxSprite)continue;
-    const b=line.box,x=b.x-80+(b.w+160)*p;
+    const lp=cue.kind==='highlight'?p:p-li*.22;if(lp<0||lp>1)continue;
+    const b=line.box,x=b.x-80+(b.w+160)*lp;
     ctx.save();shapePath(ctx,line.spec.box,b.x,b.y,b.w,b.h);ctx.clip();
     const g=ctx.createLinearGradient(x-70,0,x+70,50);g.addColorStop(0,'rgba(255,255,255,0)');g.addColorStop(.5,'rgba(255,255,255,.55)');g.addColorStop(1,'rgba(255,255,255,0)');
     ctx.fillStyle=g;ctx.fillRect(b.x-30,b.y,b.w+60,b.h);ctx.restore();
@@ -470,8 +502,108 @@ const DECO={
     ctx.restore();
   },
   shine(ctx,cue,t){shine(ctx,cue,t);},
-  echo(){}
+  echo(){},
+  // a brick column drops beside the phrase; the words bump into it
+  wall(ctx,cue,t){
+    const main=cue.lines.at(-1),m=main.box,from=main.at+.08,p=(t-from)/.24;if(p<=0)return;
+    const w=58,h=m.h+56,x=Math.min(W-30-w,m.x+m.w+16),y0=m.y-28,drop=-150*(1-outBack(p,1.2));
+    ctx.save();ctx.translate(0,drop);ctx.globalAlpha*=clamp(p*3);
+    ctx.shadowColor='rgba(4,12,28,.55)';ctx.shadowBlur=14;ctx.shadowOffsetY=8;ctx.fillStyle='#4A3A33';ctx.beginPath();ctx.roundRect(x,y0,w,h,6);ctx.fill();ctx.shadowColor='transparent';
+    const bh=17,bw=28;ctx.beginPath();ctx.roundRect(x,y0,w,h,6);ctx.clip();
+    for(let r=0;r*bh<h;r++)for(let k=-1;k*bw<w;k++){ctx.fillStyle=(r+k)%3?'#C97B4F':'#B26A43';ctx.fillRect(x+k*bw+(r%2?bw/2:0)+2,y0+r*bh+2,bw-4,bh-4);}
+    ctx.restore();
+    const hit=(t-main.landed)/.35;if(hit>0&&hit<1){ctx.save();ctx.globalAlpha*=1-hit;ctx.strokeStyle=C.orangeL;ctx.lineWidth=5;ctx.lineCap='round';
+      for(let i=0;i<5;i++){const a=Math.PI*(.7+i*.15),r0=10+30*hit;ctx.beginPath();ctx.moveTo(x-6+Math.cos(a)*r0,m.y+m.h/2+Math.sin(a)*r0);ctx.lineTo(x-6+Math.cos(a)*(r0+22),m.y+m.h/2+Math.sin(a)*(r0+22));ctx.stroke();}ctx.restore();}
+  },
+  // one bar of four, blinking
+  weakbars(ctx,cue,t){
+    const main=cue.lines.at(-1),m=main.box,from=main.at+.1;if(t<from)return;
+    const x=Math.min(W-30-80,m.x+m.w+14),base=m.y+m.h-14,k=outBack((t-from)/.25);
+    for(let i=0;i<4;i++){const h=(m.h-30)*(.3+.23*i)*k,lit=i===0;ctx.save();ctx.fillStyle=lit?(Math.sin(t*9)>-.3?C.orange:C.orangeL):'rgba(90,110,146,.45)';ctx.strokeStyle=C.white;ctx.lineWidth=3;ctx.beginPath();ctx.roundRect(x+i*20,base-h,14,h,4);ctx.fill();if(!lit)ctx.setLineDash([4,4]);ctx.stroke();ctx.restore();}
+  },
+  // a buffering ring at the left of the phrase
+  buffer(ctx,cue,t){
+    const main=cue.lines.at(-1),m=main.box,from=main.at+.1;if(t<from)return;
+    const cx=Math.max(54,m.x-44),cy=m.y+m.h/2,k=outBack((t-from)/.25),step=Math.floor(t*12);
+    for(let i=0;i<8;i++){const a=i/8*Math.PI*2+step/8*Math.PI*2;ctx.save();ctx.globalAlpha*=(.2+.8*i/8)*k;ctx.fillStyle=C.white;ctx.translate(cx+Math.cos(a)*26*k,cy+Math.sin(a)*26*k);ctx.rotate(a);ctx.beginPath();ctx.roundRect(-8,-4,16,8,4);ctx.fill();ctx.restore();}
+  },
+  // an orange line struck through the phrase
+  strike(ctx,cue,t){
+    const main=cue.lines.at(-1),m=main.box,p=outCubic((t-main.landed+.05)/.28);if(p<=0)return;
+    const y=m.y+m.h*.52,x0=m.x-10,x1=x0+(m.w+20)*p;ctx.save();ctx.strokeStyle=C.orange;ctx.lineWidth=12;ctx.lineCap='round';ctx.shadowColor='rgba(4,12,28,.5)';ctx.shadowBlur=8;
+    ctx.beginPath();ctx.moveTo(x0,y+6);ctx.lineTo(x1,y-6*p);ctx.stroke();ctx.restore();
+  },
+  xmark(ctx,cue,t){
+    const main=cue.lines.at(-1),m=main.box,k=outBack((t-main.landed-.12)/.24,2.4);if(t<main.landed+.12)return;
+    const x=Math.min(W-50,m.x+m.w+18),y=m.y+6,r=30;ctx.save();ctx.translate(x,y);ctx.scale(k,k);ctx.fillStyle=C.orange;ctx.shadowColor='rgba(0,0,0,.4)';ctx.shadowBlur=10;ctx.beginPath();ctx.arc(0,0,r,0,7);ctx.fill();ctx.shadowColor='transparent';
+    ctx.strokeStyle=C.white;ctx.lineWidth=8;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(-11,-11);ctx.lineTo(11,11);ctx.moveTo(11,-11);ctx.lineTo(-11,11);ctx.stroke();ctx.restore();
+  },
+  // hazard tape above and below, sliding
+  tape(ctx,cue,t){
+    const b=cue.box,p=outCubic((t-.05)/.3);if(p<=0)return;
+    for(const [y,dir] of [[b.y-24,1],[b.y+b.h+8,-1]]){const w=Math.min(W-60,b.w+120)*p,x=CX-w/2;ctx.save();ctx.beginPath();ctx.rect(x,y,w,16);ctx.clip();ctx.fillStyle=C.navy;ctx.fillRect(x,y,w,16);
+      ctx.fillStyle=C.orange;const off=(t*60*dir)%32;for(let k=-2;k*32<w+64;k++){const sx=x+k*32+off;ctx.beginPath();ctx.moveTo(sx,y+16);ctx.lineTo(sx+16,y);ctx.lineTo(sx+30,y);ctx.lineTo(sx+14,y+16);ctx.closePath();ctx.fill();}ctx.restore();}
+  },
+  warn(ctx,cue,t){
+    const main=cue.lines.at(-1),m=main.box,k=outBack((t-main.at-.1)/.25,2);if(t<main.at+.1)return;
+    const x=Math.min(W-52,m.x+m.w+50),y=m.y+m.h/2,s=34*k*(1+.06*Math.sin(t*8));ctx.save();ctx.translate(x,y);ctx.fillStyle=C.orange;ctx.strokeStyle=C.white;ctx.lineWidth=5;ctx.lineJoin='round';
+    ctx.beginPath();ctx.moveTo(0,-s);ctx.lineTo(s*1.05,s*.8);ctx.lineTo(-s*1.05,s*.8);ctx.closePath();ctx.fill();ctx.stroke();ctx.fillStyle=C.white;ctx.fillRect(-3.5*k,-s*.45,7*k,s*.7);ctx.beginPath();ctx.arc(0,s*.48,4.5*k,0,7);ctx.fill();ctx.restore();
+  },
+  // cracks run across the box once it has landed
+  crack(ctx,cue,t){
+    const main=cue.lines.at(-1),m=main.box,p=outCubic((t-main.landed)/.3);if(p<=0)return;
+    ctx.save();ctx.strokeStyle='rgba(255,255,255,.9)';ctx.lineWidth=3.5;ctx.lineCap=ctx.lineJoin='round';ctx.shadowColor='rgba(4,12,28,.6)';ctx.shadowBlur=4;
+    const paths=[[[.18,0],[.24,.3],[.2,.55],[.27,.8],[.24,1]],[[.62,0],[.58,.25],[.66,.5],[.6,.72],[.68,1]],[[.24,.3],[.36,.38]],[[.66,.5],[.8,.44]]];
+    for(const pts of paths){ctx.beginPath();const n=Math.max(2,Math.ceil(pts.length*p));pts.slice(0,n).forEach(([u,v],i)=>ctx[i?'lineTo':'moveTo'](m.x+m.w*u,m.y+m.h*v));ctx.stroke();}
+    ctx.restore();
+  },
+  // a Wi-Fi mark loses its arcs one by one, then is slashed
+  wifioff(ctx,cue,t){
+    const main=cue.lines.at(-1),m=main.box,from=main.at+.1;if(t<from)return;
+    const cx=Math.min(W-62,m.x+m.w+56),cy=m.y+m.h/2+18,cyc=(t-from)%1.8,lit=cyc<.3?3:cyc<.6?2:cyc<.9?1:0;
+    ctx.save();ctx.lineCap='round';ctx.lineWidth=8;
+    for(let i=0;i<3;i++){ctx.strokeStyle=i<lit?C.white:'rgba(90,110,146,.55)';ctx.beginPath();ctx.arc(cx,cy,14+i*14,-Math.PI*.78,-Math.PI*.22);ctx.stroke();}
+    ctx.fillStyle=C.white;ctx.beginPath();ctx.arc(cx,cy,5,0,7);ctx.fill();
+    const s=outCubic((t-from-.25)/.25);if(s>0){ctx.strokeStyle=C.orange;ctx.lineWidth=9;ctx.beginPath();ctx.moveTo(cx-34,cy-52);ctx.lineTo(cx-34+68*s,cy-52+64*s);ctx.stroke();}
+    ctx.restore();
+  },
+  // a line chart that falls under the phrase
+  decline(ctx,cue,t){
+    const b=cue.box,p=outCubic((t-cue.lines.at(-1).landed)/.5);if(p<=0)return;
+    const x0=b.x+b.w*.06,x1=b.x+b.w*.94,y0=b.y+b.h+8,pts=[[0,0],[.22,10],[.38,-4],[.6,22],[.78,16],[1,44]];
+    ctx.save();ctx.strokeStyle=C.orange;ctx.lineWidth=8;ctx.lineCap=ctx.lineJoin='round';ctx.beginPath();
+    let last=null;for(const [u,v] of pts){if(u>p)break;const x=x0+(x1-x0)*u,y=y0+v;ctx[last?'lineTo':'moveTo'](x,y);last=[x,y];}
+    if(last){ctx.stroke();ctx.fillStyle=C.orange;ctx.save();ctx.translate(last[0],last[1]);ctx.rotate(.9);ctx.beginPath();ctx.moveTo(14,0);ctx.lineTo(-8,-11);ctx.lineTo(-8,11);ctx.closePath();ctx.fill();ctx.restore();}
+    ctx.restore();
+  }
 };
+// ---- premium title layers: a flare on entry, a soft halo for contrast, sparks as each line lands ----------------
+function premiumBack(ctx,cue,t){
+  const b=cue.box,cx=b.x+b.w/2,cy=b.y+b.h/2,r=Math.max(b.w,b.h)*.78;
+  ctx.save();
+  const halo=ctx.createRadialGradient(cx,cy,r*.1,cx,cy,r);halo.addColorStop(0,'rgba(11,31,63,'+(.26+.04*Math.sin(t*2.4))+')');halo.addColorStop(1,'rgba(11,31,63,0)');
+  ctx.globalAlpha*=clamp(t/.25);ctx.fillStyle=halo;ctx.fillRect(Math.max(0,cx-r),cy-r,Math.min(W,2*r),2*r);
+  const p=t/.6;if(p<1){const f=ctx.createRadialGradient(cx,cy,0,cx,cy,r*(.5+.9*p));f.addColorStop(0,'rgba(255,240,225,'+(.7*(1-p))+')');f.addColorStop(.45,'rgba(243,112,33,'+(.35*(1-p))+')');f.addColorStop(1,'rgba(243,112,33,0)');
+    ctx.globalAlpha=1;ctx.fillStyle=f;ctx.fillRect(0,cy-r*1.5,W,r*3);}
+  ctx.restore();
+}
+const SPARK=[C.orange,C.white,C.blueL,C.greenL,C.peach];
+function premiumFront(ctx,cue,t){
+  ctx.save();
+  cue.lines.forEach((line,li)=>{
+    const at=(line.landed??line.at+.2)-.12,p=(t-at)/.62;if(p<=0||p>=1)return;
+    const b=line.box,cx=b.x+b.w/2,cy=b.y+b.h/2;
+    for(let i=0;i<14;i++){
+      const a=i/14*Math.PI*2+li*.7,sp=(.7+((i*37+li*11)%10)/14),d=outCubic(p)*sp,x=clamp(cx+Math.cos(a)*(b.w/2+18+70*d),24,W-24),y=cy+Math.sin(a)*(b.h/2+14+48*d);
+      ctx.globalAlpha=(1-p)*.95;ctx.fillStyle=SPARK[(i+li)%SPARK.length];
+      if(i%3)ctx.fillRect(x-3,y-3,6*(1-p*.5),6*(1-p*.5));else{ctx.beginPath();ctx.arc(x,y,4.5*(1-p*.4),0,Math.PI*2);ctx.fill();}
+    }
+  });
+  // a slow twinkle at two corners of the block once everything has landed
+  const done=Math.max(...cue.lines.map(l=>l.landed??0))+.1;
+  if(t>done&&!(cue.style.deco||[]).includes('sparkle')){const b=cue.box;[[b.x+b.w+4,b.y+6,22,0],[b.x-6,b.y+b.h-4,16,2.1]].forEach(([x,y,r,ph])=>star(ctx,clamp(x,40,W-40),y,r*outBack((t-done)/.3)*(.7+.3*Math.sin(t*4+ph)),C.white,t*.6+ph));}
+  ctx.restore();
+}
 function corners(ctx,b,t,color,m){
   const p=outCubic(t/.3),g=m+46*(1-p),arm=34,x0=Math.max(26,b.x-g),x1=Math.min(1054,b.x+b.w+g),y0=b.y-g,y1=b.y+b.h+g;
   ctx.save();ctx.globalAlpha*=p;ctx.strokeStyle=color;ctx.lineWidth=7;ctx.lineCap='round';ctx.shadowColor='rgba(0,0,0,.45)';ctx.shadowBlur=6;ctx.beginPath();
@@ -479,7 +611,7 @@ function corners(ctx,b,t,color,m){
   ctx.stroke();ctx.restore();
 }
 // The scan line of 'focus' stays behind: across white letters it looked like a stray diacritic.
-const BEHIND=new Set(['focus','burst','ring','speed','stripe','underline','hudline','fiber','wifi','stream','gauge','nodes']);
+const BEHIND=new Set(['focus','burst','ring','speed','stripe','underline','hudline','fiber','wifi','stream','gauge','nodes','tape','decline']);
 // A Hook that opens the video is already on screen in the very first frame.
 const lead=cue=>cue.kind==='hook'&&cue.start<.01?.08:0;
 function cueTransform(cue,t){
@@ -494,6 +626,11 @@ function cueTransform(cue,t){
       if(t>.15&&t<.36){const d=Math.pow(1-(t-.15)/.21,2);m.dx+=Math.sin(t*95)*9*d;m.dy+=Math.cos(t*80)*7*d;}
     }else m.sx*=.55+.45*outBack(t/.24,1.8);
     m.dy+=2.4*Math.sin(t*3.4);
+    const after=cue.style.after,main=cue.lines.at(-1),hitAt=(main.landed??.3)+.02;
+    if(after==='bump'&&t>hitAt){const k=t-hitAt;m.dx+=-26*Math.sin(k*26)*Math.exp(-k*7);}
+    else if(after==='flicker'&&t>hitAt&&Math.floor(t*15)%13===5)m.alpha*=.45;
+    else if(after==='jitter'&&t>hitAt&&(t*2.6)%1<.14)m.dx+=((Math.floor(t*30)*37)%13-6)*1.4;
+    else if(after==='sink'&&t>hitAt){const k=outCubic((t-hitAt)/1.1);m.dy+=16*k;m.rot+=(cue.seed%2?1:-1)*.025*k;}
   }else{
     m.dy+=3*Math.sin(t*3.1);
     if(cue.tilt)m.rot+=cue.tilt;
@@ -513,10 +650,12 @@ function drawCue(ctx,cue,time,hidden){
   ghosts.forEach((a,i)=>at(ctx,cx,cy,{...m,dx:m.dx*(1.25+.3*i),alpha:m.alpha*a},()=>cue.lines.forEach(l=>drawLine(ctx,l,t,cue))));
   at(ctx,cx,cy,m,()=>{
     const deco=cue.style.deco||[];
+    if(cue.style.premium)premiumBack(ctx,cue,t);
     for(const d of deco)if(BEHIND.has(d))DECO[d](ctx,cue,t);
     cue.lines.forEach(l=>drawLine(ctx,l,t,cue));
     if(cue.style.shine)shine(ctx,cue,t);
     for(const d of deco)if(!BEHIND.has(d))DECO[d](ctx,cue,t);
+    if(cue.style.premium)premiumFront(ctx,cue,t);
   });
   return true;
 }

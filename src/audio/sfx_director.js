@@ -68,6 +68,7 @@ function catalog(){
   return {count:sfx.length,sfx};
 }
 // ---- meaning ------------------------------------------------------------------------------------------
+const {isNegative}=require('../editing/tone');
 const INTENTS=[
   [/\b\d+ ?k\b|dong|gia|cuoc|nghin|trieu/,['cash','run','bell','impact']],
   [/tang|mien phi|uu dai|qua|voucher|0 ?d\b/,['bell','cash','tone','pop']],
@@ -78,7 +79,7 @@ const INTENTS=[
   [/dang ky|lien he|goi ngay/,['bell','cash','tone']]
 ];
 const GENERAL=['pop','tone','bell','run','impact','whoosh','mech','cash'];
-function familiesFor(text){const t=normalize(text);return (INTENTS.find(([re])=>re.test(t))||[null,GENERAL])[1];}
+function familiesFor(text){if(isNegative(text))return ['mech','impact','tone','run'];const t=normalize(text);return (INTENTS.find(([re])=>re.test(t))||[null,GENERAL])[1];}
 // ---- selection ----------------------------------------------------------------------------------------
 const hash=text=>parseInt(crypto.createHash('sha256').update(String(text)).digest('hex').slice(0,8),16);
 class SfxDirector{

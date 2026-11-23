@@ -159,7 +159,7 @@ function createReferenceBrolls(subtitles,totalDuration,catalog,allowedIds=null,l
   let named=0;const FOLLOW=2.4;
   const append=(section,hit)=>{
     if(section.end<=section.start)return;
-    if(active?.brollId===hit.clip.id&&section.start-active.speechEnd<=.4){
+    if(active?.brollId===hit.clip.id&&section.start-active.speechEnd<=.75){
       active.end=active.speechEnd=round(section.end);active.duration=round(active.end-active.start);named=section.end;
       return;
     }

@@ -1,5 +1,12 @@
 # Nhật ký thay đổi
 
+## Phiên bản 1.7.0 — 23/11/2026
+
+- Bộ B-roll đồ họa động mới, vẽ bằng code theo màu FPT: modem Wi-Fi 6, FPT Play trên TV, sóng 4G/5G, tường chặn sóng, Mesh phủ sóng cả nhà, tốc độ cao, giật lag. Tự chèn khi lời nói nhắc chủ đề.
+- 8 kiểu chữ cho câu nói về vấn đề ("bị bức tường ngăn", "sóng yếu", "giật lag"): vấp tường, sóng yếu, giật lag, gạch bỏ, băng cảnh báo, nứt vỡ, mất Wi-Fi, tụt dốc. Tự nhận câu tiêu cực; câu "không còn giật lag" không tính.
+- Hook/Outro cao cấp hơn: lóe sáng, chữ khối nổi, tia sáng quét từng dòng, hạt bung khi chữ đáp. Thêm 4 kiểu: neon phát sáng, chữ khối 3D, mở đôi, tia sáng quét (tổng 22).
+- Chia dòng chữ không còn tách "bức / tường" và các cụm từ trong từ điển.
+
 ## Phiên bản 1.6.1 — 23/11/2026
 
 - Highlight video dài: cắt theo từng ý, hiện đúng từ đầu và mất ngay sau từ cuối; trước đây cắt giữa cụm và giữ 1,9 giây. Dòng người dùng gõ khác lời nói chút ít vẫn khớp được mốc.

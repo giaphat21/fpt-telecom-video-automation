@@ -22,7 +22,7 @@ Thời gian trên máy 16 luồng, video 13 giây từ 4 clip: nhận dạng l�
 | Dời, đổi độ dài | Kéo khối, kéo hai đầu khối (Hook, Outro, nhạc, SFX, hiệu ứng cũng kéo được). Bật **Hít** để bám lời nói và mép cảnh |
 | Phóng to | Ctrl + lăn chuột |
 | Sửa chữ | Chọn khối Sub, Highlight, Hook hoặc Outro rồi gõ |
-| Đổi kiểu chữ | Chọn Highlight/Hook/Outro, bấm một trong các hình mẫu (24 kiểu Highlight, 18 kiểu Hook/Outro) |
+| Đổi kiểu chữ | Chọn Highlight/Hook/Outro, bấm một trong các hình mẫu (24 kiểu Highlight, 8 kiểu cho câu nói về vấn đề, 22 kiểu Hook/Outro) |
 | SFX | Chọn khối SFX: đổi âm, âm lượng, tắt, dời; **+ SFX** để thêm |
 | Cắt clip | Kéo hai đầu clip hoặc phím S; chữ, B-roll, SFX phía sau tự dời |
 | Hiệu ứng hình | **+ Hiệu ứng** thêm tại kim (zoom, đẩy máy, rung, chớp, mờ…); chọn rồi Delete để xóa, kể cả zoom cảnh và tối dần |
@@ -45,7 +45,7 @@ Chấm trắng trên khối: đã sửa tay. Gạch chân đỏ ở Sub: nghi sa
 | Đổi phong cách Hook | Chọn khối Hook trên timeline rồi chọn kiểu, hoặc **Đổi phong cách**. Để yên thì mỗi video tự dùng kiểu lâu chưa dùng nhất. |
 | Highlight riêng | Nhập mỗi dòng một cụm đúng với lời nói. |
 | SFX riêng | Thả tệp mp3/wav vào `assets/sfx-user`, mở lại Studio. Hệ thống tự phân loại; muốn chỉnh tay thì sửa `config/sfx_library.json`. |
-| B-roll đúng sản phẩm | Tải clip lên và gán vào chủ đề Wi-Fi 6, Camera, FPT Play, Bóng đá hoặc Gaming. |
+| B-roll đúng sản phẩm | Có sẵn đồ họa động cho Wi-Fi 6, FPT Play, 4G/5G, tường chặn sóng, Mesh, tốc độ, giật lag; tự chèn theo lời nói. Muốn dùng clip thật thì tải lên và gán vào chủ đề Wi-Fi 6, Camera, FPT Play, Bóng đá hoặc Gaming. |
 | Đổi bố cục B-roll | Toàn màn hình, chia màn hình hoặc khung chính giữa trên timeline. |
 
 Bảng kiểu chữ: `docs/brand/brand_typography.png`. Quy tắc dựng: `AGENTS.md`, mục 8.

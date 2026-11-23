@@ -5,11 +5,17 @@ const COMPOUNDS=['tien loi','cuc ky','mot ngay','mot thang','lap dat','lap mang'
   'tai khoan','fpt play','fpt telecom','truyen hinh','thoa suc','xem bong da','bong da','ngoai hang anh','dac biet','tang ngay','camera ai','dam thoai',
   '2 chieu','hai chieu','toc do','toc do cao','gia chi','chi tu','gia dinh','lien he','dang ky','uu dai','lien tay','bang thong','cap quang','mien phi',
   'giat lag','choi game','do tre','an ninh','giam sat','kho phim','tra gop','khuyen mai','qua tang','dong ngay','1 gbps','da nang'].map(c=>c.split(' '));
+// Word pairs from config/lexicon.json ("bức tường", "tín hiệu"…). Node loads them here; the Studio bundle sets the same
+// list, so a title breaks its lines identically in the preview and in the render.
+let PAIRS=null;
+function setPairs(list){PAIRS=new Set(list);}
+if(typeof window==='undefined'){try{const load=require;setPairs([...load('../speech/phrase_segmenter').PAIRS].map(p=>normalize(p)));}catch(_){}}
 const KEY=/\d|mien phi|tang|camera|wifi|fpt play|ngoai hang|bong da|internet|uu dai|combo/;
 function joins(tokens){
   const locked=new Set();
   for(const c of COMPOUNDS)for(let i=0;i+c.length<=tokens.length;i++)
     if(c.every((t,k)=>tokens[i+k]===t))for(let k=1;k<c.length;k++)locked.add(i+k);
+  if(PAIRS)for(let i=1;i<tokens.length;i++)if(PAIRS.has(tokens[i-1]+' '+tokens[i]))locked.add(i);
   // Keep a number with its unit ("7.000 đồng", "5 tài khoản").
   const unit=/^(k|nghin|ngan|trieu|dong|thang|ngay|tai|kenh|chieu|gbps|mbps|gb|tran|thiet|nguoi|nam|gio)$/;
   tokens.forEach((t,i)=>{if(i&&/\d$/.test(tokens[i-1])&&unit.test(t))locked.add(i);});
@@ -44,4 +50,4 @@ function meaningfulWords(words){
 }
 // Higher = carries an offer, number or product, so it deserves the screen over ordinary narration.
 const emphasisScore=text=>(KEY.test(normalize(text))?3:0)+Math.min(2,String(text).split(/\s+/).length/3);
-module.exports={emphasisScore,splitLines,meaningfulWords,isFiller,COMPOUNDS};
+module.exports={emphasisScore,splitLines,meaningfulWords,isFiller,COMPOUNDS,setPairs};

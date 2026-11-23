@@ -1,6 +1,6 @@
 {
   "name": "fpt-telecom-video-automation",
-  "version": "1.6.1",
+  "version": "1.7.0",
   "private": true,
   "description": "FPT Telecom speech-synchronized video automation studio",
   "type": "commonjs",

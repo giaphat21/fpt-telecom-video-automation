@@ -1,4 +1,5 @@
 const {normalize}=require('../editing/timeline_rules');
+const {isNegative}=require('../editing/tone');
 
 'use strict';
 const BRAND_COLORS = Object.freeze({ orange:'#F37021',blue:'#0066B3',green:'#00A651',navy:'#0B1F3F',white:'#FFFFFF' });
@@ -10,7 +11,10 @@ const BRAND_STYLES = Object.freeze([
   'fpt_logo_blocks','fpt_fiber_line','fpt_signal_bars','fpt_wifi_wave','fpt_router_led','fpt_data_stream','fpt_speed_gauge','fpt_connect_nodes'
 ]);
 const HOOK_STYLES = Object.freeze(['slab_stack','logo_blocks','mega_outline','glass_card','ribbon_wave','signal_pop','ticket_banner','fiber_neon',
-  'type_terminal','stamp_seal','swing_tag','curtain_bar','glitch_cut','wave_bounce','corner_frame','spotlight_ring','arrow_rush','tri_blocks']);
+  'type_terminal','stamp_seal','swing_tag','curtain_bar','glitch_cut','wave_bounce','corner_frame','spotlight_ring','arrow_rush','tri_blocks',
+  'neon_glow','extrude_pop','split_open','light_beam']);
+// Problem set: used only, and first, on phrases about a problem (src/editing/tone.js).
+const NEGATIVE_STYLES = Object.freeze(['neg_wall_block','neg_weak_signal','neg_lag_glitch','neg_strike_cross','neg_warning_tape','neg_crack_sink','neg_wifi_off','neg_down_trend']);
 const hash = text => parseInt(require('crypto').createHash('sha256').update(String(text)).digest('hex').slice(0,8),16);
 const MOTIONS = ['pop_bounce','slide_left','slam_drop','slide_right'];
 const TOPICS=[
@@ -36,13 +40,16 @@ function applyTypographyVariety(items,{seed=null,recentStyles=[],videos=null}={}
   const chronological = items.map((h,index)=>({h,index})).sort((a,b)=>Number(a.h.start)-Number(b.h.start));
   let lastMotion = null;
   chronological.forEach(({h,index},order) => {
-    const candidates = BRAND_STYLES.filter(s=>!recent.slice(-2).includes(s));
-    const minimum = Math.min(...candidates.map(s=>used.get(s)||0));
-    const fresh = candidates.filter(s=>(used.get(s)||0)===minimum);
+    // A problem phrase draws from the problem set first; any other phrase never gets it.
+    const negative = isNegative(h.text), pool = negative ? [...NEGATIVE_STYLES,...BRAND_STYLES] : BRAND_STYLES;
+    const candidates = pool.filter(s=>!recent.slice(-2).includes(s));
+    const ranked = negative ? candidates.filter(s=>NEGATIVE_STYLES.includes(s)) : candidates, choices = ranked.length ? ranked : candidates;
+    const minimum = Math.min(...choices.map(s=>used.get(s)||0));
+    const fresh = choices.filter(s=>(used.get(s)||0)===minimum);
     const topical = topicStyles(h.text), proper = fresh.filter(s=>!misleading(s,h.text));
     let style;
     // A choice made on the timeline stays; it only yields to the rule against repeating a look within three cues.
-    if (h.styleFrom==='user' && candidates.includes(h.typo)) style = h.typo;
+    if (h.styleFrom==='user' && [...BRAND_STYLES,...NEGATIVE_STYLES].includes(h.typo) && !recent.slice(-2).includes(h.typo)) style = h.typo;
     else if ((seed==null||h.styleFrom==='plan') && !(seed!=null&&!h.styleFrom) && fresh.includes(h.typo) && !misleading(h.typo,h.text)) style = h.typo;
     else if (seed==null) style = topical.find(s=>fresh.includes(s)) || proper[index % Math.max(1,proper.length)] || fresh[index % fresh.length];
     else {
@@ -57,4 +64,4 @@ function applyTypographyVariety(items,{seed=null,recentStyles=[],videos=null}={}
   });
   return output;
 }
-module.exports={topicStyles,BRAND_COLORS,BRAND_STYLES,HOOK_STYLES,MOTIONS,applyTypographyVariety};
+module.exports={topicStyles,BRAND_COLORS,BRAND_STYLES,NEGATIVE_STYLES,HOOK_STYLES,MOTIONS,applyTypographyVariety};

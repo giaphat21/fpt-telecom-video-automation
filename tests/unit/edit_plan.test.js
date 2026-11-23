@@ -83,7 +83,7 @@ test('The browser engine is the render engine and has no Node dependency',()=>{
   const code=require('../../src/web/engine_bundle').engineBundle(),sandbox={};
   new Function('window',code)(sandbox);
   const engine=sandbox.FptEngine.typography;
-  assert.equal(Object.keys(engine.STYLES).length,24);assert.equal(Object.keys(engine.HOOKS).length,HOOK_STYLES.length);
+  assert.equal(Object.keys(engine.STYLES).length,24+8);assert.equal(Object.keys(engine.HOOKS).length,HOOK_STYLES.length);
   assert.ok(!/require\('(fs|path|child_process|@napi)/.test(code));
 });
 test('Titles, sounds, music and Sub looks edited on the timeline reach the plan',()=>{
@@ -131,4 +131,34 @@ test('Picture effects: the preview curve and the export expression agree',()=>{
   assert.equal(normalizeFx([{kind:'zoom_in',start:1,end:99},{kind:'nope',start:0,end:1},{kind:'flash',start:2,end:2}],10).length,1);
   for(const kind of Object.keys(KINDS)){const list=normalizeFx([{kind,start:1,end:2}],10),a=frameFx(list,1.02),b=frameFx(list,3);assert.deepEqual(b,{zoom:1,dx:0,dy:0,light:0,blur:0});assert.notDeepEqual(kind==='blur'||kind==='dip'?frameFx(list,1.5):a,b,kind);assert.ok(fxFilters(list).includes('1.000'),kind);}
   assert.equal(fxFilters([]),'');
+});
+
+test('Problem phrases get the problem typography and a heavier sound; solutions never do',()=>{
+  const {isNegative}=require('../../src/editing/tone'),{NEGATIVE_STYLES,applyTypographyVariety}=require('../../src/typography/brand_rules');
+  for(const s of ['Bị bức tường ngăn','Sóng yếu','Wi-Fi bị chập chờn','Giật lag liên tục','Mất kết nối','Load chậm'])assert.ok(isNegative(s),s);
+  for(const s of ['Không còn giật lag','Phủ sóng xuyên tường','Chăm sóc khách hàng','Yêu thích FPT','Hết lo mạng yếu','Tốc độ siêu nhanh'])assert.ok(!isNegative(s),s);
+  const items=['Bị bức tường ngăn','Modem Wi-Fi 6','Sóng yếu chập chờn','Giá chỉ 195K','Mạng chậm quá','Tặng Camera AI'].map((text,i)=>({text,start:i*2,end:i*2+1.8}));
+  const out=applyTypographyVariety(items,{seed:'neg'});
+  out.forEach((h,i)=>assert.equal(NEGATIVE_STYLES.includes(h.typo),isNegative(items[i].text),h.text+' '+h.typo));
+  assert.equal(new Set(out.filter((h,i)=>isNegative(items[i].text)).map(h=>h.typo)).size,3);
+  assert.ok(require('../../src/audio/sfx_director').familiesFor('Sóng yếu').includes('mech'));
+});
+test('Problem looks and premium titles stay inside the frame and keep compounds on one line',()=>{
+  const {NEGATIVE_STYLES,HOOK_STYLES}=require('../../src/typography/brand_rules'),K=require('../../src/typography/kinetic_overlay');
+  for(const typo of NEGATIVE_STYLES){
+    const draw=K.frameDrawer(K.buildCues({totalDur:4,highlights:[{text:'Wi-Fi bị mất sóng liên tục',typo,motion:'pop_bounce',start:0,dur:2.2,y:350,scale:1.4}]}));
+    for(let f=0;f<66;f+=3){const c=draw(f/30);if(!c)continue;for(const x of [0,c.width-1])assert.ok(!c.getContext('2d').getImageData(x,0,1,c.height).data.some((v,i)=>i%4===3&&v>40),typo+' frame '+f);}
+  }
+  const [cue]=K.buildCues({totalDur:4,highlights:[{text:'Bị bức tường ngăn',typo:'neg_wall_block',start:0,dur:2,y:350,scale:1.4}]});
+  assert.ok(cue.lines.some(l=>l.words.map(w=>w.word.toLowerCase()).join(' ').includes('bức tường')),'bức tường bị tách dòng');
+  for(const style of ['neon_glow','extrude_pop','split_open','light_beam'])assert.ok(HOOK_STYLES.includes(style));
+  const draw=K.frameDrawer(K.buildCues({totalDur:4,hook:{style:'light_beam',line1:'WI-FI NHÀ BẠN',line2:'CÓ ĐANG BỊ YẾU'},hookDur:3.5}));
+  for(let f=0;f<40;f+=2)assert.ok(draw(f/30),'Hook phải có hình từ khung đầu');
+});
+test('Motion-graphic B-roll: every topic has a verified clip and the spoken topic picks it',()=>{
+  const b=require('../../src/broll/broll_compositor'),cat=b.getBrollCatalog();
+  for(const id of ['stock_wifi6','stock_fptplay','mg_signal','mg_wall','mg_mesh','mg_speed','mg_lag']){const c=cat.find(x=>x.id===id);assert.ok(c&&c.autoEligible&&c.available,id);assert.equal(c.defaultLayout,'pip',id);}
+  const sub=(text,start)=>{const w=text.split(' ');return {text,start,end:start+w.length*.3,words:w.map((x,i)=>({word:x,startMs:Math.round((start+i*.3)*1000),endMs:Math.round((start+i*.3+.25)*1000)}))};};
+  const got=b.autoDetectBrollFromSubtitles([sub('vì có quá nhiều bức tường ngăn cản',4),sub('xem video thì quay vòng mãi',8),sub('lắp thêm Mesh phủ sóng mọi góc',12),sub('sóng 5G cũng không bằng',16)],3.5,30).map(s=>s.brollId);
+  assert.deepEqual(got,['mg_wall','mg_lag','mg_mesh','mg_signal']);
 });

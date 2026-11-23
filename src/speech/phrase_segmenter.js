@@ -42,4 +42,4 @@ function segment(words,{ideal=4.5,min=2,max=6,maxSeconds=2.8,cuts=[],weight=.35}
   const out=[];for(let j=n;j>0;j=from[j])out.unshift([from[j],j]);
   return out.map(([i,j])=>words.slice(i,j));
 }
-module.exports={segment,clean,joined,STARTERS,LEANING,TRAILING};
+module.exports={segment,clean,joined,PAIRS,STARTERS,LEANING,TRAILING};

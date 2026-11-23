@@ -45,12 +45,9 @@ const BUILT_IN_BROLLS = [
     id: 'stock_wifi6',
     name: 'Modem Wi-Fi 6 Cáp Quang',
     icon: '📶',
-    keywords: [
-      'wifi', 'wi-fi', 'modem', 'mesh', 'internet', 'gbps', 'mbps', '1 gbps',
-      'tốc độ', 'toc do', 'băng thông', 'bang thong', 'cáp quang', 'cap quang', 'đường truyền', 'duong truyen', 'phát sóng'
-    ],
+    keywords: ['wifi', 'wi-fi', 'wifi 6', 'wi-fi 6', 'modem', 'internet', 'phát sóng', 'phat song', 'bộ phát', 'mạng fpt', 'lắp mạng', 'lắp đặt internet'],
     file: 'broll_stock_wifi6.mp4',
-    productFile: 'broll_product_wifi6.mp4',
+    productFile: 'mg_wifi6_modem.mp4',
     thumb: 'thumb_stock_wifi6.jpg',
     defaultLayout: 'pip',
     duration: 3.5,
@@ -80,6 +77,8 @@ const BUILT_IN_BROLLS = [
       'fpt play', 'phim chiếu rạp', 'phim 4k', 'phim', 'giải trí', 'giai tri'
     ],
     file: 'broll_stock_fptplay.mp4',
+    productFile: 'mg_fptplay.mp4',
+    productLayout: 'pip',
     thumb: 'thumb_stock_fptplay.jpg',
     defaultLayout: 'cutaway',
     duration: 3.8,
@@ -98,6 +97,32 @@ const BUILT_IN_BROLLS = [
     defaultLayout: 'top_half',
     duration: 3.8,
     description: 'Chơi game trực tuyến tốc độ cao và đa nhiệm nhiều thiết bị'
+  },
+  // Motion graphics drawn for the project (scripts/assets/generate_motion_graphics.js): explain the idea, in the centre card.
+  {
+    id: 'mg_signal', name: 'Sóng di động 4G/5G', icon: '📡', file: 'mg_signal_5g.mp4', thumb: 'mg_signal_5g.jpg', defaultLayout: 'pip', duration: 4,
+    keywords: ['4g', '5g', 'sóng di động', 'song di dong', 'sóng điện thoại', 'song dien thoai', 'dữ liệu di động', 'du lieu di dong', '3g', 'data di động', 'cột sóng', 'cot song', 'trạm phát sóng'],
+    description: 'Cột sóng truyền dữ liệu tới điện thoại, 4G lên 5G'
+  },
+  {
+    id: 'mg_wall', name: 'Tường chặn sóng Wi-Fi', icon: '🧱', file: 'mg_wall_block.mp4', thumb: 'mg_wall_block.jpg', defaultLayout: 'pip', duration: 4,
+    keywords: ['bức tường', 'buc tuong', 'tường dày', 'tuong day', 'vách tường', 'ngăn cản', 'ngan can', 'cản sóng', 'chặn sóng', 'chan song', 'sóng yếu', 'song yeu', 'yếu sóng', 'mạng yếu', 'mang yeu', 'wifi yếu', 'wi-fi yếu', 'mất sóng', 'mat song', 'chập chờn', 'chap chon', 'góc chết', 'goc chet', 'rớt mạng', 'rot mang', 'đặt quá xa', 'nhà thì lại quá to', 'nhà to'],
+    description: 'Sóng Wi-Fi yếu dần qua từng bức tường'
+  },
+  {
+    id: 'mg_mesh', name: 'Wi-Fi Mesh phủ sóng cả nhà', icon: '🏠', file: 'mg_mesh_cover.mp4', thumb: 'mg_mesh_cover.jpg', defaultLayout: 'pip', duration: 4,
+    keywords: ['mesh', 'phủ sóng', 'phu song', 'xuyên tường', 'xuyen tuong', 'mọi góc', 'moi goc', 'nhiều tầng', 'nhieu tang', 'mở rộng sóng', 'mo rong song', 'kích sóng', 'kich song', 'bộ kích', 'cả nhà', 'ca nha', 'mọi phòng', 'moi phong'],
+    description: 'Các điểm Mesh nối nhau, phòng nào cũng có sóng'
+  },
+  {
+    id: 'mg_speed', name: 'Tốc độ cao', icon: '⚡', file: 'mg_speed_gauge.mp4', thumb: 'mg_speed_gauge.jpg', defaultLayout: 'pip', duration: 4,
+    keywords: ['tốc độ', 'toc do', 'băng thông', 'bang thong', 'gbps', 'mbps', '1 gbps', 'cáp quang', 'cap quang', 'đường truyền', 'duong truyen', 'siêu nhanh', 'sieu nhanh', 'tải nhanh', 'tai nhanh', 'mượt mà', 'muot ma'],
+    description: 'Đồng hồ tốc độ vượt lên, cáp quang chạy nhanh'
+  },
+  {
+    id: 'mg_lag', name: 'Mạng giật lag', icon: '⏳', file: 'mg_lag_buffer.mp4', thumb: 'mg_lag_buffer.jpg', defaultLayout: 'pip', duration: 4,
+    keywords: ['giật lag', 'giat lag', 'bị giật', 'bi giat', 'lag', 'đứng hình', 'dung hinh', 'quay vòng', 'quay vong', 'tải chậm', 'tai cham', 'load chậm', 'mạng chậm', 'mang cham', 'chậm xuống', 'cham xuong', 'độ trễ cao', 'ping cao', 'treo máy'],
+    description: 'Video đứng hình, vòng tải quay, độ trễ nhảy'
   }
 ];
 
@@ -106,6 +131,7 @@ const BUILT_IN_BROLLS = [
 /**
  * Lấy danh sách tất cả B-Roll có sẵn (built-in + user-upload)
  */
+const GENERATED = ['brand_product_render', 'brand_motion_graphic'];
 function getBrollCatalog() {
   const manifestPath = path.join(BROLL_LIBRARY_DIR, 'sources.json');
   const manifest = fs.existsSync(manifestPath) ? JSON.parse(fs.readFileSync(manifestPath, 'utf8')) : {};
@@ -126,14 +152,15 @@ function getBrollCatalog() {
     const stockReady = () => fs.existsSync(fPath) && manifest[b.file]?.status === 'metadata_verified';
     if (b.productFile && path.dirname(fPath) !== BROLL_USER_DIR && !stockReady()) {
       const product = path.join(BROLL_LIBRARY_DIR, b.productFile);
-      if (fs.existsSync(product) && manifest[b.productFile]?.status === 'brand_product_render') { fPath = product; file = b.productFile; }
+      if (fs.existsSync(product) && GENERATED.includes(manifest[b.productFile]?.status)) { fPath = product; file = b.productFile; }
     }
     const available = fs.existsSync(fPath) && fs.statSync(fPath).isFile();
     const source = manifest[file];
     const userProvided = path.dirname(fPath) === BROLL_USER_DIR;
-    const autoEligible = available && (userProvided || (['metadata_verified', 'brand_product_render'].includes(source?.status) && source.fileSize === fs.statSync(fPath).size));
+    const autoEligible = available && (userProvided || (['metadata_verified', ...GENERATED].includes(source?.status) && source.fileSize === fs.statSync(fPath).size));
     return {
       ...b,
+      defaultLayout: file === b.productFile && b.productLayout ? b.productLayout : b.defaultLayout,
       description: userProvided ? 'Clip do bạn cung cấp cho chủ đề này.' : (source?.title || 'Nguồn stock cũ, chưa xác nhận nội dung/giấy phép.'),
       autoEligible, sourcePage: source?.sourcePage || null,
       sourceWarning: autoEligible ? null : (source?.reason || 'Cần clip đúng chủ đề hoặc nguồn được xác nhận.'),

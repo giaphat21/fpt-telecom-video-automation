@@ -111,13 +111,15 @@ Theo xác nhận mới nhất của người dùng, quy tắc này ưu tiên hơ
 - Video chuẩn: `assets/references/standard-video/standard.mp4`, SHA-256 `b75a16e356f8d8f75c907c4e2ff84ff93c28edba695c3d6cb028329a87e2083b`; số liệu: `plan.json` cùng thư mục và `config/approved_reference.json` → `standard`.
 - **Giữ nguyên cách làm:** nhịp, chuyển động, cách đặt và trộn SFX, bố cục. Hook nhiều tầng y320 có chữ ngay đầu, mặc định 3,5 giây (người dùng kéo được cả hai đầu trên timeline, tới B-roll đầu tiên); Highlight y350 đúng từ; bóng đá ở nửa trên; minh họa sản phẩm ở chính giữa, trên đầu VJ; Sub y1580; Outro trúng lời CTA; tối dần sau lời cuối.
 - **Chỉ đổi theo từng video:** nội dung Sub, Highlight, Hook, Outro và B-roll theo lời nói.
-- ✔ **Luân phiên triệt để:** Hook và Outro (18 kiểu) chọn kiểu lâu chưa dùng nhất; 24 kiểu Highlight xoay hết bộ trước khi lặp, có tính 6 video gần nhất; chuyển động không lặp liền nhau; SFX tránh 2 video gần nhất. Kiểu do trình duyệt gửi kèm không phải lựa chọn: chỉ `styleFrom: "user"` mới được giữ.
+- ✔ **Luân phiên triệt để:** Hook và Outro (22 kiểu) chọn kiểu lâu chưa dùng nhất; 24 kiểu Highlight xoay hết bộ trước khi lặp, có tính 6 video gần nhất; chuyển động không lặp liền nhau; SFX tránh 2 video gần nhất. Kiểu do trình duyệt gửi kèm không phải lựa chọn: chỉ `styleFrom: "user"` mới được giữ.
 - ✔ SFX chỉ lấy từ `assets/sfx-user` (8.4). Chỉ dùng video chuẩn để đối chiếu, không cắt lấy cảnh. Lượt dựng thử (xuất vào `var/`) không chiếm lượt luân phiên của video thật.
 
 ## 8.1. Typography thương hiệu FPT Telecom
 - ✔ Chỉ dùng cam `#F37021`, xanh dương `#0066B3`, xanh lá `#00A651`, navy `#0B1F3F`, trắng và sắc độ của chúng. Không vàng neon, tím, cyan neon, đỏ.
 - ✔ Sub có 14 kiểu trong `src/typography/subtitle_style.js`, người dùng chọn cho cả video hoặc từng câu. Mặc định là kiểu của video chuẩn (8.0): chữ trắng, từ khóa vàng `#FFFF00` to hơn 20%, viền cam `#FC6601`; đây là ngoại lệ duy nhất của bảng màu. 13 kiểu còn lại chỉ dùng màu FPT. Hook, Highlight, Outro không dùng vàng.
 - ✔ Bộ 24 kiểu trong `src/typography/kinetic_overlay.js`: 16 kiểu nền và 8 kiểu chủ đề mạng (`fpt_logo_blocks`, `fpt_fiber_line`, `fpt_signal_bars`, `fpt_wifi_wave`, `fpt_router_led`, `fpt_data_stream`, `fpt_speed_gauge`, `fpt_connect_nodes`).
+- ✔ Thêm 8 kiểu cho câu nói về vấn đề ("bị bức tường ngăn", "sóng yếu", "giật lag"): vấp tường, sóng yếu, giật lag, gạch bỏ, băng cảnh báo, nứt vỡ, mất Wi-Fi, tụt dốc (`NEGATIVE_STYLES`). Nhận câu tiêu cực bằng `src/editing/tone.js`; câu báo đã hết vấn đề ("không còn giật lag", "phủ sóng xuyên tường") không tính. Câu tiêu cực dùng bộ này trước, câu khác không bao giờ dùng. Màu: sắc độ navy, chữ trắng, cảnh báo cam. SFX nặng hơn (cơ khí, va đập).
+- ✔ Chia dòng không tách cụm từ trong `config/lexicon.json` ("bức tường", "tín hiệu"…); trình duyệt và bản xuất chia giống nhau.
 - ✔ Luân phiên cả kiểu Highlight giữa các video; xuất lại cùng dự án giữ nguyên.
 - ✔ Không lặp kiểu trong 2 Highlight gần nhất; ưu tiên kiểu chưa dùng; kiểu theo chủ đề không đặt lên nội dung khác.
 - ✔ Chữ chỉ gồm lời nói hoặc nội dung người dùng nhập. Không tự thêm nhãn, giá, thông số. Dòng trống không vẽ.
@@ -125,13 +127,15 @@ Theo xác nhận mới nhất của người dùng, quy tắc này ưu tiên hơ
 
 ## 8.2. B-roll sinh động, đặt chính giữa
 - ✔ Khung minh họa sản phẩm (Camera AI, modem…) đặt **chính giữa** theo chiều ngang, dưới Highlight và trên Sub; tự dời khi sẽ che mặt VJ, đo lại ở từng cảnh trong lúc B-roll hiện. Không đặt góc phải.
+- ✔ Bộ B-roll đồ họa động vẽ bằng code (`scripts/assets/generate_motion_graphics.js`, 10 giây, 1280×720, chỉ màu FPT): modem Wi-Fi 6, FPT Play trên TV (logo FPT Play người dùng gửi), sóng 4G/5G, tường chặn sóng, Mesh phủ sóng cả nhà, tốc độ cao, giật lag. Chỉ có tên sản phẩm, không vẽ giá, tốc độ hay số liệu. Lời nói nhắc chủ đề nào thì tự chèn clip đó ở khung chính giữa; người dùng gán clip thật thì clip thật được ưu tiên. FPT Play dùng khung giữa khi phát đồ họa, toàn màn hình khi người dùng gán clip.
 - ✔ B-roll giữ khi lời nói còn nhắc chủ đề (câu gọi tên và câu nói tiếp trong 2,4 giây); nhắc lại thì hiện lại, không treo suốt video dài.
 - Mọi B-roll có chuyển động vào, đẩy máy nhẹ trong cảnh và chuyển động ra; cảnh chia đôi kết thúc bằng cắt thẳng.
 - ✔ Bắt đầu/kết thúc theo đoạn lời nói liên quan, không chồng nhau, không lấn Hook/Outro.
 - Chỉ dùng nguồn đúng chủ đề: clip người dùng gán → stock đã xác minh → clip dựng từ ảnh sản phẩm FPT. Thiếu nguồn thì cảnh báo, không thay bằng cảnh sai.
 
 ## 8.3. Hook mở đầu sáng tạo
-- ✔ 18 phong cách Hook/Outro trong `HOOKS` của `src/typography/kinetic_core.js` (dải nghiêng, khối logo, chữ lớn viền, thẻ kính, ruy băng, tín hiệu, vé, sợi quang, gõ chữ, đóng dấu, thẻ đung đưa, mở rèm, nhiễu sóng, nhảy sóng, khung góc, xoay vào, lao tới, ba khối nối mạng), mỗi kiểu có bố cục, chuyển động và công thức SFX riêng.
+- ✔ 22 phong cách Hook/Outro trong `HOOKS` của `src/typography/kinetic_core.js` (dải nghiêng, khối logo, chữ lớn viền, thẻ kính, ruy băng, tín hiệu, vé, sợi quang, gõ chữ, đóng dấu, thẻ đung đưa, mở rèm, nhiễu sóng, nhảy sóng, khung góc, xoay vào, lao tới, ba khối nối mạng, neon phát sáng, chữ khối 3D, mở đôi, tia sáng quét), mỗi kiểu có bố cục, chuyển động và công thức SFX riêng.
+- ✔ Hook/Outro cao cấp hơn Highlight: lóe sáng khi vào, quầng tối nhẹ sau chữ cho dễ đọc, chữ viền có khối nổi navy, tia sáng quét qua từng dòng, hạt màu FPT bung ra khi mỗi dòng đáp, sao lấp lánh khi đã đứng yên.
 - ✔ Luân phiên giữa các video: luôn chọn kiểu lâu chưa dùng nhất (`src/editing/style_history.js`). Xuất lại cùng dự án giữ nguyên kiểu; có thể chỉ định `hookStyle`.
 - ✔ Hook có chữ ngay khung hình đầu, y320, scale 1.3. Outro dùng phong cách khác Hook.
 - ✔ Mỗi dòng Hook vào hình đều có âm thanh; dòng nào được VJ nói tới thì nhấn lại.
