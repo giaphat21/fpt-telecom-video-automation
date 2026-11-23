@@ -1,0 +1,143 @@
+{
+ "installed": "2026-11-22",
+ "sources": [
+  {
+   "repo": "https://github.com/remotion-dev/skills",
+   "commit": "6f55706d1069e512430582ad86e4e57dc07afe1b",
+   "license": "none in repository (Remotion itself has its own licence)",
+   "skills": [
+    "remotion-best-practices"
+   ],
+   "skipped": [
+    "remotion-captions",
+    "remotion-create",
+    "remotion-docs",
+    "remotion-interactivity",
+    "remotion-license",
+    "remotion-maps",
+    "remotion-markup",
+    "remotion-multimedia",
+    "remotion-render",
+    "remotion-saas",
+    "remotion-studio",
+    "remotion-upgrade"
+   ]
+  },
+  {
+   "repo": "https://github.com/iart-ai/kinetic-typography-skills",
+   "commit": "2b79c81230c6647a344844f9ed53b6fa07f3f1f9",
+   "license": "MIT",
+   "skills": [
+    "kinetic-typography"
+   ],
+   "skipped": []
+  },
+  {
+   "repo": "https://github.com/iart-ai/tiktok-video-skills",
+   "commit": "88e7152fc2710fa16852d013959cfd988a8adc8b",
+   "license": "MIT",
+   "skills": [
+    "caption-animation",
+    "countdown-video",
+    "lower-thirds",
+    "short-form-video"
+   ],
+   "skipped": []
+  },
+  {
+   "repo": "https://github.com/iart-ai/motion-design-skills",
+   "commit": "b85e50c4cef5ff17aa2187a10d49d2dae9226c74",
+   "license": "MIT",
+   "skills": [
+    "after-effects",
+    "animation-principles",
+    "beat-sync-editing",
+    "color-motion",
+    "logo-animation",
+    "motion-art-direction",
+    "motion-background",
+    "shot-composition"
+   ],
+   "skipped": [
+    "remotion-video"
+   ]
+  },
+  {
+   "repo": "https://github.com/iart-ai/ad-video-skills",
+   "commit": "cc8071678f4225ee7bdccc4506f2468722bb3515",
+   "license": "MIT",
+   "skills": [
+    "ad-creative-video",
+    "launch-video",
+    "testimonial-video"
+   ],
+   "skipped": []
+  },
+  {
+   "repo": "https://github.com/iart-ai/awesome-motion-skills",
+   "commit": "6ed70cad23df49c90b317f0351ec01f389642daf",
+   "license": "CC0",
+   "skills": [],
+   "skipped": [
+    "link list; contains no SKILL.md"
+   ]
+  },
+  {
+   "repo": "https://github.com/manuvegax/motionsmith",
+   "commit": "831b461b2cd0c083a0c421d4a2b98f713857114d",
+   "license": "MIT (fonts OFL-1.1)",
+   "skills": [
+    "motionsmith"
+   ],
+   "skipped": [
+    "companions/motion-architect",
+    "examples",
+    "tests"
+   ]
+  },
+  {
+   "repo": "https://github.com/vidmoat/skills",
+   "commit": "ec2c2a944a2d4524d4b3affc6af315511946d6b5",
+   "license": "Apache-2.0 code / CC-BY-4.0 text",
+   "skills": [
+    "audio-ducking",
+    "caption-styling"
+   ],
+   "skipped": [
+    "all 58 skills/vidmoat/*"
+   ]
+  },
+  {
+   "repo": "https://github.com/iamaanahmad/agents-video-editing-skills",
+   "commit": "eb105c74fde767157c206aaf8fa5504d25e01f38",
+   "license": "MIT",
+   "skills": [
+    "audio-mixing",
+    "captions-subtitles",
+    "ffmpeg-essentials",
+    "motion-design-craft",
+    "platform-export",
+    "vertical-shorts",
+    "video-planning",
+    "video-qa",
+    "voiceover-tts"
+   ],
+   "skipped": [
+    "moviepy-python-video",
+    "remotion-programmatic-video",
+    "screen-recording-demos",
+    "thumbnails",
+    "video-editing-router"
+   ]
+  },
+  {
+   "repo": "https://github.com/ZiadAbdelkarim/beat-synced-edit",
+   "commit": "48c09c92ee69c2d89b7e44b146bbd7b9c26fff08",
+   "license": "MIT",
+   "skills": [
+    "beat-sync-edit"
+   ],
+   "skipped": []
+  }
+ ]
+}

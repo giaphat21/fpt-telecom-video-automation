@@ -2,20 +2,53 @@
 const PATHS=require('../config/paths');
 const http=require('http'),fs=require('fs'),path=require('path'),crypto=require('crypto');
 const {execFile}=require('child_process');
-const {createReferenceHighlights,speechBoundaries}=require('./core/reference_editor');
-const {resolveMediaPath}=require('./core/subtitle_generator');
-const {FPT_KNOWLEDGE_BASE,ensureRealBrollClips}=require('./core/resource_catalog');
-const {getBrollWarnings,assignBrollUpload,getBrollApiResponse,autoDetectReferenceBrolls,BROLL_USER_DIR}=require('./core/broll_compositor');
-const {matchHighlightRequest,createHighlights,PROFILES}=require('./core/highlight_planner');
-const {VIDEO_EXTENSIONS,AUDIO_EXTENSIONS}=require('./core/media_profile');
+const {createReferenceHighlights,speechBoundaries}=require('./editing/reference_editor');
+const {resolveMediaPath}=require('./speech/subtitle_generator');
+const {FPT_KNOWLEDGE_BASE,ensureRealBrollClips}=require('./broll/resource_catalog');
+const {getBrollWarnings,assignBrollUpload,getBrollApiResponse,autoDetectReferenceBrolls,BROLL_USER_DIR}=require('./broll/broll_compositor');
+const {matchHighlightRequest,createHighlights,PROFILES}=require('./editing/highlight_planner');
+const {catalog:sfxCatalog}=require('./audio/sfx_director');
+const {VIDEO_EXTENSIONS,AUDIO_EXTENSIONS,probeMediaAsync}=require('./media/media_profile');
 const {TaskQueue}=require('./web/task_queue');
+const {engineBundle}=require('./web/engine_bundle');
+const {planForClient}=require('./pipeline/edit_plan');
+const {normalizeClipWindows}=require('./pipeline/render_inputs');
+const {ROOT:BASE_DIR}=require('./pipeline/base_cache');
+const {BRAND_STYLES,HOOK_STYLES,MOTIONS}=require('./typography/brand_rules');
 const {WEB,httpError,inside,confinedPath,sendJson,createGuard,readJson,saveUpload,serveStatic}=require('./web/http_utils');
+const VERSION=require('../package.json').version;
 const PORT=Number(process.env.FPT_STUDIO_PORT)||3457, HOST=process.env.FPT_STUDIO_HOST||'127.0.0.1';
 if(WEB && !['127.0.0.1','::1'].includes(HOST))throw Error('Web mode phải nghe loopback phía sau HTTPS proxy.');
 const ASSETS_DIR=PATHS.assets,VIDEO_DIR=PATHS.videos,VOICE_DIR=PATHS.voices,OUTPUT_DIR=PATHS.output;
 for(const dir of [ASSETS_DIR,VIDEO_DIR,VOICE_DIR,OUTPUT_DIR,PATHS.logs])fs.mkdirSync(dir,{recursive:true});
 ensureRealBrollClips();
-const guard=createGuard(),queue=new TaskQueue(),jobs=new Map();
+const diskVersion=()=>{try{return JSON.parse(fs.readFileSync(path.join(PATHS.root,'package.json'),'utf8')).version;}catch(_){return VERSION;}};
+// After an update the code on disk is newer than the one in memory: the launcher starts the new server on the same port.
+function restartSelf(){
+  setTimeout(()=>{
+    require('child_process').spawn(process.execPath,[path.join(PATHS.root,'scripts/launch_studio.js'),'--no-browser','--replace'],{cwd:PATHS.root,detached:true,windowsHide:true,stdio:'ignore'}).unref();
+    queue.close();server.closeAllConnections?.();server.close(()=>process.exit(0));setTimeout(()=>process.exit(0),1500).unref();
+  },200);
+}
+// Fingerprint of a media file: size plus its first and last megabyte. Enough to recognise a clip that is already here.
+const prints=new Map();
+function fingerprint(file){
+  const s=fs.statSync(file),key=file+'|'+s.size+'|'+s.mtimeMs;if(prints.has(key))return prints.get(key);
+  const fd=fs.openSync(file,'r'),part=Math.min(1<<20,s.size),head=Buffer.alloc(part),tail=Buffer.alloc(part);
+  try{fs.readSync(fd,head,0,part,0);fs.readSync(fd,tail,0,part,s.size-part);}finally{fs.closeSync(fd);}
+  const value=s.size+'-'+crypto.createHash('sha256').update(head).update(tail).digest('hex').slice(0,32);prints.set(key,value);return value;
+}
+const guard=createGuard(),queue=new TaskQueue(),jobs=new Map(),shared=new Map();
+// The same analysis requested twice (prewarm, then the button) runs once.
+function once(key,start){
+  if(shared.has(key))return shared.get(key);
+  const work=start().finally(()=>shared.delete(key));shared.set(key,work);return work;
+}
+const voiceSpeedOf=payload=>Math.max(.5,Math.min(2,Number(payload.voiceSpeed)||1.25));
+function autosub(payload,media){
+  const task={...media,videoCount:media.videoFiles.length||1,voiceSpeed:voiceSpeedOf(payload),prompt:payload.prompt||'',originalScript:payload.originalScript||''};
+  return once('autosub:'+JSON.stringify(task),()=>queue.enqueue('autosub',task));
+}
 function jsonFile(file,fallback){return fs.existsSync(file)?JSON.parse(fs.readFileSync(file,'utf8')):fallback;}
 function selectedMedia(payload){
   const list=(plural,singular,alias)=>Array.isArray(payload[plural])&&payload[plural].length?payload[plural]:
@@ -41,6 +74,7 @@ function selectedMedia(payload){
   }
   return {videoFiles,voiceFiles};
 }
+const cutsOf=payload=>(Array.isArray(payload.clipWindows)?payload.clipWindows:[]).map(w=>Number(w.timelineStart)).filter(t=>t>0);
 function validSubtitles(payload){
   if(payload.subtitles!==undefined && !Array.isArray(payload.subtitles))throw httpError(400,'Sub text không hợp lệ.');
 }
@@ -57,19 +91,24 @@ const server=http.createServer(async(req,res)=>{
     if(!guard(req,res))return;
     if(['GET','HEAD'].includes(req.method)){
       if(route==='/')return serveStatic(req,res,path.join(PATHS.root,'public/index.html'));
+      if(route==='/studio/engine.js'){res.writeHead(200,{'Content-Type':'text/javascript; charset=utf-8','Cache-Control':'private, no-cache'});return res.end(engineBundle());}
+      if(route.startsWith('/studio/'))return serveStatic(req,res,confinedPath(path.join(PATHS.root,'public/studio'),decodeURIComponent(route.slice(8))));
+      if(/^\/preview\/[0-9a-f]{24}\/proxy\.mp4$/.test(route))return serveStatic(req,res,confinedPath(BASE_DIR,route.slice(9)));
       if(route.startsWith('/output/'))return serveStatic(req,res,confinedPath(OUTPUT_DIR,decodeURIComponent(route.slice(8))));
       if(route.startsWith('/assets/'))return serveStatic(req,res,confinedPath(ASSETS_DIR,decodeURIComponent(route.slice(8))));
     }
     if(req.method==='GET'){
-      if(route==='/api/config')return sendJson(res,200,{webMode:WEB,output:{width:1080,height:1920,fps:30},maxUploadMB:Number(process.env.FPT_MAX_UPLOAD_MB||2048)});
+      if(route==='/api/config')return sendJson(res,200,{webMode:WEB,version:VERSION,busy:queue.busy,output:{width:1080,height:1920,fps:30},maxUploadMB:Number(process.env.FPT_MAX_UPLOAD_MB||2048)});
+      if(route==='/api/version')return sendJson(res,200,{running:VERSION,installed:diskVersion(),busy:queue.busy,canRestart:!WEB&&Boolean(process.env.FPT_LAUNCHED)});
+      if(route==='/api/styles')return sendJson(res,200,{highlight:BRAND_STYLES,hook:HOOK_STYLES,motion:MOTIONS});
       if(route==='/api/fpt-hub')return sendJson(res,200,{ok:true,hub:FPT_KNOWLEDGE_BASE});
       if(['/api/tech-sfx','/api/sfx-catalog'].includes(route))
-        return sendJson(res,200,{ok:true,...jsonFile(path.join(ASSETS_DIR,'sfx/sfx_manifest.json'),{count:0,sfx:[]})});
+        return sendJson(res,200,{ok:true,...sfxCatalog()});
       if(['/api/bgm-list','/api/bgm-library'].includes(route)){
         const directory=path.join(ASSETS_DIR,'custom-music');
         const custom=fs.existsSync(directory)?fs.readdirSync(directory).filter(f=>AUDIO_EXTENSIONS.test(f)).map(f=>({
           id:'custom_'+f,name:f,type:'custom',file:f,url:'/assets/custom-music/'+encodeURIComponent(f)})):[];
-        const builtIn=['upbeat','bright','fresh','synth','chill'].map(id=>({id,name:id,type:'preset',file:'bgm_fpt_'+id+'.mp3',url:'/assets/bgm_fpt_'+id+'.mp3'}));
+        const builtIn=['upbeat','bright','fresh','synth','chill'].map(id=>({id,name:id,type:'preset',file:'music-presets/bgm_fpt_'+id+'.mp3',url:'/assets/music-presets/bgm_fpt_'+id+'.mp3'}));
         return sendJson(res,200,{ok:true,builtIn,custom});
       }
       if(route==='/api/brolls')return sendJson(res,200,{ok:true,...jsonFile(path.join(ASSETS_DIR,'broll-images/broll_manifest.json'),{count:0,brolls:[]})});
@@ -93,7 +132,7 @@ const server=http.createServer(async(req,res)=>{
         const dir=isBroll?BROLL_USER_DIR:kind==='voice'?VOICE_DIR:kind==='bgm'?path.join(ASSETS_DIR,'custom-music'):VIDEO_DIR;
         const isVideo=kind==='video'||isBroll;
         const uploaded=await saveUpload(req,dir,url.searchParams.get('name')||'',isVideo?VIDEO_EXTENSIONS:AUDIO_EXTENSIONS,
-          file=>queue.enqueue('probe',{file,kind:isVideo?'video':'audio'}));
+          file=>probeMediaAsync(file,isVideo?'video':'audio'));
         if(isBroll&&topic)assignBrollUpload(topic,uploaded.fileName);
         return sendJson(res,200,{ok:true,...uploaded,kind,url:'/assets/'+path.relative(ASSETS_DIR,dir).replace(/\\/g,'/')+'/'+encodeURIComponent(uploaded.fileName)});
       }
@@ -102,14 +141,38 @@ const server=http.createServer(async(req,res)=>{
         return sendJson(res,200,{ok:true,crawled:results.filter(r=>r.ok!==false).length,results,catalog:getBrollApiResponse()});
       }
       if(route==='/api/crawl-fpt')return sendJson(res,200,{ok:true,hub:await queue.enqueue('crawl-fpt',{})});
+      if(route==='/api/upload-known'){
+        const ask=await readJson(req),list=Array.isArray(ask.prints)?ask.prints.slice(0,100).map(String):[],known={};
+        if(list.length)for(const f of fs.readdirSync(VIDEO_DIR).filter(f=>VIDEO_EXTENSIONS.test(f))){const full=path.join(VIDEO_DIR,f),size=fs.statSync(full).size;if(list.some(p=>p.startsWith(size+'-'))){const p=fingerprint(full);if(list.includes(p))known[p]=f;}}
+        return sendJson(res,200,{ok:true,known});
+      }
+      if(route==='/api/restart'){
+        if(WEB||!process.env.FPT_LAUNCHED)throw httpError(403,'Hãy mở lại Studio bằng start_studio.cmd.');
+        if(queue.busy)throw httpError(409,'Studio đang xử lý video. Đợi xong rồi cập nhật.');
+        sendJson(res,200,{ok:true});restartSelf();return;
+      }
       const payload=await readJson(req);
       validSubtitles(payload);
       if(route==='/api/autosub'){
         const media=selectedMedia(payload);
         if(!media.videoFiles.length&&!media.voiceFiles.length)throw httpError(400,'Hãy chọn video hoặc voice để tạo Sub text.');
-        const result=await queue.enqueue('autosub',{...media,videoCount:media.videoFiles.length||1,
-          voiceSpeed:Math.max(.5,Math.min(2,Number(payload.voiceSpeed)||1.25)),prompt:payload.prompt||'',originalScript:payload.originalScript||''});
-        return sendJson(res,200,addBrolls(result,payload));
+        return sendJson(res,200,addBrolls({...await autosub(payload,media)},payload));
+      }
+      if(route==='/api/prewarm'){
+        // Starts listening as soon as the clips are chosen, so the Sub text button answers at once.
+        const media=selectedMedia(payload);
+        if(media.videoFiles.length&&!queue.busy)autosub(payload,media).catch(()=>{});
+        return sendJson(res,200,{ok:true});
+      }
+      if(route==='/api/plan'||route==='/api/prepare'){
+        const media=selectedMedia(payload);
+        if(!media.videoFiles.length||!Array.isArray(payload.clipWindows)||!payload.clipWindows.length)throw httpError(400,'Cần video và khoảng cắt.');
+        const windows=normalizeClipWindows(payload.clipWindows,media.videoFiles,voiceSpeedOf(payload)),job={...payload,...media};
+        if(route==='/api/plan')return sendJson(res,200,{ok:true,plan:planForClient(job,windows)});
+        const plan=planForClient(job,windows);
+        const task={windows,voiceSpeed:voiceSpeedOf(payload),fx:payload.fx||{},brolls:plan.brolls,projectName:payload.projectName,bgm:{disableBgm:payload.disableBgm,bgmMode:payload.bgmMode,customBgm:payload.customBgm,bgmFromStart:payload.bgmFromStart}};
+        const preview=await once('prepare:'+JSON.stringify(task),()=>queue.enqueue('prepare',task));
+        return sendJson(res,200,{ok:true,preview});
       }
       if(route==='/api/detect-brolls'){
         const subs=payload.subtitles||[],total=Number(payload.totalDuration)||Math.max(0,...subs.map(s=>Number(s.end)||0));
@@ -126,13 +189,13 @@ const server=http.createServer(async(req,res)=>{
       }
       if(route==='/api/scan-keywords'){
         const subs=payload.subtitles||[],total=Number(payload.totalDuration)||Math.max(0,...subs.map(s=>Number(s.end)||0));
-        const keywords=createReferenceHighlights(subs,total);return sendJson(res,200,{ok:true,count:keywords.length,keywords});
+        const keywords=createReferenceHighlights(subs,total,{cuts:cutsOf(payload)});return sendJson(res,200,{ok:true,count:keywords.length,keywords});
       }
       if(['/api/autohighlight','/api/generate-highlights'].includes(route)){
         const subs=payload.subtitles||[],total=Number(payload.totalDuration)||(subs.length?Number(subs.at(-1).end||24)+2:24);
         const phrases=payload.customPhrases||payload.phrases||payload.textList||payload.text;
         const hasPhrases=phrases&&(Array.isArray(phrases)?phrases.length:String(phrases).trim().length);
-        const result=hasPhrases?matchHighlightRequest(phrases,subs,total):{highlights:createReferenceHighlights(subs,total),unmatched:[]};
+        const result=hasPhrases?matchHighlightRequest(phrases,subs,total):{highlights:createReferenceHighlights(subs,total,{cuts:cutsOf(payload)}),unmatched:[]};
         if(result.unmatched.length)return sendJson(res,422,{ok:false,requestedCount:result.requestedCount,unmatched:result.unmatched,
           error:'Chưa tạo đủ các cụm. Không thay danh sách hiện tại. Các dòng chưa khớp:\n'+result.unmatched.map(p=>p.line+'. '+p.text).join('\n')});
         return sendJson(res,200,{ok:true,count:result.highlights.length,requestedCount:result.requestedCount??result.highlights.length,
@@ -177,6 +240,10 @@ const server=http.createServer(async(req,res)=>{
   }catch(error){sendJson(res,error.status||500,{ok:false,error:error.message});}
 });
 server.requestTimeout=30*60*1000;server.headersTimeout=60000;server.keepAliveTimeout=5000;
-server.listen(PORT,HOST,()=>console.log('FPT Video Studio: http://localhost:'+PORT+' ('+(WEB?'web':'local')+')'));
+server.listen(PORT,HOST,()=>{
+  console.log('FPT Video Studio: http://localhost:'+PORT+' ('+(WEB?'web':'local')+')');
+  // Fonts and sound measurements are loaded before the first edit asks for them.
+  setTimeout(()=>{try{sfxCatalog();require('./typography/kinetic_overlay').buildCues({totalDur:1,highlights:[{text:'FPT',typo:'fpt_orange_block',start:0,dur:1,y:350,scale:1.4}]});}catch(error){console.warn(error.message);}},300).unref();
+});
 function shutdown(){queue.close();server.close(()=>process.exit(0));setTimeout(()=>process.exit(0),5000).unref();}
 process.on('SIGTERM',shutdown);process.on('SIGINT',shutdown);

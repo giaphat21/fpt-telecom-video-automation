@@ -27,7 +27,7 @@ function createGuard() {
   const [algorithm,salt,hash]=String(process.env.FPT_ADMIN_PASSWORD_HASH||'').split(':');
   const publicUrl=process.env.FPT_PUBLIC_URL;
   if(WEB && (algorithm!=='scrypt' || !/^[a-f0-9]{32}$/.test(salt||'') || !/^[a-f0-9]{64}$/.test(hash||'')))
-    throw Error('Web mode cần FPT_ADMIN_PASSWORD_HASH hợp lệ. Chạy scripts/configure_web.ps1.');
+    throw Error('Web mode cần FPT_ADMIN_PASSWORD_HASH hợp lệ. Chạy scripts/server/configure_web.ps1.');
   if(WEB && (!publicUrl || new URL(publicUrl).protocol!=='https:'))throw Error('FPT_PUBLIC_URL phải là địa chỉ HTTPS.');
   let acceptedDigest=null;
   const failures=new Map();
@@ -80,11 +80,11 @@ async function saveUpload(req,directory,name,allowed,verify) {
   const file=confinedPath(directory,filename),temporary=file+'.upload';
   fs.mkdirSync(directory,{recursive:true});
   let count=0;
-  const limiter=new Transform({transform(chunk,encoding,callback){
+  const limiter=new Transform({highWaterMark:1<<20,transform(chunk,encoding,callback){
     count+=chunk.length;callback(count>MAX_UPLOAD?httpError(413,'Tệp vượt giới hạn tải lên.'):null,chunk);
   }});
   try{
-    await pipeline(req,limiter,fs.createWriteStream(temporary,{flags:'wx'}));
+    await pipeline(req,limiter,fs.createWriteStream(temporary,{flags:'wx',highWaterMark:1<<21}));
     if(!count)throw httpError(400,'Tệp tải lên rỗng.');
     const metadata=await verify(temporary);
     fs.renameSync(temporary,file);

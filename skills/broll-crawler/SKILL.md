@@ -21,12 +21,12 @@ Skill tự động cào, tải và xử lý video B-Roll độ phân giải cao 
 
 ### Cào toàn bộ chủ đề:
 ```bash
-node src/core/broll_crawler.js
+node src/broll/broll_crawler.js
 ```
 
 ### Cào một chủ đề cụ thể:
 ```javascript
-const { crawlBrollTopic } = require('./src/core/crawler_broll');
+const { crawlBrollTopic } = require('./src/broll/broll_crawler');
 await crawlBrollTopic('football'); // 'technology' | 'security' | 'television' | 'gaming'
 ```
 

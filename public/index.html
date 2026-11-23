@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FPT Video Studio</title>
+  <link rel="icon" type="image/png" href="/assets/brand/fpt-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
@@ -18,8 +19,7 @@ button{cursor:pointer}a{color:inherit}button:disabled{opacity:.45;cursor:not-all
 h1,h2,h3,p{margin:0}h1{font-size:17px;font-weight:650;letter-spacing:-.4px}h2{font-size:15px;font-weight:600}h3,.section-label{font-size:13px;font-weight:600}
 .app-header{height:76px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:20px;padding:0 max(28px,calc((100vw - 1224px)/2));background:#141519;position:relative;z-index:20}
 .brand{display:flex;align-items:center;gap:16px;text-decoration:none}.brand-info{border-left:1px solid #383b43;padding-left:16px}.brand-info>span{color:var(--text-muted);font-size:10px;letter-spacing:.6px}
-.fpt-badge-logo{display:flex;gap:3px;transform:skewX(-10deg)}.fpt-badge-logo span{display:grid;place-items:center;width:23px;height:28px;border-radius:5px;font-size:19px;font-weight:800;color:white}
-.fpt-badge-logo span:nth-child(1){background:var(--fpt-blue)}.fpt-badge-logo span:nth-child(2){background:var(--fpt-orange)}.fpt-badge-logo span:nth-child(3){background:var(--fpt-green)}
+.brand-logo{display:block;height:46px;width:auto;background:#fff;border-radius:8px;padding:5px 9px;box-sizing:border-box}
 .header-actions,.inline{display:flex;align-items:center;gap:10px}.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid transparent;border-radius:8px;padding:10px 16px;background:var(--fpt-orange);color:#fff;font-size:12px;font-weight:600;text-decoration:none;line-height:1.4;box-shadow:none;transition:background .15s,border-color .15s;white-space:nowrap}
 .btn:hover:not(:disabled){background:#db631a}.btn-sec{background:#24272e;border-color:#373b44;color:#e1e3e8}.btn-sec:hover:not(:disabled){background:#30343d;border-color:#626771}.btn-quiet{background:transparent;color:#b5bac5}.btn-quiet:hover:not(:disabled){background:#282b32;color:#fff}.btn-sm{padding:8px 12px;font-size:11px}
 .icon-btn{display:inline-grid;place-items:center;flex-shrink:0;border:1px solid var(--border);border-radius:6px;background:transparent;color:var(--text-muted);width:30px;height:30px;font-size:17px}.icon-btn:hover{background:#30343d;color:#fff}.icon-btn.del:hover{color:#ff9191}
@@ -51,164 +51,20 @@ input[type=range]{padding:0;accent-color:var(--fpt-orange)}
 .file-upload{position:relative;overflow:hidden;margin:0;cursor:pointer}.file-upload input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer}.file-upload:focus-within{outline:2px solid #f8a16c;outline-offset:3px}
 @media(min-width:1000px) and (max-height:850px){.phone-screen{width:220px}}
 @media(max-width:1000px){.app-container{grid-template-columns:minmax(0,1fr) 300px;padding:0 20px;gap:16px}.card{padding:18px}.monitor-card{padding:16px}.app-header{padding:0 20px}.phone-screen{width:225px}.timeline-card{padding:0}}
-@media(max-width:760px){.app-container{grid-template-columns:minmax(0,1fr);margin:16px auto;padding:0 16px 30px}.app-header{height:68px;padding:0 16px;gap:10px}.brand{gap:10px}.brand-info{padding-left:10px}.brand-info h1{font-size:14px}.fpt-badge-logo span{width:17px;height:23px;font-size:15px}.header-actions{gap:6px}.header-actions .btn{font-size:10px;padding:8px 10px}.monitor-wrap{position:static}.phone-screen{width:240px}.timeline-card{grid-row:2}.automation-bar{padding:0}.field-grid{grid-template-columns:1fr}.dialog-header,.settings-content{padding:18px}.settings-tabs{padding:0 12px}.topic-checklist{grid-template-columns:1fr}.dropzone{padding:16px 12px;gap:10px}.dropzone p{font-size:11px}.dropzone span{font-size:9px}.automation-bar .btn{padding:7px 8px;font-size:10px}.editable-row{grid-template-columns:50px minmax(0,1fr) auto;gap:6px}.time-label{font-size:9px}.title-fields input{font-size:11px}.timeline-toggle{padding:16px}.timeline-card .tl-time{width:100%;margin:0}.manual-highlight,.highlight-options{grid-template-columns:1fr}}
+@media(max-width:760px){.app-container{grid-template-columns:minmax(0,1fr);margin:16px auto;padding:0 16px 30px}.app-header{height:68px;padding:0 16px;gap:10px}.brand{gap:10px}.brand-info{padding-left:10px}.brand-info h1{font-size:14px}.header-actions{gap:6px}.header-actions .btn{font-size:10px;padding:8px 10px}.monitor-wrap{position:static}.phone-screen{width:240px}.timeline-card{grid-row:2}.automation-bar{padding:0}.field-grid{grid-template-columns:1fr}.dialog-header,.settings-content{padding:18px}.settings-tabs{padding:0 12px}.topic-checklist{grid-template-columns:1fr}.dropzone{padding:16px 12px;gap:10px}.dropzone p{font-size:11px}.dropzone span{font-size:9px}.automation-bar .btn{padding:7px 8px;font-size:10px}.editable-row{grid-template-columns:50px minmax(0,1fr) auto;gap:6px}.time-label{font-size:9px}.title-fields input{font-size:11px}.timeline-toggle{padding:16px}.timeline-card .tl-time{width:100%;margin:0}.manual-highlight,.highlight-options{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;scroll-behavior:auto!important}}
 
 .music-upload-bar{display:flex;align-items:center;gap:12px;padding:0 4px}.music-file-name{font-size:11px;color:#adb5c1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.render-action{margin-top:16px}.log-disclosure{margin-top:12px}
-    /* Interactive Mini-Timeline Editor Styles */
-    .timeline-card {
-      transition: all 0.2s ease;
-    }
-    .tl-track {
-      position: absolute;
-      left: 0;
-      right: 0;
-      background: rgba(11, 19, 43, 0.4);
-    }
-    .tl-track:nth-child(even) {
-      background: rgba(7, 13, 30, 0.5);
-    }
-    .tl-block {
-      position: absolute;
-      top: 3px;
-      bottom: 3px;
-      border-radius: 6px;
-      font-size: 11px;
-      font-weight: 600;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      padding: 0 8px;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      cursor: grab;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.35);
-      border: 1.5px solid rgba(255,255,255,0.18);
-      user-select: none;
-      transition: border-color 0.12s, box-shadow 0.12s;
-    }
-    .tl-block:active {
-      cursor: grabbing;
-    }
-    .tl-block:hover {
-      filter: brightness(1.15);
-      z-index: 15;
-    }
-    .tl-block.selected {
-      border: 2px solid #FFFFFF !important;
-      box-shadow: 0 0 14px rgba(56, 189, 248, 0.95) !important;
-      z-index: 25;
-    }
-    .tl-handle {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      width: 8px;
-      background: rgba(255, 255, 255, 0.25);
-      cursor: ew-resize !important;
-      z-index: 28;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.12s, width 0.12s;
-    }
-    .tl-handle::after {
-      content: '';
-      width: 2px;
-      height: 12px;
-      background: rgba(255,255,255,0.85);
-      border-radius: 1px;
-    }
-    .tl-handle:hover {
-      background: #38BDF8 !important;
-      width: 11px;
-    }
-    .tl-handle-l {
-      left: 0;
-      border-top-left-radius: 5px;
-      border-bottom-left-radius: 5px;
-      border-right: 1px solid rgba(0,0,0,0.3);
-    }
-    .tl-handle-r {
-      right: 0;
-      border-top-right-radius: 5px;
-      border-bottom-right-radius: 5px;
-      border-left: 1px solid rgba(0,0,0,0.3);
-    }
-    .tl-block-video {
-      background: linear-gradient(135deg, #1E3A8A, #0F172A);
-      border-color: #38BDF8;
-    }
-    .tl-block-illust {
-      background: linear-gradient(135deg, #065F46, #064E3B);
-      border-color: #34D399;
-    }
-    .tl-block-hook {
-      background: linear-gradient(135deg, #EA580C, #C2410C);
-      border-color: #FDBA74;
-    }
-    .tl-block-outro {
-      background: linear-gradient(135deg, #047857, #065F46);
-      border-color: #6EE7B7;
-    }
-    .tl-block-sub {
-      background: linear-gradient(135deg, #0284C7, #0369A1);
-      border-color: #7DD3FC;
-    }
-    .tl-block-highlight {
-      background: linear-gradient(135deg, #D97706, #B45309);
-      border-color: #FCD34D;
-    }
-    .tl-sfx-chip {
-      position: absolute;
-      top: 4px;
-      height: 20px;
-      padding: 0 6px;
-      border-radius: 4px;
-      background: #4C1D95;
-      border: 1px solid #A78BFA;
-      color: #EDE9FE;
-      font-size: 10px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 3px;
-      cursor: pointer;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.4);
-      white-space: nowrap;
-    }
-    .tl-sfx-chip:hover {
-      filter: brightness(1.25);
-    }
-    .tl-ruler-tick {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      width: 1px;
-      background: rgba(148, 163, 184, 0.2);
-    }
-    .tl-ruler-tick.major {
-      background: rgba(56, 189, 248, 0.5);
-    }
-    .tl-ruler-label {
-      position: absolute;
-      top: 3px;
-      font-size: 9.5px;
-      font-family: 'JetBrains Mono', monospace;
-      color: #64748B;
-      transform: translateX(-50%);
-    }
-
 .card-title h2,.section-heading h3,.section-heading .section-label,.title-fields h3,.timeline-toggle strong{color:var(--fpt-orange)}
 </style>
+  <link rel="stylesheet" href="/studio/timeline.css">
 </head>
 <body>
 
 <header class="app-header">
   <a class="brand" href="/" aria-label="FPT Video Studio">
-    <div class="fpt-badge-logo" aria-hidden="true"><span>F</span><span>P</span><span>T</span></div>
-    <div class="brand-info"><h1>Video Studio</h1><span>FPT Telecom</span></div>
+    <img class="brand-logo" src="/assets/brand/fpt-telecom-logo.png" alt="FPT Telecom" width="150" height="50" />
+    <div class="brand-info"><h1>Video Studio</h1></div>
   </a>
   <div class="header-actions">
     
@@ -216,6 +72,7 @@ input[type=range]{padding:0;accent-color:var(--fpt-orange)}
   </div>
 </header>
 
+<div id="versionBanner" class="version-banner" role="alert" hidden></div>
 <main class="app-container">
   <div class="workspace">
     <section class="card" aria-labelledby="sourceTitle">
@@ -225,6 +82,7 @@ input[type=range]{padding:0;accent-color:var(--fpt-orange)}
         <div><p>Thả video vào đây hoặc <strong>chọn tệp</strong></p><span>MP4, MOV · Chọn nhiều video cùng lúc</span></div>
         <input id="videoInput" type="file" accept="video/*" multiple hidden />
       </div>
+      <div id="uploadList" class="upload-list" role="status" hidden></div>
       <div id="videoOrderNotice" class="status" role="status" style="display:none"></div>
       <div id="selectedVideos"></div>
       <details id="videoPoolWrap" class="disclosure library-disclosure">
@@ -236,7 +94,8 @@ input[type=range]{padding:0;accent-color:var(--fpt-orange)}
       <div class="card-title"><h2 id="contentTitle"><span class="step">02</span> Nội dung</h2></div>
       <div class="section-heading">
         <div class="inline"><h3>Sub text</h3><span id="subCount" class="count"></span></div>
-        <button type="button" id="autoSubBtn" class="btn btn-sm" onclick="runAutoSub()">Tạo Sub text</button>
+        <div class="inline"><label class="sub-style" for="subStyleSelect">Kiểu Sub <select id="subStyleSelect"></select></label>
+        <button type="button" id="autoSubBtn" class="btn btn-sm" onclick="runAutoSub()">Tạo Sub text</button></div>
       </div>
       <div id="subStatusBanner" class="status" role="status" style="display:none"></div>
       <p id="subEmptyPlaceholder" hidden></p>
@@ -266,34 +125,10 @@ input[type=range]{padding:0;accent-color:var(--fpt-orange)}
             <div class="manual-highlight">
               <label>Nội dung<input id="newHlText" placeholder="Nội dung highlight" /></label>
               <label>Bắt đầu (giây)<input id="newHlStart" type="number" min="0" step="0.1" placeholder="4.5" /></label>
-              <label>Kiểu chữ<select id="newHlTypo"><option value="fpt_editorial_stack">Editorial FPT</option><option value="fpt_offset_echo">Echo ba màu</option><option value="fpt_bracket_focus">Khung tiêu điểm</option><option value="fpt_ribbon_cut">Dải chữ chéo</option>
-              < vl="">🎲 Tự Độ T Từ Kó</>
-              < vl="ffbllm">⚽ Nạ Hạ A & NHA</>
-              < vl="fs">⚡ Cyb HUD 1Gbs</>
-              < vl="fmsm">📷 Cm AI CCTV</>
-              < vl="fv3">🎫 Vé Và Gảm Gá Đ</>
-              < vl="flss">💎 Kí N 3 Mà T</>
-              < vl="fslkk">🥊 Cú Đấm Ké Dl-T</>
-              < vl="fbs">💰 Hộ Gá Ư Đã</>
-              < vl="flslb">🟧 Dả 3 Mà Skw T</>
-              < vl="fblk">🟧 Kố Cm Nổ Bậ</>
-              < vl="fb">🟩 Tẻ X Ckmk</>
-              < vl="fblll">🟦 Vê Tố X T</>
-            </select></label>
+              <label>Kiểu chữ<select id="newHlTypo"><option value="auto">Tự luân phiên</option></select></label>
               <label>Âm thanh<select id="newHlSfx">
-              < vl="">🎯 D Cẩ ()</>
-              < vl="bll">🛎️ T D (bll)</>
-              < vl="sf12">💨 s Ws (sf12)</>
-              < vl="sf22">⚡ Qk Sws (sf22)</>
-              < vl="flkflslk">⚡ lk ls (flkflslk)</>
-              < vl="sf26">🫰 lk Bú Ty (sf26)</>
-              < vl="flkmfls">📸 Cm ls (flkmfls)</>
-              < vl="bll">🔔 T Bll (bll)</>
-              < vl="m">✨ Cm D (m)</>
-              < vl="smy">💰 Cs My (smy)</>
-              < vl="sf1">🖱️  Clk (sf1)</>
-              < vl="sf4">🔘 S Clk (sf4)</>
-            </select></label>
+                <option value="">Tự động theo nội dung</option>
+              </select></label>
               <button type="button" class="btn btn-sec btn-sm" onclick="addNewHighlight()">Thêm</button>
             </div>
           </details>
@@ -331,8 +166,11 @@ input[type=range]{padding:0;accent-color:var(--fpt-orange)}
           <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="m10 8 6 4-6 4z"/></svg>
           <span>Video của bạn sẽ<br/>hiển thị tại đây</span>
         </div>
+        <canvas id="liveCanvas" aria-hidden="true"></canvas>
         <div id="safeZoneOverlay" class="safe-zone-overlay"></div>
       </div>
+      <div class="preview-mode" role="group" aria-label="Chế độ xem"><button type="button" id="modeLive" aria-pressed="false">Xem trực tiếp</button><button type="button" id="modeFinal" aria-pressed="false" disabled>Bản xuất</button></div>
+      <div id="liveStatus" class="live-status" role="status"></div>
       
       <button type="button" id="renderBtn" class="btn render-action" onclick="startRender()">Tạo video</button>
       <div id="progressWrap" class="progress-panel" style="display:none" role="status">
@@ -357,62 +195,35 @@ input[type=range]{padding:0;accent-color:var(--fpt-orange)}
       <span class="inline"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 5h18M7 2v20M3 10h11v4H3zm7 7h11v4H10z"/></svg><strong>Timeline</strong></span>
       <span class="inline muted"><span id="timelineToggleLabel">Mở timeline</span><span class="chevron" aria-hidden="true"></span></span>
     </button>
-          <div id="timelineBody" style="display:none"><div class="tl-toolbar"><button type="button" id="tlPlayBtn" class="btn btn-sec btn-sm" onclick="toggleTimelinePlay()" title="Phát / Dừng (Space)">Phát</button><button type="button" id="tlSplitBtn" class="btn btn-sec btn-sm" onclick="splitCurrentTimelineItem()" title="Cắt (S)">Cắt</button><button type="button" id="tlDeleteBtn" class="btn btn-sec btn-sm" onclick="deleteCurrentTimelineItem()" title="Xóa (Delete)">Xóa</button><button type="button" class="btn btn-quiet btn-sm" onclick="zoomTimeline(-0.25)" aria-label="Thu nhỏ timeline">−</button><button type="button" class="btn btn-quiet btn-sm" onclick="zoomTimeline(0.25)" aria-label="Phóng to timeline">+</button><button type="button" class="btn btn-quiet btn-sm" onclick="fitTimeline()">Vừa khung</button><span id="timelineTimeDisplay" class="tl-time">00:00 / 00:00</span></div>
-        <div style="display:flex; border:1px solid #1E293B; border-radius:8px; overflow:hidden; background:#040711; box-shadow: inset 0 2px 8px rgba(0,0,0,0.6);">
-          <!-- Left Track Headers (Nhãn Track) -->
-          <div style="width:125px; flex-shrink:0; background:#070C1A; border-right:1px solid #1E293B; display:flex; flex-direction:column; font-size:10.5px; font-weight:700;">
-            <div style="height:22px; padding:2px 8px; border-bottom:1px solid #1E293B; color:#64748B; display:flex; align-items:center;">Thời gian</div>
-            <div style="height:30px; padding:2px 8px; border-bottom:1px solid #1E293B; color:#38BDF8; display:flex; align-items:center; gap:5px;">Video</div>
-            <div style="height:30px; padding:2px 8px; border-bottom:1px solid #1E293B; color:#FB923C; display:flex; align-items:center; gap:4px;">B-roll</div><div style="height:30px; padding:2px 8px; border-bottom:1px solid #1E293B; color:#34D399; display:flex; align-items:center; gap:5px;">Minh họa</div>
-            <div style="height:30px; padding:2px 8px; border-bottom:1px solid #1E293B; color:#FF8533; display:flex; align-items:center; gap:5px;">Tiêu đề</div>
-            <div style="height:30px; padding:2px 8px; border-bottom:1px solid #1E293B; color:#4ADE80; display:flex; align-items:center; gap:5px;">Sub text</div>
-            <div style="height:30px; padding:2px 8px; border-bottom:1px solid #1E293B; color:#FBBF24; display:flex; align-items:center; gap:5px;">Highlight</div>
-            <div style="height:26px; padding:2px 8px; color:#A78BFA; display:flex; align-items:center; gap:5px;">Âm thanh</div>
-          </div>
-
-          <!-- Right Multi-Track Area with Scrubber -->
-          <div id="timelineScrollWrap" style="flex:1; overflow-x:auto; overflow-y:hidden; position:relative; user-select:none; cursor:crosshair; min-height:228px;" onmousedown="onTimelineScrubStart(event)">
-            <div id="timelineCanvasInner" style="position:relative; height:228px; min-width:100%;">
-              <!-- Ruler -->
-              <div id="timelineRuler" style="position:absolute; top:0; left:0; right:0; height:22px; border-bottom:1px solid #1E293B; background:#060A17;"></div>
-              
-              <!-- Track 1: Video Clips -->
-              <div id="trackVideo" class="tl-track" style="position:absolute; top:22px; left:0; right:0; height:30px; border-bottom:1px solid #131E35;"></div>
-              
-              <!-- Track 1B: B-Roll Cut-Away (MỚI) -->
-              <div id="trackBrollCutaway" class="tl-track" style="position:absolute; top:52px; left:0; right:0; height:30px; border-bottom:1px solid #131E35; background:rgba(234,88,12,0.04);"></div>
-              
-              <!-- Track 2: Ảnh Minh Họa & B-Roll -->
-              <div id="trackIllustrations" class="tl-track" style="position:absolute; top:82px; left:0; right:0; height:30px; border-bottom:1px solid #131E35;"></div>
-              
-              <!-- Track 3: Hook & Outro -->
-              <div id="trackHookOutro" class="tl-track" style="position:absolute; top:112px; left:0; right:0; height:30px; border-bottom:1px solid #131E35;"></div>
-              
-              <!-- Track 4: Subtitles -->
-              <div id="trackSubs" class="tl-track" style="position:absolute; top:142px; left:0; right:0; height:30px; border-bottom:1px solid #131E35;"></div>
-              
-              <!-- Track 5: Highlights -->
-              <div id="trackHighlights" class="tl-track" style="position:absolute; top:172px; left:0; right:0; height:30px; border-bottom:1px solid #131E35;"></div>
-              
-              <!-- Track 6: SFX & BGM -->
-              <div id="trackSfx" class="tl-track" style="position:absolute; top:202px; left:0; right:0; height:26px;"></div>
-
-              <!-- Playhead Needle -->
-              <div id="timelinePlayhead" style="position:absolute; top:0; bottom:0; left:0; width:2px; background:#EF4444; z-index:40; pointer-events:none;">
-                <div style="position:absolute; top:0; left:-5px; width:12px; height:12px; background:#EF4444; transform:rotate(45deg); border-radius:2px; box-shadow:0 0 6px rgba(239,68,68,0.8);"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Quick Edit Dock (Biên tập trực tiếp tại đây) -->
-        <div id="timelineQuickEditDock" style="margin-top:8px; padding:8px 12px; background:#091024; border:1px solid #1E293B; border-radius:8px; display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; font-size:12px;">
-          <div id="tlSelectionInfo" style="color:#94A3B8; display:flex; align-items:center; gap:6px;">
-            <span>Chọn một đoạn để chỉnh sửa.</span>
-          </div>
-          <div id="tlEditorControls" style="display:none; align-items:center; gap:8px; flex:1; justify-content:flex-end; flex-wrap:wrap;"></div>
-        </div>
+    <div id="timelineBody" style="display:none"><div class="tl">
+      <div class="tl-bar">
+        <div class="tl-group"><button type="button" id="tlPlayBtn" class="tl-btn primary" title="Phát / Dừng (Space)">Phát</button>
+        <span id="timelineTimeDisplay" class="tl-time">0:00.00 / 0:00.00</span></div>
+        <div class="tl-group"><button type="button" id="tlUndo" class="tl-btn" title="Hoàn tác (Ctrl+Z)">↶ Hoàn tác</button>
+        <button type="button" id="tlRedo" class="tl-btn" title="Làm lại (Ctrl+Y)" aria-label="Làm lại">↷</button></div>
+        <div class="tl-group"><button type="button" id="tlSplitBtn" class="tl-btn" title="Cắt đoạn đang chọn tại kim (S)">Cắt</button>
+        <button type="button" id="tlCopy" class="tl-btn" title="Sao chép (Ctrl+C)">Chép</button>
+        <button type="button" id="tlPaste" class="tl-btn" title="Dán tại kim (Ctrl+V)">Dán</button>
+        <button type="button" id="tlDup" class="tl-btn" title="Nhân đôi (Ctrl+D)">Nhân đôi</button>
+        <button type="button" id="tlDeleteBtn" class="tl-btn" title="Xóa đoạn đang chọn (Delete)">Xóa</button></div>
+        <div class="tl-group"><button type="button" id="tlAddTitle" class="tl-btn">+ Tiêu đề</button>
+        <button type="button" id="tlAddHl" class="tl-btn">+ Highlight</button>
+        <button type="button" id="tlAddSub" class="tl-btn">+ Sub</button>
+        <button type="button" id="tlAddBroll" class="tl-btn">+ B-roll</button>
+        <button type="button" id="tlAddSfx" class="tl-btn">+ SFX</button>
+        <select id="tlAddFx" class="tl-btn" aria-label="Thêm hiệu ứng"></select></div>
+        <div class="tl-group"><button type="button" id="tlShuffle" class="tl-btn" title="Cùng nội dung, đổi Hook, Outro, kiểu chữ và SFX">Đổi phong cách</button>
+        <button type="button" id="tlFixStyles" class="tl-btn fix" hidden></button></div>
+        <div class="tl-group end"><button type="button" id="tlSnapBtn" class="tl-btn on" title="Hít vào mép cảnh, lời nói, kim">Hít</button>
+        <input id="tlZoom" class="tl-zoom" type="range" min="0" max="100" value="0" aria-label="Phóng to timeline" />
+        <button type="button" id="tlFit" class="tl-btn">Vừa khung</button></div>
       </div>
+      <div class="tl-main">
+        <div id="tlHeads" class="tl-heads"></div>
+        <div id="timelineScrollWrap"><div id="timelineCanvasInner"><div id="timelineRuler"></div><div id="timelinePlayhead"></div><div id="tlSnap" class="tl-snapline"></div></div></div>
+      </div>
+      <div id="tlInspector" class="tl-insp" aria-live="polite"></div>
+    </div></div>
   </section>
 </main>
 
@@ -433,6 +244,9 @@ input[type=range]{padding:0;accent-color:var(--fpt-orange)}
   <div id="brollGallery"></div><div id="sfxGrid"></div><audio id="sfxPlayer"></audio>
 </div>
 
+<script src="/studio/engine.js"></script>
+<script src="/studio/live.js"></script>
+<script src="/studio/timeline.js"></script>
 <script>
     let poolVideos = [];
     let selectedVideos = [];
@@ -443,6 +257,10 @@ input[type=range]{padding:0;accent-color:var(--fpt-orange)}
     let currentBrollCutaways = [];
     let brollScanVersion = 0;
     let creativeSeed = 0;
+    // Edit decisions made on the timeline; every render sends them back so the MP4 equals the preview.
+    let studioSeed = '', hookStyle = '', outroStyle = '', outroStartManual = null, outroEndManual = null, hookStartManual = null, hookDurManual = null;
+    let extraTitles = [], musicSegments = null, subStyleId = 'chuan';
+    let sfxOverrides = {}, customSfx = [], customFx = [], fxState = {}, previousLooks = [], highlightsTouched = false;
     let autoBrollEnabled = true;
 
     // Danh sách các ID chủ đề B-Roll được phép (mặc định tích chọn cả 5)
@@ -460,7 +278,7 @@ input[type=range]{padding:0;accent-color:var(--fpt-orange)}
     const LAYOUT_INFO = {
       cutaway: { label: 'Cut-Away Full', icon: '✂️' },
       top_half: { label: 'Top-Half (40%)', icon: '↕️' },
-      pip: { label: 'PIP Góc Phải', icon: '📱' }
+      pip: { label: 'Khung chính giữa', icon: '📱' }
     };
 
     function addNewIllustrationPrompt() {
@@ -654,7 +472,7 @@ input[type=range]{padding:0;accent-color:var(--fpt-orange)}
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             subtitles: currentSubtitles,
-            hookDur: 3.5,
+            hookDur: studioPlan?.hookDur ?? 3.5,
             totalDuration: spokenTimelineDuration(),
             allowedBrollIds: Array.from(enabledBrollIds)
           })
@@ -677,7 +495,7 @@ input[type=range]{padding:0;accent-color:var(--fpt-orange)}
             autoDetected: true
           }));
           renderBrollQueue();
-          renderTimeline();
+          TL.changed({prepare:true});
           if (!silent) {
             if (filtered.length > 0) {
               alert(`✅ Đã tự động khớp ${filtered.length} cảnh B-Roll theo lời nói VJ:\n` +
@@ -749,7 +567,7 @@ input[type=range]{padding:0;accent-color:var(--fpt-orange)}
   const active = currentBrollCutaways.filter(b=>b.enabled!==false && (!ALL_BROLL_TOPICS.includes(b.brollId)||enabledBrollIds.has(b.brollId)));
   document.getElementById('brollCountLabel').textContent = active.length;
   document.getElementById('clearBrollBtn').style.display = active.length ? 'inline-flex' : 'none';
-  const layouts = {cutaway:'Toàn màn hình',top_half:'Chia màn hình',pip:'Khung nổi'};
+  const layouts = {cutaway:'Toàn màn hình',top_half:'Chia màn hình',pip:'Khung chính giữa'};
   document.getElementById('brollQueueList').innerHTML = active.map(b=>{
     const index = currentBrollCutaways.indexOf(b);
     return `<div class="broll-item"><div><strong>${escapeStudioText(b.name||'B-roll')}</strong><small>${Number(b.start).toFixed(1)} – ${Number(b.end).toFixed(1)}s</small></div>
@@ -864,7 +682,9 @@ input[type=range]{padding:0;accent-color:var(--fpt-orange)}
         renderPool();
         renderSubList();
         renderHighlightsList();
+        document.getElementById('newHlTypo').insertAdjacentHTML('beforeend',Object.keys(window.FptEngine.typography.STYLES).map(s=>`<option value="${s}">${escapeStudioText(STYLE_NAMES[s]||s)}</option>`).join(''));
         allSfx = sfxRes.sfx || [];
+        document.getElementById('newHlSfx').innerHTML = '<option value="">Tự động theo nội dung</option>' + allSfx.map(s => `<option value="${escapeStudioText(s.id)}">${escapeStudioText(s.cat + ' · ' + s.name)}</option>`).join('');
         const countTag = document.getElementById('sfxCountTag');
         if (countTag) countTag.textContent = `${allSfx.length} SFX SẴN SÀNG`;
         renderSfx('all');
@@ -880,7 +700,8 @@ input[type=range]{padding:0;accent-color:var(--fpt-orange)}
 
         fileInput.addEventListener('change', (e) => {
           if (e.target.files && e.target.files.length) {
-            Array.from(e.target.files).forEach(f => handleUploadedVideo(f));
+            handleUploadedVideos(Array.from(e.target.files).sort((a, b) => a.name.localeCompare(b.name, 'vi', { numeric: true })));
+            e.target.value = '';
           }
         });
 
@@ -899,7 +720,7 @@ input[type=range]{padding:0;accent-color:var(--fpt-orange)}
           drop.style.borderColor = '';
           drop.style.background = '';
           if (e.dataTransfer.files && e.dataTransfer.files.length) {
-            Array.from(e.dataTransfer.files).forEach(f => handleUploadedVideo(f));
+            handleUploadedVideos(Array.from(e.dataTransfer.files).sort((a, b) => a.name.localeCompare(b.name, 'vi', { numeric: true })));
           }
         });
 
@@ -908,59 +729,60 @@ input[type=range]{padding:0;accent-color:var(--fpt-orange)}
         renderSelectedVideos();
         if (typeof renderTimeline === 'function') renderTimeline();
 
-        window.addEventListener('resize', () => {
-          if (typeof renderTimeline === 'function') renderTimeline();
-        });
-
-        const previewVid = document.getElementById('previewVideo');
-        if (previewVid) {
-          previewVid.addEventListener('timeupdate', () => {
-            if (!isTimelineScrubbing) {
-              timelineCurrentTime = previewVid.currentTime;
-              updateTimelinePlayheadUI();
-            }
-          });
-          previewVid.addEventListener('play', () => {
-            const btn = document.getElementById('tlPlayBtn');
-            if (btn) btn.textContent = 'Tạm dừng';
-          });
-          previewVid.addEventListener('pause', () => {
-            const btn = document.getElementById('tlPlayBtn');
-            if (btn) btn.textContent = 'Phát';
-          });
-        }
       } catch (e) {
         console.error(e);
       }
     }
 
-    async function handleUploadedVideo(file) {
-      if (!file) return;
-      const drop = document.getElementById('videoDrop');
-      const p = drop.querySelector('p');
-      const oldHtml = p.innerHTML;
-      p.innerHTML = `⏳ Đang tải lên <b>${file.name}</b> (${(file.size / (1024 * 1024)).toFixed(1)} MB)...`;
-      try {
-        const res = await fetch(`/api/upload?kind=video&name=${encodeURIComponent(file.name)}`, {
-          method: 'POST',
-          body: file
-        });
-        const data = await res.json();
-        if (data.ok) {
-          addVideo(data.fileName);
-          p.textContent = 'Đã thêm ' + data.fileName;
-          setTimeout(() => {
-            p.innerHTML = oldHtml;
-          }, 3500);
-        } else {
-          alert('Lỗi tải video: ' + (data.error || 'Thất bại'));
-          p.innerHTML = oldHtml;
-        }
-      } catch (e) {
-        alert('Lỗi kết nối tải video: ' + e.message);
-        p.innerHTML = oldHtml;
-      }
+    const uploadState = { active: 0, queue: [], done: 0, total: 0, loaded: 0, bytes: 0, started: 0, names: [] };
+    const mega = n => (n / 1048576).toFixed(n > 104857600 ? 0 : 1);
+    async function fingerprint(file) {
+      if (!window.crypto?.subtle) return null;
+      const part = Math.min(1 << 20, file.size), [head, tail] = await Promise.all([file.slice(0, part).arrayBuffer(), file.slice(file.size - part).arrayBuffer()]);
+      const joined = new Uint8Array(part * 2); joined.set(new Uint8Array(head)); joined.set(new Uint8Array(tail), part);
+      const hash = await crypto.subtle.digest('SHA-256', joined);
+      return file.size + '-' + [...new Uint8Array(hash)].map(b => b.toString(16).padStart(2, '0')).join('').slice(0, 32);
     }
+    function showUpload(text) {
+      const box = document.getElementById('uploadList');
+      box.hidden = !uploadState.total; if (box.hidden) { box.innerHTML = ''; return; }
+      const pct = uploadState.bytes ? Math.min(100, Math.round(uploadState.loaded / uploadState.bytes * 100)) : 100, secs = (performance.now() - uploadState.started) / 1000;
+      box.innerHTML = '<div class="upload-head"><span>' + escapeStudioText(text || (uploadState.done < uploadState.total ? 'Đang tải ' + uploadState.done + '/' + uploadState.total + ' video' : 'Đã thêm ' + uploadState.total + ' video')) + '</span><span>' + pct + '%' + (uploadState.done < uploadState.total && secs > .5 ? ' · ' + mega(uploadState.loaded / secs) + ' MB/s' : '') + '</span></div><div class="upload-bar"><i style="width:' + pct + '%"></i></div>';
+    }
+    const sendFile = (file, onProgress) => new Promise((resolve, reject) => {
+      const x = new XMLHttpRequest();
+      x.open('POST', '/api/upload?kind=video&name=' + encodeURIComponent(file.name));
+      x.upload.onprogress = e => onProgress(e.loaded);
+      x.onload = () => { let d = {}; try { d = JSON.parse(x.responseText); } catch (_) {} x.status < 300 && d.ok ? resolve(d.fileName) : reject(Error(d.error || 'Máy chủ từ chối tệp (' + x.status + ')')); };
+      x.onerror = () => reject(Error('Mất kết nối khi tải lên'));
+      x.send(file);
+    });
+    async function handleUploadedVideos(files) {
+      files = files.filter(Boolean); if (!files.length) return;
+      if (!uploadState.active && uploadState.done >= uploadState.total) Object.assign(uploadState, { done: 0, total: 0, loaded: 0, bytes: 0, started: performance.now() });
+      uploadState.total += files.length; uploadState.bytes += files.reduce((a, f) => a + f.size, 0); uploadState.active++;
+      showUpload();
+      const results = new Array(files.length), failed = [];
+      let known = {}, prints = [];
+      try { prints = await Promise.all(files.map(fingerprint)); const ask = prints.filter(Boolean); if (ask.length) known = (await fetch('/api/upload-known', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prints: ask }) }).then(r => r.json())).known || {}; } catch (_) {}
+      let next = 0, frame = 0; const tick = () => { if (!frame) frame = requestAnimationFrame(() => { frame = 0; showUpload(); }); };
+      const worker = async () => {
+        while (next < files.length) {
+          const i = next++, file = files[i]; let sent = 0;
+          const progress = n => { uploadState.loaded += n - sent; sent = n; tick(); };
+          try { results[i] = known[prints[i]] || await sendFile(file, progress); } catch (e) { failed.push(file.name + ': ' + e.message); }
+          progress(file.size); uploadState.done++; showUpload();
+        }
+      };
+      await Promise.all(Array.from({ length: Math.min(4, files.length) }, worker));
+      uploadState.active--;
+      const fresh = results.filter(f => f && !selectedVideos.includes(f));
+      if (fresh.length) { for (const f of fresh) if (!poolVideos.includes(f)) poolVideos.push(f); selectedVideos.push(...fresh); renderPool(); invalidateStudioAnalysis(); renderSelectedVideos(); renderTimeline(); }
+      showUpload();
+      if (failed.length) alert('Chưa tải được:\n' + failed.join('\n'));
+      setTimeout(() => { if (!uploadState.active) { uploadState.total = 0; showUpload(); } }, 4000);
+    }
+    const handleUploadedVideo = file => handleUploadedVideos([file]);
 
     function renderPool() {
   document.getElementById('videoPool').innerHTML = poolVideos.map((v,i) =>
@@ -1114,12 +936,12 @@ input[type=range]{padding:0;accent-color:var(--fpt-orange)}
       }
       const val = document.getElementById('bgmMode').value;
       const fileMap = {
-        auto: '/assets/bgm_fpt_upbeat.mp3',
-        upbeat: '/assets/bgm_fpt_upbeat.mp3',
-        bright: '/assets/bgm_fpt_bright.mp3',
-        fresh: '/assets/bgm_fpt_fresh.mp3',
-        synth: '/assets/bgm_fpt_synth.mp3',
-        chill: '/assets/bgm_fpt_chill.mp3'
+        auto: '/assets/music-presets/bgm_fpt_upbeat.mp3',
+        upbeat: '/assets/music-presets/bgm_fpt_upbeat.mp3',
+        bright: '/assets/music-presets/bgm_fpt_bright.mp3',
+        fresh: '/assets/music-presets/bgm_fpt_fresh.mp3',
+        synth: '/assets/music-presets/bgm_fpt_synth.mp3',
+        chill: '/assets/music-presets/bgm_fpt_chill.mp3'
       };
       playSfx(customBgmFile ? customBgmFile.url : (fileMap[val] || fileMap.upbeat));
     }
@@ -1178,6 +1000,9 @@ input[type=range]{padding:0;accent-color:var(--fpt-orange)}
           throw new Error('Không nhận diện được lời nói. Hãy kiểm tra video có âm thanh giọng nói rõ hoặc chọn clip khác.');
         }
         if (data.ok) {
+          resetEditDecisions();
+          studioSeed = 'FPT_Video_' + Date.now();
+          currentHighlights = [];
           currentSubtitles = data.subtitles || [];
           currentClipWindows = data.clipWindows || [];
 
@@ -1188,6 +1013,7 @@ input[type=range]{padding:0;accent-color:var(--fpt-orange)}
             currentBrollCutaways = allowed.map((b, i) => ({
               ...b,
               id: `broll_${Date.now()}_${i}`,
+              uid: 'b' + (i + 1),
               brollId: b.brollId,
               name: b.name,
               icon: b.icon,
@@ -1207,7 +1033,8 @@ input[type=range]{padding:0;accent-color:var(--fpt-orange)}
             for(let i=1;i<=3;i++)document.getElementById('outro'+i).value=data.autoOutro?.['line'+i]||'';
           }
           renderSubList();
-          renderTimeline();
+          renderHighlightsList();
+          TL.changed({ now: true });
           document.getElementById('subEditorBox').style.display = 'block';
           const placeholder = document.getElementById('subEmptyPlaceholder');
           if (placeholder) placeholder.style.display = 'none';
@@ -1232,36 +1059,24 @@ input[type=range]{padding:0;accent-color:var(--fpt-orange)}
   document.getElementById('subCount').textContent = count ? count + ' câu' : '';
   document.getElementById('subEmptyPlaceholder').style.display = count ? 'none' : 'block';
   document.getElementById('subEditorBox').style.display = count ? 'block' : 'none';
-  document.getElementById('subList').innerHTML = currentSubtitles.map((s,i) => `
+  if (document.getElementById('subDetails').open) document.getElementById('subList').innerHTML = currentSubtitles.map((s,i) => `
     <div class="editable-row"><span class="time-label">${Number(s.start).toFixed(2)}s</span>
-      <input aria-label="Sub text ${i+1}" value="${escapeStudioText(s.text)}" oninput="currentSubtitles[${i}].text=this.value;renderTimeline()" />
+      <input aria-label="Sub text ${i+1}" value="${escapeStudioText(s.text)}" spellcheck="true" lang="vi" onfocus="TL.remember()" oninput="currentSubtitles[${i}].text=this.value;currentSubtitles[${i}].edited=true;renderTimeline()" />
     </div>`).join('');
   renderTimeline();
 }
 
 
     function renderHighlightsList() {
-  const count = currentHighlights.length;
+  const count = currentHighlights.length, details = document.getElementById('highlightDetails');
   document.getElementById('highlightCount').textContent = count ? String(count) : '';
-  document.getElementById('highlightDetails').hidden = !count;
-  const typoOptions = Array.from(document.getElementById('newHlTypo').options).filter(o=>o.value!=='auto');
-  const sfxOptions = Array.from(document.getElementById('newHlSfx').options);
-  const options = (list, value) => {
-    const values = list.map(o=>({value:o.value,text:o.textContent}));
-    if(value && !values.some(o=>o.value===value)) values.push({value,text:value});
-    return values.map(o=>`<option value="${escapeStudioText(o.value)}" ${o.value===value?'selected':''}>${escapeStudioText(o.text)}</option>`).join('');
-  };
-  document.getElementById('highlightList').innerHTML = currentHighlights.map((h,i)=>`
-    <div class="highlight-row">
-      <div class="editable-row"><span class="time-label">${Number(h.start).toFixed(2)}s</span>
-        <input aria-label="Highlight ${i+1}" value="${escapeStudioText(h.text)}" oninput="currentHighlights[${i}].text=this.value;renderTimeline()" />
-        <button type="button" class="icon-btn del" onclick="currentHighlights.splice(${i},1);renderHighlightsList()" aria-label="Xóa Highlight ${i+1}">×</button>
-      </div>
-      <details class="disclosure"><summary>Hiệu ứng</summary><div class="highlight-options">
-        <label>Kiểu chữ<select onchange="currentHighlights[${i}].typo=this.value;renderTimeline()">${options(typoOptions,h.typo||'fpt_orange_block')}</select></label>
-        <label>Âm thanh<select onchange="currentHighlights[${i}].sfx=this.value;renderTimeline()">${options(sfxOptions,h.sfx||'ding_correct')}</select></label>
-      </div></details>
-    </div>`).join('');
+  details.hidden = !count;
+  // Rows exist only while the list is open; looks and sounds are chosen on the timeline.
+  if (details.open) document.getElementById('highlightList').innerHTML = currentHighlights.map((h,i)=>`
+    <div class="highlight-row"><div class="editable-row"><button type="button" class="time-label linklike" onclick="TL.select('highlight',${i})" title="Mở trên timeline">${Number(h.start).toFixed(2)}s</button>
+        <input aria-label="Highlight ${i+1}" value="${escapeStudioText(h.text)}" spellcheck="true" lang="vi" onfocus="TL.remember()" oninput="currentHighlights[${i}].text=this.value;currentHighlights[${i}].edited=true;renderTimeline()" />
+        <button type="button" class="icon-btn del" onclick="TL.remember();currentHighlights.splice(${i},1);highlightsTouched=true;renderHighlightsList()" aria-label="Xóa Highlight ${i+1}">×</button>
+      </div></div>`).join('');
   updateKeywordCount();
   renderTimeline();
 }
@@ -1341,7 +1156,7 @@ input[type=range]{padding:0;accent-color:var(--fpt-orange)}
         const res = await fetch('/api/scan-keywords', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ subtitles: currentSubtitles,totalDuration:spokenTimelineDuration() })
+          body: JSON.stringify({ subtitles: currentSubtitles,totalDuration:spokenTimelineDuration(),clipWindows:currentClipWindows })
         });
         const data = await res.json();
         if (data.ok && Array.isArray(data.keywords) && data.keywords.length > 0) {
@@ -1405,7 +1220,10 @@ input[type=range]{padding:0;accent-color:var(--fpt-orange)}
         if (data.ok && Array.isArray(data.highlights)) {
           const requestedCount = rawText.split(/\r?\n/).map(t => t.trim()).filter(Boolean).length;
           if (data.highlights.length !== requestedCount) throw new Error('Số highlight trả về không khớp số dòng đã nhập. Danh sách cũ được giữ nguyên.');
-          currentHighlights = data.highlights;
+          TL.remember();
+          // Styles are chosen by the plan so they rotate between videos.
+          currentHighlights = data.highlights.map(({typo,motion,...h})=>({...h,uid:'r'+(h.requestLine??h.id)+'_'+Math.round(h.start*1000)}));
+          highlightsTouched = true;
           renderHighlightsList();
           const banner = document.getElementById('hlStatusBanner');
           if (banner) {
@@ -1431,15 +1249,7 @@ input[type=range]{padding:0;accent-color:var(--fpt-orange)}
       const st = parseFloat(document.getElementById('newHlStart').value) || 4.5;
       const sfx = document.getElementById('newHlSfx').value;
       const typoSelect = document.getElementById('newHlTypo');
-      let chosenTypo = typoSelect ? typoSelect.value : 'auto';
-      if (chosenTypo === 'auto') {
-        if (/ngoại\s*hạng|nha|premier|bóng\s*đá/i.test(txt)) chosenTypo = 'fpt_football_match';
-        else if (/gbps|mbps|tốc\s*độ|ping|speed/i.test(txt)) chosenTypo = 'fpt_speed_hud';
-        else if (/camera|an\s*ninh|giám\s*sát|ai/i.test(txt)) chosenTypo = 'fpt_camera_smart';
-        else if (/voucher|tặng|0đ|miễn\s*phí/i.test(txt)) chosenTypo = 'fpt_voucher_3d';
-        else if (/tiền|195|220|giá|cước|hời/i.test(txt)) chosenTypo = 'fpt_price_burst';
-        else chosenTypo = 'fpt_orange_block';
-      }
+      const chosenTypo = typoSelect ? typoSelect.value : 'auto';
       const defaultY = document.getElementById('hlGlobalY') ? parseFloat(document.getElementById('hlGlobalY').value) : 350;
       const defaultScale = document.getElementById('hlGlobalScale') ? parseFloat(document.getElementById('hlGlobalScale').value) : 1.40;
       if (!txt) return alert('Vui lòng nhập nội dung Text Highlight!');
@@ -1450,9 +1260,13 @@ input[type=range]{padding:0;accent-color:var(--fpt-orange)}
         text: txt,
         y: defaultY,
         scale: defaultScale,
-        sfx: sfx,
-        typo: chosenTypo
+        uid: 'm' + Date.now(),
+        edited: true,
+        timingPolicy: 'preserve_all',
+        ...(sfx ? { sfx, sfxChosen: true } : {}),
+        ...(chosenTypo !== 'auto' ? { typo: chosenTypo, styleFrom: 'user' } : {})
       });
+      highlightsTouched = true;
       document.getElementById('newHlText').value = '';
       renderHighlightsList();
     }
@@ -1500,22 +1314,7 @@ input[type=range]{padding:0;accent-color:var(--fpt-orange)}
         await startRender(true);
       }
 
-      // Start Video Render
-      async function startRender(autoDownload = false) {
-      if (!selectedVideos.length) {
-        alert('Vui lòng upload video trước khi Render!');
-        return;
-      }
-      const btn1 = document.getElementById('renderBtn');
-      const btn2 = document.getElementById('renderBtnTop');
-      btn1.disabled = true; btn2.disabled = true;
-      document.querySelector('.workspace').inert=true;
-      document.getElementById('timelineCard').inert=true;
-      document.getElementById('resultArea').style.display = 'none';
-      const capcutAlert = document.getElementById('capcutDraftAlert');
-      if (capcutAlert) capcutAlert.style.display = 'none';
-      document.getElementById('progressWrap').style.display = 'flex';
-
+      function buildRenderPayload() {
       const isDisableBgm = document.getElementById('disableBgmToggle').checked;
       const isBgmFromStart = !document.getElementById('bgmDropToggle').checked;
       const hookPosY = document.getElementById('hookPosY') ? parseFloat(document.getElementById('hookPosY').value) : 320;
@@ -1523,8 +1322,12 @@ input[type=range]{padding:0;accent-color:var(--fpt-orange)}
       const hlGlobalYVal = document.getElementById('hlGlobalY') ? parseFloat(document.getElementById('hlGlobalY').value) : 350;
       const hlGlobalScaleVal = document.getElementById('hlGlobalScale') ? parseFloat(document.getElementById('hlGlobalScale').value) : 1.40;
 
-      const payload = {
-        projectName: 'FPT_Video_' + Date.now(),
+      return {
+        projectName: studioSeed || 'FPT_Video',
+        ...(studioSeed ? { styleSeed: studioSeed } : {}),
+        hookStyle: hookStyle || undefined, outroStyle: outroStyle || undefined, outroStart: outroStartManual ?? undefined, hookDur: hookDurManual ?? undefined, hookStart: hookStartManual ?? undefined, outroEnd: outroEndManual ?? undefined,
+        extraTitles, musicSegments: musicSegments ?? undefined, subStyle: subStyleId,
+        sfxOverrides, customSfx, customFx, fx: fxState, previousLooks, autoHighlight: !highlightsTouched,
         titleMode: userEditedHook ? 'manual' : 'auto',
         disableBgm: isDisableBgm,
         bgmMode: isDisableBgm ? 'none' : document.getElementById('bgmMode').value,
@@ -1564,7 +1367,24 @@ input[type=range]{padding:0;accent-color:var(--fpt-orange)}
         },
         outroCta: (document.getElementById('outro3') ? document.getElementById('outro3').value : '').trim()
       };
+      }
+      // Start Video Render
+      async function startRender(autoDownload = false) {
+      if (!selectedVideos.length) {
+        alert('Vui lòng upload video trước khi Render!');
+        return;
+      }
+      const btn1 = document.getElementById('renderBtn');
+      const btn2 = document.getElementById('renderBtnTop');
+      btn1.disabled = true; btn2.disabled = true;
+      document.querySelector('.workspace').inert=true;
+      document.getElementById('timelineCard').inert=true;
+      document.getElementById('resultArea').style.display = 'none';
+      const capcutAlert = document.getElementById('capcutDraftAlert');
+      if (capcutAlert) capcutAlert.style.display = 'none';
+      document.getElementById('progressWrap').style.display = 'flex';
 
+      const payload = {...buildRenderPayload(),projectName:'FPT_Video_'+Date.now()};
 
       try {
         const response=await fetch('/api/render',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
@@ -1591,7 +1411,12 @@ input[type=range]{padding:0;accent-color:var(--fpt-orange)}
           document.getElementById('subStatusBanner').textContent='Đã tạo '+currentSubtitles.length+' câu Sub text.';
 
           document.getElementById('resultArea').style.display='flex';
-          document.getElementById('previewVideo').src=st.result.videoUrl+'?t='+Date.now();
+          if(st.result.hookStyle)hookStyle=st.result.hookStyle;
+          if(st.result.outroStyle)outroStyle=st.result.outroStyle;
+          if(!studioSeed&&st.result.styleSeed)studioSeed=st.result.styleSeed;
+          if(!userEditedHook){for(let i=1;i<=4;i++)document.getElementById('hook'+i).value=st.result.hook?.['line'+i]||'';for(let i=1;i<=3;i++)document.getElementById('outro'+i).value=st.result.outro?.['line'+i]||'';}
+          TL.changed({now:true});
+          Live.setFinal(st.result.videoUrl+'?t='+Date.now());
           document.getElementById('downloadVideo').href=st.result.videoUrl;
           document.getElementById('downloadThumb').href=st.result.thumbUrl;
           document.getElementById('outputPathDisplay').textContent=st.result.outMp4||st.result.safeName;
@@ -1605,1154 +1430,6 @@ input[type=range]{padding:0;accent-color:var(--fpt-orange)}
         alert('Lỗi: '+error.message);
       }finally{btn1.disabled=false;btn2.disabled=false;document.querySelector('.workspace').inert=false;document.getElementById('timelineCard').inert=false;}
     }
-
-    // ===============================================================
-    // 🎬 CAPCUT MULTI-TRACK INTERACTIVE TIMELINE ENGINE (Chuyên Nghiệp)
-    // ===============================================================
-    let timelineZoom = 1.0;
-    let timelineCurrentTime = 0.0;
-    let timelineIsPlaying = false;
-    let timelinePlayTimer = null;
-    let selectedTimelineItem = null;
-    let isTimelineScrubbing = false;
-    let activeTimelineDrag = null;
-
-function syncClipWindows() {
-  if(!selectedVideos.length){currentClipWindows=[];return;}
-  let cursor=0;
-  const rebuilt=[];
-  for(const fileRef of selectedVideos){
-    const existing=currentClipWindows.filter(w=>w.fileRef===fileRef);
-    const windows=existing.length?existing:[{id:'estimate_'+fileRef,fileRef,estimated:true,trimStart:0,trimEnd:5*currentVoiceSpeed,timelineDur:5}];
-    for(const win of windows){
-      const duration=(Number(win.trimEnd)-Number(win.trimStart||0))/currentVoiceSpeed;
-      const timelineDur=Number.isFinite(duration)&&duration>0?Number(duration.toFixed(3)):5;
-      rebuilt.push({...win,timelineStart:Number(cursor.toFixed(3)),timelineDur});
-      cursor+=timelineDur;
-    }
-  }
-  currentClipWindows=rebuilt;
-}
-
-    function getTimelineTotalDuration() {
-      const maxVideoEnd = currentClipWindows && currentClipWindows.length
-        ? currentClipWindows.reduce((acc, c) => acc + (Number(c.timelineDur) || 0), 0)
-        : (selectedVideos.length * 6);
-      const maxBrollEnd = currentBrollCutaways && currentBrollCutaways.length
-        ? Math.max(...currentBrollCutaways.filter(b => b.enabled !== false).map(b => Number(b.end || 0)))
-        : 0;
-      const maxSubEnd = currentSubtitles && currentSubtitles.length
-        ? Math.max(...currentSubtitles.map(s => Number(s.end || 0)))
-        : 0;
-      const maxHlEnd = currentHighlights && currentHighlights.length
-        ? Math.max(...currentHighlights.map(h => Number(h.end || 0)))
-        : 0;
-      const maxIllEnd = currentIllustrations && currentIllustrations.length
-        ? Math.max(...currentIllustrations.filter(i => i.enabled).map(i => Number(i.end || 0)))
-        : 0;
-      return Math.max(1, maxVideoEnd, maxBrollEnd, maxSubEnd, maxHlEnd, maxIllEnd);
-    }
-
-    function getTimelineSfxList() {
-      const totalDur = getTimelineTotalDuration();
-      const outroDur = Math.min(Math.max(0,totalDur-Math.min(3.5,totalDur)),Math.min(4,Math.max(2.4,totalDur*0.15)));
-      const outroStart = Math.max(0, totalDur - outroDur);
-      const list = [];
-
-      // 1. Opener SFX (0.0s)
-      list.push({
-        id: 'sfx_opener_ting',
-        key: 'bellring',
-        name: 'Mở Màn: Ting Chuông',
-        start: 0.0,
-        type: 'sfx_opener',
-        icon: '🔔',
-        bg: 'linear-gradient(135deg,#7C3AED,#5B21B6)'
-      });
-
-      // 2. Highlights SFX
-      if (Array.isArray(currentHighlights)) {
-        currentHighlights.forEach((h, i) => {
-          if (h.sfx) {
-            list.push({
-              id: `sfx_hl_${i}`,
-              key: h.sfx,
-              name: `⭐ ${h.text || h.sfx}`,
-              start: Number(h.start) || 0,
-              hlIndex: i,
-              type: 'sfx_highlight',
-              icon: '✨',
-              bg: 'linear-gradient(135deg,#D97706,#B45309)'
-            });
-          }
-        });
-      }
-
-      // 3. B-Roll SFX
-      if (Array.isArray(currentBrollCutaways)) {
-        currentBrollCutaways.forEach((b, i) => {
-          if (b.enabled !== false) {
-            list.push({
-              id: `sfx_broll_${i}`,
-              key: 'whoosh_1',
-              name: `✂️ ${b.name || 'B-Roll'}`,
-              start: Number(b.start) || 0,
-              brollIndex: i,
-              type: 'sfx_broll',
-              icon: '💨',
-              bg: 'linear-gradient(135deg,#EA580C,#C2410C)'
-            });
-          }
-        });
-      }
-
-      // 4. Outro CTA SFX
-      list.push({
-        id: 'sfx_outro_cash',
-        key: 'cash_money',
-        name: 'Outro: Tiền Về & Ting',
-        start: Number(outroStart.toFixed(1)),
-        type: 'sfx_outro',
-        icon: '💰',
-        bg: 'linear-gradient(135deg,#059669,#047857)'
-      });
-
-      return list.sort((a, b) => a.start - b.start);
-    }
-
-    function renderTimeline() {
-      const wrap = document.getElementById('timelineScrollWrap');
-      const canvasInner = document.getElementById('timelineCanvasInner');
-      if (!wrap || !canvasInner) return;
-
-      syncClipWindows();
-      if (document.getElementById('timelineBody').style.display === 'none') return;
-
-      const totalDur = getTimelineTotalDuration();
-      const wrapW = wrap.clientWidth || 800;
-      const basePxPerSec = wrapW / totalDur;
-      const pxPerSec = Math.max(16, basePxPerSec * timelineZoom);
-      const totalWidthPx = Math.max(wrapW, Math.ceil(totalDur * pxPerSec));
-      canvasInner.style.width = totalWidthPx + 'px';
-
-      // 1. Render Ruler (Thước đo thời gian)
-      const ruler = document.getElementById('timelineRuler');
-      if (ruler) {
-        let rulerHtml = '';
-        const step = pxPerSec > 35 ? 1 : (pxPerSec > 18 ? 2 : 5);
-        for (let sec = 0; sec <= totalDur; sec += step) {
-          const leftPx = sec * pxPerSec;
-          const isMajor = sec % 5 === 0;
-          rulerHtml += `
-            <div class="tl-ruler-tick ${isMajor ? 'major' : ''}" style="left:${leftPx}px;"></div>
-            ${isMajor || step === 1 ? `<span class="tl-ruler-label" style="left:${leftPx}px;">${sec}s</span>` : ''}
-          `;
-        }
-        ruler.innerHTML = rulerHtml;
-      }
-
-      // 2. Track 1: Video Clips (Hỗ trợ kéo 2 mép co/giãn thời lượng chuẩn CapCut)
-      const trackVideo = document.getElementById('trackVideo');
-      if (trackVideo) {
-        if (!currentClipWindows || currentClipWindows.length === 0) {
-          trackVideo.innerHTML = `<span style="font-size:10.5px; color:#475569; padding-left:8px; line-height:30px;">Chưa chọn video clip</span>`;
-        } else {
-          trackVideo.innerHTML = currentClipWindows.map((c, i) => {
-            const leftPx = (c.timelineStart || 0) * pxPerSec;
-            const widthPx = Math.max(18, (c.timelineDur || 1.0) * pxPerSec - 2);
-            const isSel = selectedTimelineItem && selectedTimelineItem.type === 'video' && selectedTimelineItem.index === i;
-            return `
-              <div class="tl-block tl-block-video ${isSel ? 'selected' : ''}" style="left:${leftPx}px; width:${widthPx}px;"
-                   title="Clip #${i + 1}: ${c.fileRef} (${c.timelineStart.toFixed(1)}s - ${(c.timelineStart + c.timelineDur).toFixed(1)}s, dài ${c.timelineDur.toFixed(1)}s)"
-                   onmousedown="onTimelineBlockMouseDown(event, 'video', ${i})">
-                <div class="tl-handle tl-handle-l" onmousedown="onTimelineHandleMouseDown(event, 'video', ${i}, 'left')" title="Kéo để cắt ngắn đầu video"></div>
-                <div style="flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; padding:0 3px;">🎬 #${i + 1} ${c.fileRef} (${c.timelineDur.toFixed(1)}s)</div>
-                <div class="tl-handle tl-handle-r" onmousedown="onTimelineHandleMouseDown(event, 'video', ${i}, 'right')" title="Kéo để cắt ngắn đuôi video"></div>
-              </div>
-            `;
-          }).join('');
-        }
-      }
-
-      // 3. Track 2: Ảnh Minh Họa & B-Roll (Wi-Fi 6, Camera AI, Ngoại Hạng Anh, Speedtest)
-      const trackIllustrations = document.getElementById('trackIllustrations');
-      if (trackIllustrations) {
-        const activeIlls = currentIllustrations.filter(ill => ill.enabled !== false);
-        if (activeIlls.length === 0) {
-          trackIllustrations.innerHTML = `<span style="font-size:10.5px; color:#475569; padding-left:8px; line-height:30px;">(Không chèn ảnh minh họa) <button type="button" class="btn btn-sec btn-sm" onclick="addNewIllustrationPrompt()" style="font-size:9.5px; padding:1px 6px; margin-left:6px; color:#34D399; border-color:#059669; cursor:pointer;">+ Thêm Minh Họa</button></span>`;
-        } else {
-          trackIllustrations.innerHTML = currentIllustrations.map((ill, i) => {
-            if (ill.enabled === false) return '';
-            const st = Number(ill.start) || 0;
-            const et = Number(ill.end) || (st + 2.6);
-            const dur = Math.max(0.4, et - st);
-            const leftPx = st * pxPerSec;
-            const widthPx = Math.max(20, dur * pxPerSec - 2);
-            const isSel = selectedTimelineItem && selectedTimelineItem.type === 'illustration' && selectedTimelineItem.index === i;
-            return `
-              <div class="tl-block tl-block-illust ${isSel ? 'selected' : ''}" style="left:${leftPx}px; width:${widthPx}px;"
-                   title="${ill.name}: ${ill.title} (${st.toFixed(1)}s - ${et.toFixed(1)}s)"
-                   onmousedown="onTimelineBlockMouseDown(event, 'illustration', ${i})">
-                <div class="tl-handle tl-handle-l" onmousedown="onTimelineHandleMouseDown(event, 'illustration', ${i}, 'left')" title="Kéo để dời giây bắt đầu"></div>
-                <div style="flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; padding:0 3px;">${ill.icon || '🖼️'} ${ill.name} (${dur.toFixed(1)}s)</div>
-                <div class="tl-handle tl-handle-r" onmousedown="onTimelineHandleMouseDown(event, 'illustration', ${i}, 'right')" title="Kéo để dời giây kết thúc"></div>
-              </div>
-            `;
-          }).join('');
-        }
-      }
-
-      // 3B. Track B-Roll Cut-Away (MỚI - track riêng biệt màu Cam FPT)
-      const trackBrollCutaway = document.getElementById('trackBrollCutaway');
-      if (trackBrollCutaway) {
-        const hasActive = currentBrollCutaways.some(b => b.enabled !== false && (!b.brollId || (!ALL_BROLL_TOPICS.includes(b.brollId) || enabledBrollIds.has(b.brollId))));
-        if (!hasActive) {
-          trackBrollCutaway.innerHTML = `<span style="font-size:10px; color:#92400E; padding-left:8px; line-height:30px; display:flex; align-items:center; gap:6px;">
-            ✂️ <b style="color:#FB923C;">B-ROLL</b> <span style="color:#64748B;">(Chưa có B-Roll)</span> <button type="button" class="btn btn-sec btn-sm" onclick="promptAddManualBroll()" style="font-size:9.5px; padding:1px 6px; margin-left:6px; color:#FB923C; border-color:#EA580C; cursor:pointer;">➕ Thêm B-Roll tại đây</button>
-          </span>`;
-        } else {
-          trackBrollCutaway.innerHTML = currentBrollCutaways.map((b, i) => {
-            if (b.enabled === false || (b.brollId && !(!ALL_BROLL_TOPICS.includes(b.brollId) || enabledBrollIds.has(b.brollId)))) return '';
-            const st = Number(b.start) || 0;
-            const et = Number(b.end) || (st + (b.duration || 3.5));
-            const dur = Math.max(0.4, Number((et - st).toFixed(1)));
-            const leftPx = st * pxPerSec;
-            const widthPx = Math.max(24, dur * pxPerSec - 2);
-            const liColor = b.layout === 'cutaway' ? '#FB923C' : b.layout === 'top_half' ? '#38BDF8' : '#4ADE80';
-            const isSel = selectedTimelineItem && selectedTimelineItem.type === 'broll' && selectedTimelineItem.index === i;
-            return `
-              <div class="tl-block" style="left:${leftPx}px; width:${widthPx}px; background:linear-gradient(135deg,rgba(234,88,12,0.85),rgba(154,52,18,0.95)); border-color:${liColor}; ${isSel ? 'border:2px solid #FFFFFF; box-shadow:0 0 14px rgba(251,146,60,0.9);' : ''}"
-                   title="${b.icon} ${b.name} (${b.layout}) · ${st.toFixed(1)}s - ${et.toFixed(1)}s"
-                   onmousedown="onTimelineBlockMouseDown(event, 'broll', ${i})">
-                <div class="tl-handle tl-handle-l" onmousedown="onTimelineHandleMouseDown(event, 'broll', ${i}, 'left')" title="Kéo để dời giây bắt đầu"></div>
-                <div style="flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; padding:0 4px; color:#FFF; font-size:10.5px; font-weight:700;">${b.icon} ${b.name} (${dur.toFixed(1)}s)</div>
-                <div class="tl-handle tl-handle-r" onmousedown="onTimelineHandleMouseDown(event, 'broll', ${i}, 'right')" title="Kéo để dời giây kết thúc"></div>
-              </div>`;
-          }).join('');
-        }
-      }
-
-      // 4. Track 3: Hook & Outro Track
-      const trackHookOutro = document.getElementById('trackHookOutro');
-      if (trackHookOutro) {
-        const hookText = (document.getElementById('hook1') ? document.getElementById('hook1').value : 'LẮP ĐẶT INTERNET') || 'Hook Mở Đầu';
-        const outroText = (document.getElementById('outro1') ? document.getElementById('outro1').value : 'ĐĂNG KÝ NGAY!') || 'Outro CTA';
-        const hookDur = parseFloat(localStorage.getItem('fpt_hook_dur') || '3.5');
-        const hookW = Math.max(20, hookDur * pxPerSec - 2);
-        const outroDur = Math.min(Math.max(0,totalDur-Math.min(3.5,totalDur)),Math.min(4,Math.max(2.4,totalDur*0.15)));
-        const outroLeft = Math.max(0, (totalDur - outroDur) * pxPerSec);
-        const outroW = Math.max(20, outroDur * pxPerSec - 2);
-
-        const isHookSel = selectedTimelineItem && selectedTimelineItem.type === 'hook';
-        const isOutroSel = selectedTimelineItem && selectedTimelineItem.type === 'outro';
-
-        trackHookOutro.innerHTML = `
-          <div class="tl-block tl-block-hook ${isHookSel ? 'selected' : ''}" style="left:0px; width:${hookW}px;"
-               title="Cụm Hook 4 Dòng: ${hookText} (0s - ${hookDur.toFixed(1)}s)"
-               onmousedown="onTimelineBlockMouseDown(event, 'hook', 0)">
-            <div class="tl-handle tl-handle-l" onmousedown="onTimelineHandleMouseDown(event, 'hook', 0, 'left')"></div>
-            <div style="flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; padding:0 3px;">🔥 ${hookText} (${hookDur.toFixed(1)}s)</div>
-            <div class="tl-handle tl-handle-r" onmousedown="onTimelineHandleMouseDown(event, 'hook', 0, 'right')" title="Kéo để chỉnh thời lượng Hook"></div>
-          </div>
-          <div class="tl-block tl-block-outro ${isOutroSel ? 'selected' : ''}" style="left:${outroLeft}px; width:${outroW}px;"
-               title="Cụm Kết Video: ${outroText}"
-               onmousedown="onTimelineBlockMouseDown(event, 'outro', 0)">
-            <div class="tl-handle tl-handle-l" onmousedown="onTimelineHandleMouseDown(event, 'outro', 0, 'left')" title="Kéo để chỉnh điểm bắt đầu Outro"></div>
-            <div style="flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; padding:0 3px;">🎯 ${outroText} (${outroDur.toFixed(1)}s)</div>
-            <div class="tl-handle tl-handle-r" onmousedown="onTimelineHandleMouseDown(event, 'outro', 0, 'right')"></div>
-          </div>
-        `;
-      }
-
-      // 5. Track 4: Subtitles Track
-      const trackSubs = document.getElementById('trackSubs');
-      if (trackSubs) {
-        if (!currentSubtitles || currentSubtitles.length === 0) {
-          trackSubs.innerHTML = `<span style="font-size:10.5px; color:#475569; padding-left:8px; line-height:30px;">Chưa có Sub text (Bấm 'Tạo Sub text' để tạo)</span>`;
-        } else {
-          trackSubs.innerHTML = currentSubtitles.map((s, i) => {
-            const st = Number(s.start) || 0;
-            const et = Number(s.end) || (st + 1.8);
-            const dur = Math.max(0.2, et - st);
-            const leftPx = st * pxPerSec;
-            const widthPx = Math.max(20, dur * pxPerSec - 2);
-            const isSel = selectedTimelineItem && selectedTimelineItem.type === 'sub' && selectedTimelineItem.index === i;
-            return `
-              <div class="tl-block tl-block-sub ${isSel ? 'selected' : ''}" style="left:${leftPx}px; width:${widthPx}px;"
-                   title="Sub #${i + 1} (${st.toFixed(1)}s - ${et.toFixed(1)}s): ${s.text}"
-                   onmousedown="onTimelineBlockMouseDown(event, 'sub', ${i})">
-                <div class="tl-handle tl-handle-l" onmousedown="onTimelineHandleMouseDown(event, 'sub', ${i}, 'left')" title="Kéo để chỉnh điểm bắt đầu Sub"></div>
-                <div style="flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; padding:0 3px;">💬 ${s.text}</div>
-                <div class="tl-handle tl-handle-r" onmousedown="onTimelineHandleMouseDown(event, 'sub', ${i}, 'right')" title="Kéo để chỉnh điểm kết thúc Sub"></div>
-              </div>
-            `;
-          }).join('');
-        }
-      }
-
-      // 6. Track 5: Highlights Track
-      const trackHighlights = document.getElementById('trackHighlights');
-      if (trackHighlights) {
-        if (!currentHighlights || currentHighlights.length === 0) {
-          trackHighlights.innerHTML = `<span style="font-size:10.5px; color:#475569; padding-left:8px; line-height:30px;">Chưa có Text Highlight (Nhập ở Thẻ 5 để tạo)</span>`;
-        } else {
-          trackHighlights.innerHTML = currentHighlights.map((h, i) => {
-            const st = Number(h.start) || 0;
-            const et = Number(h.end) || (st + 2.0);
-            const dur = Math.max(0.3, et - st);
-            const leftPx = st * pxPerSec;
-            const widthPx = Math.max(22, dur * pxPerSec - 2);
-            const isSel = selectedTimelineItem && selectedTimelineItem.type === 'highlight' && selectedTimelineItem.index === i;
-            return `
-              <div class="tl-block tl-block-highlight ${isSel ? 'selected' : ''}" style="left:${leftPx}px; width:${widthPx}px;"
-                   title="Highlight #${i + 1} (${st.toFixed(1)}s - ${et.toFixed(1)}s): ${h.text}"
-                   onmousedown="onTimelineBlockMouseDown(event, 'highlight', ${i})">
-                <div class="tl-handle tl-handle-l" onmousedown="onTimelineHandleMouseDown(event, 'highlight', ${i}, 'left')" title="Kéo để chỉnh điểm bắt đầu Highlight"></div>
-                <div style="flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; padding:0 3px;">⭐ ${h.text}</div>
-                <div class="tl-handle tl-handle-r" onmousedown="onTimelineHandleMouseDown(event, 'highlight', ${i}, 'right')" title="Kéo để chỉnh điểm kết thúc Highlight"></div>
-              </div>
-            `;
-          }).join('');
-        }
-      }
-
-      // 7. Track 6: SFX Track (Hiển thị đầy đủ 100% âm thanh trong video)
-      const trackSfx = document.getElementById('trackSfx');
-      if (trackSfx) {
-        const sfxList = getTimelineSfxList();
-        if (sfxList.length === 0) {
-          trackSfx.innerHTML = `<span style="font-size:10px; color:#475569; padding-left:8px; line-height:26px;">Chưa có SFX</span>`;
-        } else {
-          trackSfx.innerHTML = sfxList.map((sfx, i) => {
-            const leftPx = sfx.start * pxPerSec;
-            const isSel = selectedTimelineItem && selectedTimelineItem.type === 'sfx' && selectedTimelineItem.index === i;
-            return `
-              <div class="tl-sfx-chip ${isSel ? 'selected' : ''}" style="left:${leftPx}px; background:${sfx.bg}; border:1.5px solid ${isSel ? '#FFFFFF' : 'rgba(255,255,255,0.2)'}; ${isSel ? 'box-shadow:0 0 10px rgba(167,139,250,0.9); transform:scale(1.05);' : ''}"
-                   title="${sfx.icon} ${sfx.name} (${sfx.start.toFixed(1)}s) · Click để chọn / kéo dời"
-                   onmousedown="onTimelineBlockMouseDown(event, 'sfx', ${i})">
-                ${sfx.icon} ${sfx.name.slice(0, 15)} (${sfx.start.toFixed(1)}s)
-              </div>
-            `;
-          }).join('');
-        }
-      }
-
-      updateTimelinePlayheadUI();
-    }
-
-    function updateTimelinePlayheadUI() {
-      const wrap = document.getElementById('timelineScrollWrap');
-      const playhead = document.getElementById('timelinePlayhead');
-      const timeDisplay = document.getElementById('timelineTimeDisplay');
-      if (!wrap || !playhead) return;
-
-      const totalDur = getTimelineTotalDuration();
-      const wrapW = wrap.clientWidth || 800;
-      const basePxPerSec = wrapW / totalDur;
-      const pxPerSec = Math.max(16, basePxPerSec * timelineZoom);
-
-      const leftPx = timelineCurrentTime * pxPerSec;
-      playhead.style.left = leftPx + 'px';
-
-      if (timeDisplay) {
-        const curM = Math.floor(timelineCurrentTime / 60);
-        const curS = (timelineCurrentTime % 60).toFixed(1);
-        const totM = Math.floor(totalDur / 60);
-        const totS = (totalDur % 60).toFixed(1);
-        timeDisplay.textContent = `⏱️ ${String(curM).padStart(2,'0')}:${String(curS).padStart(4,'0')} / ${String(totM).padStart(2,'0')}:${String(totS).padStart(4,'0')}s`;
-      }
-    }
-
-    function seekTimeline(timeSec) {
-      const totalDur = getTimelineTotalDuration();
-      timelineCurrentTime = Math.max(0, Math.min(totalDur, parseFloat(timeSec) || 0));
-      updateTimelinePlayheadUI();
-
-      const vid = document.getElementById('previewVideo');
-      if (vid && vid.src && !isNaN(vid.duration) && vid.duration > 0) {
-        vid.currentTime = Math.min(vid.duration, timelineCurrentTime);
-      }
-    }
-
-    function onTimelineScrubStart(e) {
-      if (e.target.closest('.tl-block') || e.target.closest('.tl-sfx-chip') || e.target.closest('.tl-handle')) return;
-      isTimelineScrubbing = true;
-      handleScrubMove(e);
-
-      const onMouseMove = (ev) => { if (isTimelineScrubbing) handleScrubMove(ev); };
-      const onMouseUp = () => {
-        isTimelineScrubbing = false;
-        window.removeEventListener('mousemove', onMouseMove);
-        window.removeEventListener('mouseup', onMouseUp);
-      };
-      window.addEventListener('mousemove', onMouseMove);
-      window.addEventListener('mouseup', onMouseUp);
-    }
-
-    function handleScrubMove(e) {
-      const wrap = document.getElementById('timelineScrollWrap');
-      if (!wrap) return;
-      const rect = wrap.getBoundingClientRect();
-      const scrollLeft = wrap.scrollLeft;
-      const clickX = e.clientX - rect.left + scrollLeft;
-
-      const totalDur = getTimelineTotalDuration();
-      const wrapW = wrap.clientWidth || 800;
-      const basePxPerSec = wrapW / totalDur;
-      const pxPerSec = Math.max(16, basePxPerSec * timelineZoom);
-
-      const targetSec = clickX / pxPerSec;
-      seekTimeline(targetSec);
-    }
-
-    // ===============================================================
-    // 🎯 CAPCUT DRAG, TRIM & RESIZE ENGINE (Mượt mà 60fps & Đầy đủ Video/B-Roll/Sub/Highlight/SFX)
-    // ===============================================================
-
-    function promptAddManualBroll() {
-      const curT = Number((timelineCurrentTime || 3.5).toFixed(1));
-      const dur = 2.0;
-      const brollItem = {
-        id: `broll_${Date.now()}`,
-        brollId: 'stock_football',
-        name: 'Ngoại Hạng Anh (broll NHA)',
-        icon: '⚽',
-        layout: 'top_half',
-        start: curT,
-        end: Number((curT + dur).toFixed(1)),
-        duration: dur,
-        enabled: true,
-        autoDetected: false
-      };
-      currentBrollCutaways.push(brollItem);
-      renderBrollQueue();
-      renderTimeline();
-      showQuickEditDock('broll', currentBrollCutaways.length - 1);
-    }
-
-    function showQuickEditDock(type, index) {
-      if (document.getElementById('tlCollapseBtn').getAttribute('aria-expanded') !== 'true') toggleTimelineCollapse(true);
-      selectedTimelineItem = { type, index };
-      const info = document.getElementById('tlSelectionInfo');
-      const ctrls = document.getElementById('tlEditorControls');
-      if (!info || !ctrls) return;
-      ctrls.style.display = 'flex';
-
-      if (type === 'video') {
-        const c = currentClipWindows[index];
-        if (!c) return;
-        seekTimeline(c.timelineStart);
-        info.innerHTML = `<span style="color:#38BDF8; font-weight:700;">🎬 Video #${index + 1}: ${c.file || 'Clip'}</span>`;
-        ctrls.innerHTML = `
-          <div style="display:flex; align-items:center; gap:2px;" title="Cắt đầu video (Trim In)">
-            <span style="font-size:11px; color:#94A3B8;">Từ:</span>
-            <input type="number" id="tlPropStart" step="0.1" value="${c.trimStart || 0}" style="margin:0; padding:2px 4px; font-size:11px; width:50px; text-align:center;" oninput="onTimelineVideoTrimChange(${index}, 'trimStart', this.value)" />
-          </div>
-          <div style="display:flex; align-items:center; gap:2px;" title="Cắt đuôi video (Trim Out)">
-            <span style="font-size:11px; color:#94A3B8;">Đến:</span>
-            <input type="number" id="tlPropEnd" step="0.1" value="${c.trimEnd || c.timelineDur}" style="margin:0; padding:2px 4px; font-size:11px; width:50px; text-align:center;" oninput="onTimelineVideoTrimChange(${index}, 'trimEnd', this.value)" />
-          </div>
-          <span style="font-size:11px; color:#38BDF8; font-family:'JetBrains Mono';">⏱️ <b id="tlPropDur">${c.timelineDur.toFixed(1)}s</b></span>
-          <button type="button" class="btn btn-sec btn-sm" onclick="playTimelineSlice(${c.timelineStart}, ${c.timelineStart + c.timelineDur})" style="font-size:11px; padding:3px 8px;" title="Xem thử clip này">▶ Đoạn này</button>
-          <button type="button" class="btn btn-sec btn-sm" onclick="closeTimelineEditor()" style="font-size:11px; padding:3px 6px;">✕</button>
-        `;
-      } else if (type === 'broll') {
-        const b = currentBrollCutaways[index];
-        if (!b) return;
-        seekTimeline(b.start);
-        info.innerHTML = `<span style="color:#FB923C; font-weight:700;">✂️ B-Roll Cut-Away:</span>`;
-        ctrls.innerHTML = `
-          <div style="display:flex; align-items:center; gap:4px;" title="Tên B-Roll">
-            <span style="font-size:11px; color:#94A3B8;">Tên:</span>
-            <input type="text" id="tlPropName" value="${b.name || ''}" style="margin:0; padding:2px 6px; font-size:11px; width:150px; background:#0B1428; color:#F8FAFC; border:1px solid #334155; border-radius:4px;" oninput="onTimelineBrollNameChange(${index}, this.value)" />
-          </div>
-          <div style="display:flex; align-items:center; gap:2px;" title="Giây bắt đầu">
-            <span style="font-size:11px; color:#94A3B8;">Từ:</span>
-            <input type="number" id="tlPropStart" step="0.1" value="${b.start}" style="margin:0; padding:2px 4px; font-size:11px; width:54px; text-align:center; background:#0B1428; color:#F8FAFC; border:1px solid #334155; border-radius:4px;" oninput="onTimelineBrollTimeChange(${index}, 'start', this.value)" />
-          </div>
-          <div style="display:flex; align-items:center; gap:2px;" title="Giây kết thúc">
-            <span style="font-size:11px; color:#94A3B8;">Đến:</span>
-            <input type="number" id="tlPropEnd" step="0.1" value="${b.end}" style="margin:0; padding:2px 4px; font-size:11px; width:54px; text-align:center; background:#0B1428; color:#F8FAFC; border:1px solid #334155; border-radius:4px;" oninput="onTimelineBrollTimeChange(${index}, 'end', this.value)" />
-          </div>
-          <div style="display:flex; align-items:center; gap:2px;" title="Layout hiển thị">
-            <span style="font-size:11px; color:#94A3B8;">Layout:</span>
-            <select onchange="currentBrollCutaways[${index}].layout=this.value; renderTimeline(); renderBrollQueue();" style="margin:0; padding:2px 4px; font-size:11px; width:95px; background:#0B1428; color:#F8FAFC; border:1px solid #334155; border-radius:4px;">
-              <option value="top_half" ${b.layout==='top_half'?'selected':''}>↕️ Top-Half (40%)</option>
-              <option value="pip" ${b.layout==='pip'?'selected':''}>📱 PIP (Góc Phải)</option>
-              <option value="cutaway" ${b.layout==='cutaway'?'selected':''}>✂️ Cut-Away Full</option>
-            </select>
-          </div>
-          <span style="font-size:11px; color:#FB923C; font-family:'JetBrains Mono';">⏱️ <b id="tlPropDur">${Number((b.end - b.start).toFixed(1))}s</b></span>
-          <button type="button" class="btn btn-sec btn-sm" onclick="splitCurrentTimelineItem()" style="font-size:11px; padding:3px 8px; color:#F59E0B; border-color:#D97706;" title="Cắt B-Roll tại kim">✂️ Cắt</button>
-          <button type="button" class="btn btn-sec btn-sm" onclick="deleteCurrentTimelineItem()" style="font-size:11px; padding:3px 8px; color:#EF4444; border-color:rgba(239,68,68,0.3);" title="Xóa B-Roll này">🗑️ Xóa</button>
-          <button type="button" class="btn btn-sec btn-sm" onclick="playTimelineSlice(${b.start}, ${b.end})" style="font-size:11px; padding:3px 8px;" title="Xem thử đoạn này">▶ Đoạn này</button>
-          <button type="button" class="btn btn-sec btn-sm" onclick="closeTimelineEditor()" style="font-size:11px; padding:3px 6px;">✕</button>
-        `;
-      } else if (type === 'sfx') {
-        const sfxList = getTimelineSfxList();
-        const sfx = sfxList[index];
-        if (!sfx) return;
-        seekTimeline(sfx.start);
-        info.innerHTML = `<span style="color:#A78BFA; font-weight:700;">${sfx.icon} SFX: ${sfx.name}</span>`;
-        ctrls.innerHTML = `
-          <div style="display:flex; align-items:center; gap:2px;" title="Thời điểm phát SFX">
-            <span style="font-size:11px; color:#94A3B8;">Giây:</span>
-            <input type="number" id="tlPropStart" step="0.1" value="${sfx.start}" style="margin:0; padding:2px 4px; font-size:11px; width:55px; text-align:center;" oninput="onTimelineSfxTimeChange(${index}, this.value)" />
-          </div>
-          <button type="button" class="btn btn-sec btn-sm" onclick="playSfxByKey('${sfx.key}')" style="font-size:11px; padding:3px 8px; color:#A78BFA; border-color:#7C3AED;" title="Nghe thử âm thanh">🔊 Nghe Thử</button>
-          <button type="button" class="btn btn-sec btn-sm" onclick="deleteCurrentTimelineItem()" style="font-size:11px; padding:3px 8px; color:#EF4444; border-color:rgba(239,68,68,0.3);" title="Xóa SFX này">🗑️ Xóa</button>
-          <button type="button" class="btn btn-sec btn-sm" onclick="closeTimelineEditor()" style="font-size:11px; padding:3px 6px;">✕</button>
-        `;
-      } else if (type === 'illustration') {
-        const ill = currentIllustrations[index];
-        if (!ill) return;
-        seekTimeline(ill.start);
-        info.innerHTML = `<span style="color:#34D399; font-weight:700;">${ill.icon || '🖼️'} ${ill.name}:</span>`;
-        ctrls.innerHTML = `
-          <input type="text" value="${ill.title || ill.name}" style="margin:0; padding:4px 8px; font-size:12px; width:200px;" placeholder="Tiêu đề minh họa..." oninput="currentIllustrations[${index}].title=this.value; renderTimeline();" />
-          <div style="display:flex; align-items:center; gap:2px;" title="Giây bắt đầu">
-            <span style="font-size:11px; color:#94A3B8;">Từ:</span>
-            <input type="number" id="tlPropStart" step="0.1" value="${ill.start}" style="margin:0; padding:2px 4px; font-size:11px; width:50px; text-align:center;" oninput="currentIllustrations[${index}].start=parseFloat(this.value)||0; renderTimeline();" />
-          </div>
-          <div style="display:flex; align-items:center; gap:2px;" title="Giây kết thúc">
-            <span style="font-size:11px; color:#94A3B8;">Đến:</span>
-            <input type="number" id="tlPropEnd" step="0.1" value="${ill.end}" style="margin:0; padding:2px 4px; font-size:11px; width:50px; text-align:center;" oninput="currentIllustrations[${index}].end=parseFloat(this.value)||0; renderTimeline();" />
-          </div>
-          <span style="font-size:11px; color:#34D399; font-family:'JetBrains Mono';">⏱️ <b id="tlPropDur">${(ill.end - ill.start).toFixed(1)}s</b></span>
-          <button type="button" class="btn btn-sec btn-sm" onclick="splitCurrentTimelineItem()" style="font-size:11px; padding:3px 8px; color:#F59E0B; border-color:#D97706;" title="Cắt minh họa tại kim">✂️ Cắt</button>
-          <button type="button" class="btn btn-sec btn-sm" onclick="deleteCurrentTimelineItem()" style="font-size:11px; padding:3px 8px; color:#EF4444; border-color:rgba(239,68,68,0.3);" title="Xóa minh họa này">🗑️ Xóa</button>
-          <button type="button" class="btn btn-sec btn-sm" onclick="playTimelineSlice(${ill.start}, ${ill.end})" style="font-size:11px; padding:3px 8px;" title="Xem thử đoạn này">▶ Đoạn này</button>
-          <button type="button" class="btn btn-sec btn-sm" onclick="closeTimelineEditor()" style="font-size:11px; padding:3px 6px;">✕</button>
-        `;
-      } else if (type === 'sub') {
-        const s = currentSubtitles[index];
-        if (!s) return;
-        seekTimeline(s.start);
-        info.innerHTML = `<span style="color:#38BDF8; font-weight:700;">💬 Phụ Đề #${index + 1}:</span>`;
-        ctrls.innerHTML = `
-          <input type="text" value="${s.text}" style="margin:0; padding:4px 8px; font-size:12px; width:240px;" placeholder="Nội dung phụ đề..." oninput="onTimelineSubTextChange(${index}, this.value)" />
-          <div style="display:flex; align-items:center; gap:2px;" title="Giây bắt đầu">
-            <span style="font-size:11px; color:#94A3B8;">Từ:</span>
-            <input type="number" id="tlPropStart" step="0.1" value="${s.start}" style="margin:0; padding:2px 4px; font-size:11px; width:52px; text-align:center;" oninput="onTimelineSubTimeChange(${index}, 'start', this.value)" />
-          </div>
-          <div style="display:flex; align-items:center; gap:2px;" title="Giây kết thúc">
-            <span style="font-size:11px; color:#94A3B8;">Đến:</span>
-            <input type="number" id="tlPropEnd" step="0.1" value="${s.end}" style="margin:0; padding:2px 4px; font-size:11px; width:52px; text-align:center;" oninput="onTimelineSubTimeChange(${index}, 'end', this.value)" />
-          </div>
-          <button type="button" class="btn btn-sec btn-sm" onclick="splitCurrentTimelineItem()" style="font-size:11px; padding:3px 8px; color:#F59E0B; border-color:#D97706;" title="Cắt phụ đề tại kim">✂️ Cắt</button>
-          <button type="button" class="btn btn-sec btn-sm" onclick="deleteTimelineSub(${index})" style="font-size:11px; padding:3px 8px; color:#EF4444; border-color:rgba(239,68,68,0.3);" title="Xóa phụ đề này">🗑️ Xóa</button>
-          <button type="button" class="btn btn-sec btn-sm" onclick="playTimelineSlice(${s.start}, ${s.end})" style="font-size:11px; padding:3px 8px;" title="Xem thử đoạn này">▶ Đoạn này</button>
-          <button type="button" class="btn btn-sec btn-sm" onclick="closeTimelineEditor()" style="font-size:11px; padding:3px 6px;">✕</button>
-        `;
-      } else if (type === 'highlight') {
-        const h = currentHighlights[index];
-        if (!h) return;
-        seekTimeline(h.start);
-        info.innerHTML = `<span style="color:#FBBF24; font-weight:700;">⭐ Highlight #${index + 1}:</span>`;
-        ctrls.innerHTML = `
-          <input type="text" value="${h.text}" style="margin:0; padding:4px 8px; font-size:12px; width:180px;" placeholder="Text Highlight..." oninput="onTimelineHlTextChange(${index}, this.value)" />
-          <div style="display:flex; align-items:center; gap:2px;">
-            <span style="font-size:11px; color:#94A3B8;">Từ:</span>
-            <input type="number" id="tlPropStart" step="0.1" value="${h.start}" style="margin:0; padding:2px 4px; font-size:11px; width:50px; text-align:center;" oninput="onTimelineHlTimeChange(${index}, 'start', this.value)" />
-          </div>
-          <div style="display:flex; align-items:center; gap:2px;">
-            <span style="font-size:11px; color:#94A3B8;">Đến:</span>
-            <input type="number" id="tlPropEnd" step="0.1" value="${h.end || (Number(h.start) + 2.0).toFixed(1)}" style="margin:0; padding:2px 4px; font-size:11px; width:50px; text-align:center;" oninput="onTimelineHlTimeChange(${index}, 'end', this.value)" />
-          </div>
-          
-          <button type="button" class="btn btn-sec btn-sm" onclick="splitCurrentTimelineItem()" style="font-size:11px; padding:3px 8px; color:#F59E0B; border-color:#D97706;" title="Cắt highlight tại kim">✂️ Cắt</button>
-          <button type="button" class="btn btn-sec btn-sm" onclick="deleteTimelineHl(${index})" style="font-size:11px; padding:3px 8px; color:#EF4444; border-color:rgba(239,68,68,0.3);" title="Xóa highlight này">🗑️ Xóa</button>
-          <button type="button" class="btn btn-sec btn-sm" onclick="playTimelineSlice(${h.start}, ${h.end || (Number(h.start) + 2.0)})" style="font-size:11px; padding:3px 8px;" title="Xem thử đoạn này">▶ Đoạn này</button>
-          <button type="button" class="btn btn-sec btn-sm" onclick="closeTimelineEditor()" style="font-size:11px; padding:3px 6px;">✕</button>
-        `;
-      } else if (type === 'hook') {
-        seekTimeline(0);
-        info.innerHTML = `<span style="color:#FF8533; font-weight:700;">🔥 Cụm Hook Mở Đầu:</span>`;
-        ctrls.innerHTML = `
-          <input type="text" id="tlHookInput1" value="${document.getElementById('hook1') ? document.getElementById('hook1').value : ''}" style="margin:0; padding:4px 8px; font-size:12px; width:160px;" placeholder="Dòng 1 Cam..." oninput="syncHookFromTl(1, this.value)" />
-          <input type="text" id="tlHookInput2" value="${document.getElementById('hook2') ? document.getElementById('hook2').value : ''}" style="margin:0; padding:4px 8px; font-size:12px; width:160px;" placeholder="Dòng 2 Xanh..." oninput="syncHookFromTl(2, this.value)" />
-          <button type="button" class="btn btn-sec btn-sm" onclick="deleteCurrentTimelineItem()" style="font-size:11px; padding:3px 8px; color:#EF4444; border-color:rgba(239,68,68,0.3);">🗑️ Xóa Text</button>
-          <button type="button" class="btn btn-sec btn-sm" onclick="seekTimeline(0)" style="font-size:11px; padding:3px 8px;">▶ Xem Hook</button>
-          <button type="button" class="btn btn-sec btn-sm" onclick="closeTimelineEditor()" style="font-size:11px; padding:3px 6px;">✕</button>
-        `;
-      } else if (type === 'outro') {
-        const totalDur = getTimelineTotalDuration();
-        const od = parseFloat(localStorage.getItem('fpt_outro_dur') || '3.5');
-        seekTimeline(Math.max(0, totalDur - od));
-        info.innerHTML = `<span style="color:#4ADE80; font-weight:700;">🎯 Cụm Outro CTA:</span>`;
-        ctrls.innerHTML = `
-          <input type="text" id="tlOutroInput1" value="${document.getElementById('outro1') ? document.getElementById('outro1').value : ''}" style="margin:0; padding:4px 8px; font-size:12px; width:160px;" placeholder="Dòng 1..." oninput="syncOutroFromTl(1, this.value)" />
-          <input type="text" id="tlOutroInput3" value="${document.getElementById('outro3') ? document.getElementById('outro3').value : ''}" style="margin:0; padding:4px 8px; font-size:12px; width:160px;" placeholder="Dòng 3 Giá..." oninput="syncOutroFromTl(3, this.value)" />
-          <button type="button" class="btn btn-sec btn-sm" onclick="deleteCurrentTimelineItem()" style="font-size:11px; padding:3px 8px; color:#EF4444; border-color:rgba(239,68,68,0.3);">🗑️ Xóa Text</button>
-          <button type="button" class="btn btn-sec btn-sm" onclick="closeTimelineEditor()" style="font-size:11px; padding:3px 6px;">✕</button>
-        `;
-      }
-    }
-
-    function onTimelineBlockMouseDown(e, type, index) {
-      if (e.target.closest('.tl-handle')) return;
-      e.stopPropagation();
-      e.preventDefault();
-
-      showQuickEditDock(type, index);
-
-      let item = null;
-      let origStart = 0;
-      let dur = 2.0;
-
-      if (type === 'broll') {
-        item = currentBrollCutaways[index];
-        if (!item) return;
-        origStart = item.start;
-        dur = item.end - item.start;
-      } else if (type === 'sub') {
-        item = currentSubtitles[index];
-        if (!item) return;
-        origStart = item.start;
-        dur = item.end - item.start;
-      } else if (type === 'highlight') {
-        item = currentHighlights[index];
-        if (!item) return;
-        origStart = item.start;
-        dur = (item.end || (item.start + 2.0)) - item.start;
-      } else if (type === 'illustration') {
-        item = currentIllustrations[index];
-        if (!item) return;
-        origStart = item.start;
-        dur = item.end - item.start;
-      } else if (type === 'video') {
-        item = currentClipWindows[index];
-        if (!item) return;
-        origStart = item.timelineStart;
-        dur = item.timelineDur;
-      } else if (type === 'sfx') {
-        const sfxList = getTimelineSfxList();
-        item = sfxList[index];
-        if (!item) return;
-        origStart = item.start;
-        dur = 0.5;
-      } else {
-        return;
-      }
-
-      const totalDur = getTimelineTotalDuration();
-      const wrap = document.getElementById('timelineScrollWrap');
-      const wrapW = (wrap && wrap.clientWidth) || 800;
-      const basePxPerSec = wrapW / totalDur;
-      const pxPerSec = Math.max(16, basePxPerSec * timelineZoom);
-
-      const targetEl = e.currentTarget;
-      const startX = e.clientX;
-      let hasMoved = false;
-
-      const onMouseMove = (ev) => {
-        const deltaX = ev.clientX - startX;
-        if (Math.abs(deltaX) > 2) hasMoved = true;
-        const deltaSec = deltaX / pxPerSec;
-        const newStart = Math.max(0, Number((origStart + deltaSec).toFixed(1)));
-        const newEnd = Number((newStart + dur).toFixed(1));
-
-        if (targetEl) targetEl.style.left = (newStart * pxPerSec) + 'px';
-
-        const startInp = document.getElementById('tlPropStart');
-        if (startInp) startInp.value = newStart;
-        const endInp = document.getElementById('tlPropEnd');
-        if (endInp && type !== 'sfx') endInp.value = newEnd;
-
-        if (type === 'broll') {
-          item.start = newStart;
-          item.end = newEnd;
-          item.duration = Number(dur.toFixed(1));
-          item.timingSource = 'manual';
-        } else if (type === 'sub') {
-          item.start = newStart;
-          item.end = newEnd;
-        } else if (type === 'highlight') {
-          item.start = newStart;
-          item.end = newEnd;
-        } else if (type === 'illustration') {
-          item.start = newStart;
-          item.end = newEnd;
-        } else if (type === 'video') {
-          item.timelineStart = newStart;
-        } else if (type === 'sfx') {
-          onTimelineSfxTimeChange(index, newStart);
-        }
-        seekTimeline(newStart);
-      };
-
-      const onMouseUp = () => {
-        window.removeEventListener('mousemove', onMouseMove);
-        window.removeEventListener('mouseup', onMouseUp);
-        if (hasMoved) {
-          renderTimeline();
-          if (type === 'broll') renderBrollQueue();
-          if (type === 'sub') renderSubList();
-          if (type === 'highlight') renderHighlightsList();
-        }
-      };
-
-      window.addEventListener('mousemove', onMouseMove);
-      window.addEventListener('mouseup', onMouseUp);
-    }
-
-    function onTimelineHandleMouseDown(e, type, index, side) {
-      e.stopPropagation();
-      e.preventDefault();
-
-      showQuickEditDock(type, index);
-
-      let origStart = 0;
-      let origEnd = 0;
-      let b = null, s = null, h = null, ill = null, c = null;
-
-      if (type === 'broll') {
-        b = currentBrollCutaways[index];
-        if (!b) return;
-        origStart = b.start;
-        origEnd = b.end;
-      } else if (type === 'sub') {
-        s = currentSubtitles[index];
-        if (!s) return;
-        origStart = s.start;
-        origEnd = s.end;
-      } else if (type === 'highlight') {
-        h = currentHighlights[index];
-        if (!h) return;
-        origStart = h.start;
-        origEnd = h.end || (h.start + 2.0);
-      } else if (type === 'illustration') {
-        ill = currentIllustrations[index];
-        if (!ill) return;
-        origStart = ill.start;
-        origEnd = ill.end;
-      } else if (type === 'video') {
-        c = currentClipWindows[index];
-        if (!c) return;
-        origStart = c.trimStart || 0;
-        origEnd = c.trimEnd || c.timelineDur;
-      } else if (type === 'hook') {
-        origStart = 0;
-        origEnd = parseFloat(localStorage.getItem('fpt_hook_dur') || '3.5');
-      } else if (type === 'outro') {
-        const totalDur = getTimelineTotalDuration();
-        const od = parseFloat(localStorage.getItem('fpt_outro_dur') || '3.5');
-        origStart = Math.max(0, totalDur - od);
-        origEnd = totalDur;
-      } else {
-        return;
-      }
-
-      const totalDur = getTimelineTotalDuration();
-      const wrap = document.getElementById('timelineScrollWrap');
-      const wrapW = (wrap && wrap.clientWidth) || 800;
-      const basePxPerSec = wrapW / totalDur;
-      const pxPerSec = Math.max(16, basePxPerSec * timelineZoom);
-
-      const targetEl = e.target.closest('.tl-block');
-      const startX = e.clientX;
-      let hasMoved = false;
-
-      const onMouseMove = (ev) => {
-        const deltaX = ev.clientX - startX;
-        if (Math.abs(deltaX) > 2) hasMoved = true;
-        const deltaSec = deltaX / pxPerSec;
-
-        if (side === 'left') {
-          const newStart = Math.max(0, Math.min(origEnd - 0.2, Number((origStart + deltaSec).toFixed(1))));
-          const newDur = Math.max(0.2, Number((origEnd - newStart).toFixed(1)));
-          if (targetEl) {
-            targetEl.style.left = (newStart * pxPerSec) + 'px';
-            targetEl.style.width = Math.max(20, newDur * pxPerSec - 2) + 'px';
-          }
-          const sInp = document.getElementById('tlPropStart');
-          if (sInp) sInp.value = newStart;
-          const dSpan = document.getElementById('tlPropDur');
-          if (dSpan) dSpan.textContent = newDur + 's';
-
-          if (type === 'broll') { b.start = newStart; b.duration = newDur; b.timingSource = 'manual'; }
-          else if (type === 'sub') { s.start = newStart; }
-          else if (type === 'highlight') { h.start = newStart; }
-          else if (type === 'illustration') { ill.start = newStart; }
-          else if (type === 'video') { c.trimStart = newStart; c.timelineDur = newDur; }
-        } else if (side === 'right') {
-          const newEnd = Math.max(origStart + 0.2, Number((origEnd + deltaSec).toFixed(1)));
-          const newDur = Math.max(0.2, Number((newEnd - origStart).toFixed(1)));
-          if (targetEl) {
-            targetEl.style.width = Math.max(20, newDur * pxPerSec - 2) + 'px';
-          }
-          const eInp = document.getElementById('tlPropEnd');
-          if (eInp) eInp.value = newEnd;
-          const dSpan = document.getElementById('tlPropDur');
-          if (dSpan) dSpan.textContent = newDur + 's';
-
-          if (type === 'broll') { b.end = newEnd; b.duration = newDur; b.timingSource = 'manual'; }
-          else if (type === 'sub') { s.end = newEnd; }
-          else if (type === 'highlight') { h.end = newEnd; }
-          else if (type === 'illustration') { ill.end = newEnd; }
-          else if (type === 'video') { c.trimEnd = newEnd; c.timelineDur = newDur; }
-          else if (type === 'hook') { localStorage.setItem('fpt_hook_dur', String(newDur)); }
-          else if (type === 'outro') { localStorage.setItem('fpt_outro_dur', String(newDur)); }
-        }
-      };
-
-      const onMouseUp = () => {
-        window.removeEventListener('mousemove', onMouseMove);
-        window.removeEventListener('mouseup', onMouseUp);
-        if (hasMoved) {
-          renderTimeline();
-          if (type === 'broll') renderBrollQueue();
-          if (type === 'sub') renderSubList();
-          if (type === 'highlight') renderHighlightsList();
-        }
-      };
-
-      window.addEventListener('mousemove', onMouseMove);
-      window.addEventListener('mouseup', onMouseUp);
-    }
-
-    function splitCurrentTimelineItem() {
-      if (!selectedTimelineItem) return;
-      const { type, index } = selectedTimelineItem;
-      const cutT = Number((timelineCurrentTime || 0).toFixed(1));
-
-      if (type === 'broll') {
-        const b = currentBrollCutaways[index];
-        if (!b || cutT <= b.start + 0.3 || cutT >= b.end - 0.3) return;
-        const oldEnd = b.end;
-        b.timingSource = 'manual';
-        b.end = cutT;
-        b.duration = Number((b.end - b.start).toFixed(1));
-        const newB = {
-          ...b,
-          id: `broll_${Date.now()}`,
-          start: cutT,
-          end: oldEnd,
-          duration: Number((oldEnd - cutT).toFixed(1))
-        };
-        currentBrollCutaways.splice(index + 1, 0, newB);
-        renderTimeline();
-        renderBrollQueue();
-        showQuickEditDock('broll', index + 1);
-      } else if (type === 'sub') {
-        const s = currentSubtitles[index];
-        if (!s || cutT <= s.start + 0.3 || cutT >= s.end - 0.3) return;
-        const oldEnd = s.end;
-        s.end = cutT;
-        const newS = {
-          ...s,
-          id: currentSubtitles.length + 1,
-          start: cutT,
-          end: oldEnd
-        };
-        currentSubtitles.splice(index + 1, 0, newS);
-        renderTimeline();
-        renderSubList();
-        showQuickEditDock('sub', index + 1);
-      } else if (type === 'highlight') {
-        const h = currentHighlights[index];
-        if (!h) return;
-        const hEnd = h.end || (h.start + 2.0);
-        if (cutT <= h.start + 0.3 || cutT >= hEnd - 0.3) return;
-        h.end = cutT;
-        const newH = {
-          ...h,
-          id: currentHighlights.length + 1,
-          start: cutT,
-          end: hEnd
-        };
-        currentHighlights.splice(index + 1, 0, newH);
-        renderTimeline();
-        renderHighlightsList();
-        showQuickEditDock('highlight', index + 1);
-      }
-    }
-
-    function deleteCurrentTimelineItem() {
-      if (!selectedTimelineItem) return;
-      const { type, index } = selectedTimelineItem;
-      if (type === 'broll') {
-        currentBrollCutaways.splice(index, 1);
-        closeTimelineEditor();
-        renderBrollQueue();
-        renderTimeline();
-      } else if (type === 'sub') {
-        deleteTimelineSub(index);
-      } else if (type === 'highlight') {
-        deleteTimelineHl(index);
-      } else if (type === 'illustration') {
-        currentIllustrations.splice(index, 1);
-        closeTimelineEditor();
-        renderTimeline();
-      } else if (type === 'sfx') {
-        const sfxList = getTimelineSfxList();
-        const sfx = sfxList[index];
-        if (sfx) {
-          if (sfx.type === 'sfx_highlight' && currentHighlights[sfx.hlIndex]) {
-            currentHighlights.splice(sfx.hlIndex, 1);
-          } else if (sfx.type === 'sfx_broll' && currentBrollCutaways[sfx.brollIndex]) {
-            currentBrollCutaways.splice(sfx.brollIndex, 1);
-          }
-        }
-        closeTimelineEditor();
-        renderTimeline();
-      } else if (type === 'hook') {
-        if (document.getElementById('hook1')) document.getElementById('hook1').value = '';
-        if (document.getElementById('hook2')) document.getElementById('hook2').value = '';
-        closeTimelineEditor();
-        renderTimeline();
-      } else if (type === 'outro') {
-        if (document.getElementById('outro1')) document.getElementById('outro1').value = '';
-        if (document.getElementById('outro3')) document.getElementById('outro3').value = '';
-        closeTimelineEditor();
-        renderTimeline();
-      }
-    }
-
-    function onTimelineBrollNameChange(idx, val) {
-        if (currentBrollCutaways[idx]) {
-          currentBrollCutaways[idx].name = val;
-          renderTimeline();
-          renderBrollQueue();
-        }
-      }
-
-      function onTimelineBrollTimeChange(idx, field, val) {
-        if (!currentBrollCutaways[idx]) return;
-        const b = currentBrollCutaways[idx];
-        const num = parseFloat(val);
-        if (isNaN(num)) return;
-        b.timingSource = 'manual';
-
-        if (field === 'start') {
-          const curDur = b.duration || Math.max(1.0, (b.end - b.start)) || 3.5;
-          b.start = Math.max(0, Number(num.toFixed(1)));
-          // Khi dời start, tự động dời end để giữ nguyên thời lượng clip
-          b.end = Number((b.start + curDur).toFixed(1));
-          b.duration = Number(curDur.toFixed(1));
-        } else if (field === 'end') {
-          b.end = Math.max(0.5, Number(num.toFixed(1)));
-          if (b.end <= b.start) {
-            b.start = Math.max(0, Number((b.end - 0.5).toFixed(1)));
-          }
-          b.duration = Math.max(0.4, Number((b.end - b.start).toFixed(1)));
-        }
-
-        const durSpan = document.getElementById('tlPropDur');
-        if (durSpan) durSpan.textContent = b.duration.toFixed(1) + 's';
-        const startInp = document.getElementById('tlPropStart');
-        if (startInp && field === 'end') startInp.value = b.start;
-        const endInp = document.getElementById('tlPropEnd');
-        if (endInp && field === 'start') endInp.value = b.end;
-
-        renderTimeline();
-        renderBrollQueue();
-      }
-
-    function onTimelineSfxTimeChange(idx, val) {
-      const sfxList = getTimelineSfxList();
-      const sfx = sfxList[idx];
-      if (sfx) {
-        const newT = parseFloat(val) || 0;
-        if (sfx.type === 'sfx_highlight' && currentHighlights[sfx.hlIndex]) {
-          currentHighlights[sfx.hlIndex].start = newT;
-        } else if (sfx.type === 'sfx_broll' && currentBrollCutaways[sfx.brollIndex]) {
-          currentBrollCutaways[sfx.brollIndex].start = newT;
-        }
-        renderTimeline();
-      }
-    }
-
-    function onTimelineVideoTrimChange(idx, field, val) {
-      if (currentClipWindows[idx]) {
-        currentClipWindows[idx][field] = parseFloat(val) || 0;
-        currentClipWindows[idx].timelineDur = Math.max(0.25, Number(((currentClipWindows[idx].trimEnd || 5) - (currentClipWindows[idx].trimStart || 0)).toFixed(2)));
-        renderTimeline();
-      }
-    }
-
-    function closeTimelineEditor() {
-      selectedTimelineItem = null;
-      renderTimeline();
-      const info = document.getElementById('tlSelectionInfo');
-      const ctrls = document.getElementById('tlEditorControls');
-      if (info) info.innerHTML = `<span>💡 <i>Click vào bất kỳ khối nào trên Timeline (Video, Minh Họa, Sub, Highlight, Hook) hoặc kéo 2 mép để cắt/ngắn lại trực tiếp.</i></span>`;
-      if (ctrls) { ctrls.style.display = 'none'; ctrls.innerHTML = ''; }
-    }
-
-    function onTimelineSubTextChange(idx, val) {
-      if (currentSubtitles[idx]) {
-        currentSubtitles[idx].text = val;
-        renderSubList();
-        renderTimeline();
-      }
-    }
-
-    function onTimelineSubTimeChange(idx, field, val) {
-      if (currentSubtitles[idx]) {
-        currentSubtitles[idx][field] = parseFloat(val) || 0;
-        renderSubList();
-        renderTimeline();
-      }
-    }
-
-    function deleteTimelineSub(idx) {
-      if (currentSubtitles && currentSubtitles[idx]) {
-        currentSubtitles.splice(idx, 1);
-        closeTimelineEditor();
-        renderSubList();
-        renderTimeline();
-      }
-    }
-
-    function onTimelineHlTextChange(idx, val) {
-      if (currentHighlights[idx]) {
-        currentHighlights[idx].text = val;
-        renderHighlightsList();
-        renderTimeline();
-      }
-    }
-
-    function onTimelineHlTimeChange(idx, field, val) {
-      if (currentHighlights[idx]) {
-        currentHighlights[idx][field] = parseFloat(val) || 0;
-        renderHighlightsList();
-        renderTimeline();
-      }
-    }
-
-    function onTimelineHlPropChange(idx, prop, val) {
-      if (currentHighlights[idx]) {
-        currentHighlights[idx][prop] = parseFloat(val) || 0;
-        renderHighlightsList();
-        renderTimeline();
-      }
-    }
-
-    function deleteTimelineHl(idx) {
-      if (currentHighlights && currentHighlights[idx]) {
-        currentHighlights.splice(idx, 1);
-        closeTimelineEditor();
-        renderHighlightsList();
-        renderTimeline();
-      }
-    }
-
-    function syncHookFromTl(lineNum, val) {
-      const el = document.getElementById('hook' + lineNum);
-      if (el) { el.value = val; userEditedHook = true; }
-      renderTimeline();
-    }
-
-    function syncOutroFromTl(lineNum, val) {
-      const el = document.getElementById('outro' + lineNum);
-      if (el) { el.value = val; userEditedHook = true; }
-      renderTimeline();
-    }
-
-    function playTimelineSlice(startSec, endSec) {
-      seekTimeline(startSec);
-      const vid = document.getElementById('previewVideo');
-      if (vid && vid.src && !isNaN(vid.duration) && vid.duration > 0) {
-        vid.currentTime = startSec;
-        vid.play().catch(() => {});
-        const checkSlice = () => {
-          if (vid.currentTime >= endSec) {
-            vid.pause();
-            vid.removeEventListener('timeupdate', checkSlice);
-          }
-        };
-        vid.addEventListener('timeupdate', checkSlice);
-      }
-    }
-
-    function playSfxByKey(sfxKey) {
-      const audio = document.getElementById('sfxPlayer');
-      if (audio) {
-        audio.src = `/assets/sfx/${sfxKey}.mp3`;
-        audio.play().catch(() => {});
-      }
-    }
-
-    function toggleTimelinePlay() {
-      const btn = document.getElementById('tlPlayBtn');
-      const vid = document.getElementById('previewVideo');
-      const totalDur = getTimelineTotalDuration();
-
-      if (vid && vid.src && !isNaN(vid.duration) && vid.duration > 0) {
-        if (vid.paused) {
-          vid.play().catch(() => {});
-          if (btn) btn.textContent = 'Tạm dừng';
-        } else {
-          vid.pause();
-          if (btn) btn.textContent = 'Phát';
-        }
-        return;
-      }
-
-      timelineIsPlaying = !timelineIsPlaying;
-      if (btn) btn.textContent = timelineIsPlaying ? 'Tạm dừng' : 'Phát';
-
-      if (timelineIsPlaying) {
-        if (timelineCurrentTime >= totalDur) timelineCurrentTime = 0;
-        clearInterval(timelinePlayTimer);
-        timelinePlayTimer = setInterval(() => {
-          timelineCurrentTime += 0.1;
-          if (timelineCurrentTime >= totalDur) {
-            timelineCurrentTime = totalDur;
-            timelineIsPlaying = false;
-            clearInterval(timelinePlayTimer);
-            if (btn) btn.textContent = 'Phát';
-          }
-          updateTimelinePlayheadUI();
-        }, 100);
-      } else {
-        clearInterval(timelinePlayTimer);
-      }
-    }
-
-    function zoomTimeline(delta) {
-      timelineZoom = Math.max(0.5, Math.min(3.5, Number((timelineZoom + delta).toFixed(2))));
-      renderTimeline();
-    }
-
-    function fitTimeline() {
-      timelineZoom = 1.0;
-      renderTimeline();
-    }
-
-    function toggleTimelineCollapse(forceOpen) {
-  const body = document.getElementById('timelineBody');
-  const button = document.getElementById('tlCollapseBtn');
-  const open = typeof forceOpen === 'boolean' ? forceOpen : button.getAttribute('aria-expanded') !== 'true';
-  body.style.display = open ? 'block' : 'none';
-  button.setAttribute('aria-expanded', String(open));
-  document.getElementById('timelineToggleLabel').textContent = open ? 'Thu gọn' : 'Mở timeline';
-  if (open) requestAnimationFrame(() => renderTimeline());
-}
-
-    // Keyboard Shortcuts (CapCut-Style):
-    window.addEventListener('keydown', (e) => {
-      if (document.getElementById('tlCollapseBtn').getAttribute('aria-expanded') !== 'true') return;
-      if (document.activeElement.isContentEditable || ['INPUT','TEXTAREA','SELECT','BUTTON','SUMMARY','A','VIDEO'].includes(document.activeElement.tagName)) return;
-
-      if (e.code === 'Space') {
-        e.preventDefault();
-        toggleTimelinePlay();
-      } else if (e.code === 'KeyS') {
-        e.preventDefault();
-        splitCurrentTimelineItem();
-      } else if (e.code === 'Delete' || e.code === 'Backspace') {
-        e.preventDefault();
-        deleteCurrentTimelineItem();
-      } else if (e.code === 'ArrowLeft') {
-        e.preventDefault();
-        seekTimeline(timelineCurrentTime - (e.shiftKey ? 1.0 : 0.1));
-      } else if (e.code === 'ArrowRight') {
-        e.preventDefault();
-        seekTimeline(timelineCurrentTime + (e.shiftKey ? 1.0 : 0.1));
-      }
-    });
 
 function escapeStudioText(value) {
   return String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -2771,28 +1448,66 @@ async function suggestStudioKeywords() {
 }
 
 function initStudioUI() {
+  document.getElementById('subDetails').addEventListener('toggle',e=>{if(e.target.open)renderSubList();});
+  document.getElementById('highlightDetails').addEventListener('toggle',e=>{if(e.target===e.currentTarget&&e.target.open)renderHighlightsList();});
   const video=document.getElementById('previewVideo');
   const updatePreview=()=>{
     const hasSource=!!video.getAttribute('src');
     document.getElementById('previewEmpty').hidden=hasSource;
-    document.getElementById('previewState').textContent=hasSource?'Bản dựng':'Chưa có video';
+    document.getElementById('previewState').textContent=hasSource?(Live.mode==='live'?'Trực tiếp':'Bản xuất'):'Chưa có video';
   };
   new MutationObserver(updatePreview).observe(video,{attributes:true,attributeFilter:['src']});
   updatePreview();updateKeywordCount();
 }
 
+// The page on disk can be newer than the server in memory after an update; edits would then be ignored silently.
+async function checkVersion() {
+  try {
+    const [files, server, info] = await Promise.all([fetch('/studio/version.json', {cache:'no-store'}).then(r=>r.json()), fetch('/api/config').then(r=>r.json()), fetch('/api/version').then(r=>r.ok?r.json():{}).catch(()=>({}))]);
+    const banner = document.getElementById('versionBanner'), old = files.version !== server.version;
+    banner.hidden = !old;
+    if (!old) return;
+    banner.innerHTML = 'Studio đang chạy bản ' + escapeStudioText(server.version || 'cũ') + ', đã có bản ' + escapeStudioText(files.version) + '. Một số chỉnh sửa sẽ chưa có tác dụng. ' +
+      (info.canRestart ? '<button type="button" class="btn btn-sm" id="updateNow">Cập nhật ngay</button>' : 'Hãy đóng tab này và mở lại bằng <b>scripts/start_studio.cmd</b>.');
+    const button = document.getElementById('updateNow');
+    if (button) button.onclick = async () => {
+      button.disabled = true; button.textContent = 'Đang cập nhật…';
+      const r = await fetch('/api/restart', {method:'POST', headers:{'Content-Type':'application/json'}, body:'{}'}).then(x=>x.json()).catch(()=>({ok:true}));
+      if (!r.ok) { button.disabled = false; button.textContent = r.error || 'Thử lại'; return; }
+      for (let i = 0; i < 60; i++) { await new Promise(x=>setTimeout(x,500)); const v = await fetch('/api/config').then(x=>x.json()).catch(()=>null); if (v && v.version === files.version) return location.reload(); }
+      button.textContent = 'Hãy mở lại bằng start_studio.cmd';
+    };
+  } catch (_) {}
+}
+function resetEditDecisions() {
+  studioSeed='';hookStyle='';outroStyle='';outroStartManual=null;outroEndManual=null;hookStartManual=null;hookDurManual=null;extraTitles=[];musicSegments=null;sfxOverrides={};customSfx=[];customFx=[];fxState={};previousLooks=[];highlightsTouched=false;
+  TL.reset();
+}
+// Listening starts while the user is still choosing music or reading: the Sub text button then answers at once.
+let prewarmTimer=0;
+function prewarmSpeech() {
+  clearTimeout(prewarmTimer);
+  if(!selectedVideos.length)return;
+  prewarmTimer=setTimeout(()=>fetch('/api/prewarm',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({videoFiles:selectedVideos,voiceFiles:[],voiceSpeed:currentVoiceSpeed})}).catch(()=>{}),1200);
+}
 function invalidateStudioAnalysis() {
+  resetEditDecisions();
+  prewarmSpeech();
   currentSubtitles=[];currentHighlights=[];currentClipWindows=[];currentBrollCutaways=[];
   brollScanVersion++;
   lastRenderResult=null;
   document.getElementById('resultArea').style.display='none';
   document.getElementById('previewVideo').removeAttribute('src');
+  document.getElementById('previewVideo').load();
   document.getElementById('renderBtnTop').textContent='Xuất MP4';
   document.getElementById('subStatusBanner').style.display='none';
   renderSubList();renderHighlightsList();renderBrollQueue();
 }
 
     initStudioUI();
+    TL.start();
+    checkVersion();setInterval(checkVersion,60000);
+    Live.boot().then(()=>TL.changed({now:true})).catch(error=>console.error(error));
     init();
   </script>
 </body>

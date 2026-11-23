@@ -1,6 +1,6 @@
 {
   "name": "fpt-telecom-video-automation",
-  "version": "1.0.0",
+  "version": "1.6.1",
   "private": true,
   "description": "FPT Telecom speech-synchronized video automation studio",
   "type": "commonjs",
@@ -10,24 +10,22 @@
   },
   "scripts": {
     "start": "node src/server.js",
-    "doctor": "node scripts/validate_project.js",
-    "test": "node --test tests/*.test.js",
-    "test:ui": "node tests/run_studio_smoke.js",
-    "test:broll": "node tests/render_speech_broll_smoke.js",
-    "generate:assets": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/generate_brand_assets.ps1",
-    "generate:broll-cards": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/generate_broll_cards.ps1",
-    "generate:audio": "node src/core/audio_assets.js",
-    "capcut:list": "node scripts/capcut_bridge.js --list"
+    "doctor": "node scripts/build/validate_project.js",
+    "test": "node --test \"tests/unit/*.test.js\"",
+    "test:ui": "node tests/e2e/run_studio_smoke.js",
+    "test:broll": "node tests/e2e/render_speech_broll_smoke.js",
+    "generate:broll-cards": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/assets/generate_broll_cards.ps1",
+    "capcut:list": "node scripts/tools/capcut_bridge.js --list",
+    "verify": "npm run doctor && npm test && node tests/e2e/render_broll_smoke.js && npm run test:broll && npm run test:ui",
+    "generate:product-broll": "node scripts/assets/generate_product_broll.js",
+    "docs:typography": "node scripts/build/typography_catalog.js",
+    "package": "node scripts/build/package_release.js",
+    "test:timeline": "node tests/e2e/run_studio_smoke.js timeline"
   },
   "dependencies": {
+    "@napi-rs/canvas": "1.2.0",
     "capcut-cli": "0.34.0",
     "ffmpeg-static": "5.3.0",
-    "ffprobe-static": "3.1.0",
-    "google-tts-api": "2.0.2",
-    "msedge-tts": "2.1.1",
-    "@remotion/captions": "4.0.543",
-    "@remotion/layout-utils": "4.0.543",
-    "react": "18.3.1",
-    "remotion": "4.0.543"
+    "ffprobe-static": "3.1.0"
   }
 }

@@ -22,5 +22,19 @@
     "licenseUrl": "https://mixkit.co/license/#videoFree",
     "downloadedAt": "2026-11-17T14:49:01.733Z",
     "fileSize": 2258008
+  },
+  "broll_product_wifi6.mp4": {
+    "status": "brand_product_render",
+    "title": "Modem Wi-Fi 6 FPT — chuyển động dựng từ ảnh sản phẩm FPT",
+    "sourceImage": "broll-images/fpt_wifi6_chip_features.jpg",
+    "generator": "scripts/assets/generate_product_broll.js",
+    "fileSize": 2144034
+  },
+  "broll_product_camera.mp4": {
+    "status": "brand_product_render",
+    "title": "Camera FPT — chuyển động dựng từ ảnh sản phẩm FPT",
+    "sourceImage": "brand/products/camera_ai.jpg",
+    "generator": "scripts/assets/generate_product_broll.js",
+    "fileSize": 784989
   }
 }

@@ -78,7 +78,8 @@
     "defaultBgm": "background_music_01.mp4",
     "referenceIntegratedLUFS": -11.4,
     "referenceTruePeakDb": -0.09,
-    "referenceLra": 1.2
+    "referenceLra": 1.2,
+    "voiceLUFS": -13.9
   },
   "reference": {
     "duration": 14.8,
@@ -86,5 +87,27 @@
     "brolls": 1,
     "sfx": 9,
     "allowUserTextEdits": true
+  },
+  "standard": {
+    "approvedOn": "2026-11-22",
+    "path": "assets/references/standard-video/standard.mp4",
+    "sha256": "b75a16e356f8d8f75c907c4e2ff84ff93c28edba695c3d6cb028329a87e2083b",
+    "duration": 13.3,
+    "fps": 30,
+    "highlights": 6,
+    "brolls": 2,
+    "hookStyle": "ribbon_wave",
+    "outroStyle": "ticket_banner",
+    "integratedLUFS": -10.5,
+    "sub": {
+      "text": "#FFFFFF",
+      "keyword": "#FFFF00",
+      "outline": "#FC6601",
+      "keywordScale": 1.2
+    },
+    "usage": "structure_only",
+    "plan": "assets/references/standard-video/plan.json",
+    "sfx": 13,
+    "sfxFolder": "sfx-user"
   }
 }

@@ -1,7 +1,7 @@
 'use strict';
 const path=require('path'),{fork,execFile}=require('child_process');
 class TaskQueue {
-  constructor({maxWaiting=4,timeoutMs=3600000,worker=path.join(__dirname,'task_worker.js')}={}) {
+  constructor({maxWaiting=4,timeoutMs=3600000,worker=path.join(__dirname, 'task_worker.js')}={}) {
     this.pending=[];this.active=null;this.closed=false;this.maxWaiting=maxWaiting;this.timeoutMs=timeoutMs;this.worker=worker;
   }
   get busy(){return !!this.active;}

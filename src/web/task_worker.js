@@ -5,18 +5,20 @@ process.once('message',async ({type,payload})=>{
   try {
     let result;
     if(type==='render'){
-      const {runFptPipeline}=require('../core/video_pipeline');
+      const {runFptPipeline}=require('../pipeline/video_pipeline');
       result=await runFptPipeline(payload,msg=>send({type:'log',message:msg}),
         (progress,label)=>send({type:'progress',progress,label}));
     }else if(type==='autosub'){
-      result=await require('../core/subtitle_generator').generateAutoSubtitles(payload);
+      result=await require('../speech/subtitle_generator').generateAutoSubtitles(payload);
+    }else if(type==='prepare'){
+      result=await require('../pipeline/preview').preparePreview(payload);
     }else if(type==='probe'){
-      result=require('../core/media_profile').probeMedia(payload.file,payload.kind);
+      result=require('../media/media_profile').probeMedia(payload.file,payload.kind);
     }else if(type==='crawl-brolls'){
-      const crawler=require('../core/broll_crawler');
+      const crawler=require('../broll/broll_crawler');
       result=payload.topic==='all'?await crawler.crawlAllTopics():[await crawler.crawlBrollTopic(payload.topic)];
     }else if(type==='crawl-fpt'){
-      result=await require('../core/resource_catalog').crawlFptResourcesAndTrends();
+      result=await require('../broll/resource_catalog').crawlFptResourcesAndTrends();
     }else throw Error('Tác vụ không hợp lệ.');
     send({type:'result',result});
   }catch(error){send({type:'error',error:error.message,status:error.status});}
