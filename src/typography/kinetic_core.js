@@ -168,6 +168,13 @@ const STYLES={
   fpt_data_stream:{lead:slab(BG,C.white,C.sky,{family:BODY,size:40,padX:26,padY:12}),main:outline([C.sky,C.blue],C.white,16,{size:90}),deco:['stream']},
   fpt_speed_gauge:{lead:pill(NG,C.white,C.orange),main:outline(OG,C.white,16,{size:90}),deco:['gauge']},
   fpt_connect_nodes:{lead:pill(BG),main:slab(GG,C.white,C.white,{size:68,reserve:60}),deco:['nodes']},
+  // B-roll set (user, 24/11/2026): a look that belongs to the picture on screen, used first while that B-roll shows.
+  fpt_game_crosshair:{lead:slab(NG,C.sky,C.sky,{family:BODY,size:40,padX:24,padY:11}),main:outline(C.white,C.navy,15,{size:88,reserve:110}),deco:['crosshair','hpbar']},
+  fpt_game_victory:{lead:pill(BG),main:slab(OG,C.white,C.white,{size:72,reserve:150}),deco:['chevrons','burst']},
+  fpt_score_bar:{lead:slab(GG,C.white,C.white,{family:BODY,size:40,padX:26,padY:12}),main:card(NG,C.white,C.green,{size:66,reserve:110,borderW:6}),deco:['pitch','ball']},
+  fpt_cam_rec:{lead:pill(NG,C.white,C.orange),main:outline(C.white,C.navy,13,{size:84,reserve:60}),deco:['focus','rec']},
+  fpt_play_cinema:{lead:pill(OG),main:slab(NG,C.white,C.orange,{size:70,reserve:40}),deco:['filmstrip','shine']},
+  fpt_play_button:{lead:outline(C.white,C.navy,10,{family:BODY,size:48}),main:slab(OG,C.white,C.white,{box:'pill',size:62,padX:40,padY:19,reserve:130}),deco:['playbtn','ring']},
   // Problem set: only on phrases about a problem ("bị bức tường ngăn", "sóng yếu", "giật lag"). Dimmed navy, orange
   // warnings, and motion that hesitates: a bump against a wall, a flicker, a glitch, a sink.
   neg_wall_block:{neg:true,lead:pill(MG,C.white,C.navyG),main:slab([C.navyM,C.navy],C.white,C.orange,{size:70,reserve:96}),deco:['wall'],after:'bump'},
@@ -503,6 +510,81 @@ const DECO={
   },
   shine(ctx,cue,t){shine(ctx,cue,t);},
   echo(){},
+  // ---- B-roll set ----
+  // game: a reticle locks onto the phrase from the left, then pulses
+  crosshair(ctx,cue,t){
+    const main=cue.lines.at(-1),m=main.box,from=main.at+.06;if(t<from)return;
+    const p=outCubic((t-from)/.3),cx=Math.max(60,m.x-52),cy=m.y+m.h/2,r=36+44*(1-p),spin=t*1.6;
+    ctx.save();ctx.globalAlpha*=clamp(p*2);ctx.lineCap='round';ctx.shadowColor='rgba(4,12,28,.55)';ctx.shadowBlur=8;
+    ctx.strokeStyle=C.white;ctx.lineWidth=5;ctx.beginPath();ctx.arc(cx,cy,r,0,7);ctx.stroke();
+    ctx.strokeStyle=C.sky;ctx.lineWidth=4;ctx.setLineDash([10,9]);ctx.lineDashOffset=-spin*20;ctx.beginPath();ctx.arc(cx,cy,r+12,0,7);ctx.stroke();ctx.setLineDash([]);
+    ctx.strokeStyle=C.white;ctx.lineWidth=5;for(let i=0;i<4;i++){const a=i*Math.PI/2;ctx.beginPath();ctx.moveTo(cx+Math.cos(a)*(r-12),cy+Math.sin(a)*(r-12));ctx.lineTo(cx+Math.cos(a)*(r+8),cy+Math.sin(a)*(r+8));ctx.stroke();}
+    const z=1+.3*Math.max(0,Math.sin(t*6));ctx.fillStyle=C.orange;ctx.beginPath();ctx.arc(cx,cy,6*z,0,7);ctx.fill();ctx.restore();
+  },
+  // game: a segmented health bar fills under the phrase, the last chunk blinks orange
+  hpbar(ctx,cue,t){
+    const main=cue.lines.at(-1),m=main.box,from=main.at+.12,p=outCubic((t-from)/.45);if(p<=0)return;
+    const w=Math.min(560,m.w*.92),x=CX-w/2,y=m.y+m.h+16,h=16,n=10,fill=w*p;
+    ctx.save();ctx.fillStyle='rgba(11,31,63,.85)';ctx.strokeStyle=C.white;ctx.lineWidth=3;ctx.beginPath();ctx.roundRect(x-4,y-4,w+8,h+8,6);ctx.fill();ctx.stroke();
+    const g=ctx.createLinearGradient(x,0,x+w,0);g.addColorStop(0,C.green);g.addColorStop(1,C.greenL);ctx.fillStyle=g;ctx.fillRect(x,y,fill*.86,h);
+    if(fill>w*.86){ctx.fillStyle=Math.sin(t*10)>0?C.orange:C.orangeL;ctx.fillRect(x+w*.86,y,fill-w*.86,h);}
+    ctx.fillStyle='rgba(11,31,63,.9)';for(let i=1;i<n;i++)ctx.fillRect(x+w*i/n-1.5,y,3,h);ctx.restore();
+  },
+  // game victory: chevrons rush out from both sides of the banner
+  chevrons(ctx,cue,t){
+    const main=cue.lines.at(-1),m=main.box,from=main.at+.05;if(t<from)return;
+    const cy=m.y+m.h/2,s=m.h*.36;ctx.save();ctx.lineCap=ctx.lineJoin='round';ctx.shadowColor='rgba(4,12,28,.5)';ctx.shadowBlur=6;
+    for(const side of [-1,1])for(let i=0;i<3;i++){
+      const k=outBack(clamp((t-from-i*.06)/.28),1.6),drift=6*Math.sin(t*5-i),x=side<0?m.x-22-i*30-drift:m.x+m.w+22+i*30+drift;
+      if(k<=0||x<30||x>1050)continue;ctx.globalAlpha=k*(1-i*.22);ctx.strokeStyle=[C.white,C.orangeL,C.blueL][i];ctx.lineWidth=9;
+      ctx.beginPath();ctx.moveTo(x,cy-s*k);ctx.lineTo(x+side*s*.62*k,cy);ctx.lineTo(x,cy+s*k);ctx.stroke();
+    }
+    ctx.restore();
+  },
+  // football: halfway line and centre circle drawn under the scoreboard
+  pitch(ctx,cue,t){
+    const main=cue.lines.at(-1),m=main.box,p=outCubic((t-main.at-.1)/.4);if(p<=0)return;
+    const y=m.y+m.h+26,w=Math.min(620,m.w*1.05)*p;ctx.save();ctx.strokeStyle='rgba(255,255,255,.95)';ctx.lineWidth=5;ctx.shadowColor='rgba(4,12,28,.5)';ctx.shadowBlur=5;
+    ctx.beginPath();ctx.moveTo(CX-w/2,y);ctx.lineTo(CX+w/2,y);ctx.stroke();
+    ctx.strokeStyle=C.greenL;ctx.beginPath();ctx.arc(CX,y,26,Math.PI,Math.PI+Math.PI*2*p);ctx.stroke();ctx.fillStyle=C.white;ctx.beginPath();ctx.arc(CX,y,5,0,7);ctx.fill();ctx.restore();
+  },
+  // football: a ball rolls in and rests beside the scoreboard
+  ball(ctx,cue,t){
+    const main=cue.lines.at(-1),m=main.box,from=main.at+.08;if(t<from)return;
+    const p=outBack(clamp((t-from)/.5),1.3),r=26,x1=Math.min(W-40,m.x+m.w+44),x=x1+260*(1-p),y=m.y+m.h/2+4*Math.sin(t*4),rot=-(260*(1-p))/r+t*.6;
+    ctx.save();ctx.translate(x,y);ctx.rotate(rot);ctx.shadowColor='rgba(4,12,28,.55)';ctx.shadowBlur=10;ctx.shadowOffsetY=5;
+    ctx.fillStyle=C.white;ctx.beginPath();ctx.arc(0,0,r,0,7);ctx.fill();ctx.shadowColor='transparent';ctx.save();ctx.beginPath();ctx.arc(0,0,r,0,7);ctx.clip();
+    const pent=(cx,cy,s)=>{ctx.beginPath();for(let i=0;i<5;i++){const a=-Math.PI/2+i*Math.PI*2/5;ctx[i?'lineTo':'moveTo'](cx+Math.cos(a)*s,cy+Math.sin(a)*s);}ctx.closePath();ctx.fill();};
+    ctx.fillStyle=C.navy;pent(0,0,9);for(let i=0;i<5;i++){const a=-Math.PI/2+i*Math.PI*2/5;pent(Math.cos(a)*22,Math.sin(a)*22,8);}
+    ctx.restore();ctx.strokeStyle=C.navy;ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,r,0,7);ctx.stroke();ctx.restore();
+  },
+  // camera: a recording dot blinks at the corner of the viewfinder
+  rec(ctx,cue,t){
+    const b=cue.box,from=.15;if(t<from)return;const k=outBack((t-from)/.2,2),on=Math.floor(t*2.2)%2===0;
+    const x=Math.max(40,b.x-30),y=b.y-30;ctx.save();ctx.translate(x,y);ctx.scale(k,k);
+    ctx.fillStyle='rgba(11,31,63,.8)';ctx.beginPath();ctx.arc(0,0,20,0,7);ctx.fill();
+    ctx.fillStyle=on?C.orange:'rgba(243,112,33,.35)';if(on){ctx.shadowColor=C.orangeL;ctx.shadowBlur=14;}ctx.beginPath();ctx.arc(0,0,11,0,7);ctx.fill();ctx.restore();
+  },
+  // FPT Play: film strips slide above and below the title
+  filmstrip(ctx,cue,t){
+    const b=cue.box,p=outCubic((t-.05)/.35);if(p<=0)return;
+    const w=Math.min(W-60,b.w+140)*p,x=CX-w/2,hgt=40;
+    for(const [y,dir] of [[b.y-hgt-12,1],[b.y+b.h+12,-1]]){
+      ctx.save();ctx.beginPath();ctx.roundRect(x,y,w,hgt,6);ctx.clip();ctx.fillStyle=C.navy;ctx.fillRect(x,y,w,hgt);
+      const off=((t*70*dir)%60+60)%60;
+      for(let k=-1;k*60<w+60;k++){const fx=x+k*60+off;const fg=ctx.createLinearGradient(0,y,0,y+hgt);fg.addColorStop(0,[C.blueL,C.orangeL,C.greenL][(k+3)%3]);fg.addColorStop(1,[C.blue,C.orange,C.green][(k+3)%3]);ctx.fillStyle=fg;ctx.fillRect(fx+5,y+10,50,hgt-20);
+        ctx.fillStyle=C.white;for(const hx of [fx+8,fx+24,fx+40])for(const hy of [y+3,y+hgt-7])ctx.fillRect(hx,hy,8,4);}
+      ctx.restore();
+    }
+  },
+  // FPT Play: a play button pops beside the title and breathes
+  playbtn(ctx,cue,t){
+    const main=cue.lines.at(-1),m=main.box,from=main.at+.08;if(t<from)return;
+    const k=outBack((t-from)/.26,2.2),x=Math.min(W-52,m.x+m.w+56),y=m.y+m.h/2,r=36*k*(1+.05*Math.sin(t*5));
+    ctx.save();const ring=((t-from)%1.2)/1.2;ctx.globalAlpha=(1-ring)*.8;ctx.strokeStyle=C.orangeL;ctx.lineWidth=4;ctx.beginPath();ctx.arc(x,y,r+8+22*ring,0,7);ctx.stroke();ctx.globalAlpha=1;
+    ctx.shadowColor='rgba(4,12,28,.5)';ctx.shadowBlur=12;ctx.shadowOffsetY=5;ctx.fillStyle=C.white;ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill();ctx.shadowColor='transparent';
+    ctx.fillStyle=C.orange;ctx.beginPath();ctx.moveTo(x-r*.28,y-r*.42);ctx.lineTo(x+r*.48,y);ctx.lineTo(x-r*.28,y+r*.42);ctx.closePath();ctx.fill();ctx.restore();
+  },
   // a brick column drops beside the phrase; the words bump into it
   wall(ctx,cue,t){
     const main=cue.lines.at(-1),m=main.box,from=main.at+.08,p=(t-from)/.24;if(p<=0)return;
@@ -610,7 +692,7 @@ function corners(ctx,b,t,color,m){
   ctx.stroke();ctx.restore();
 }
 // The scan line of 'focus' stays behind: across white letters it looked like a stray diacritic.
-const BEHIND=new Set(['focus','burst','ring','speed','stripe','underline','hudline','fiber','wifi','stream','gauge','nodes','tape','decline']);
+const BEHIND=new Set(['focus','burst','ring','speed','stripe','underline','hudline','fiber','wifi','stream','gauge','nodes','tape','decline','pitch','filmstrip']);
 // A Hook that opens the video is already on screen in the very first frame.
 const lead=cue=>cue.kind==='hook'&&cue.start<.01?.08:0;
 function cueTransform(cue,t){

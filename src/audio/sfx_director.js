@@ -69,16 +69,18 @@ function catalog(){
 }
 // ---- meaning ------------------------------------------------------------------------------------------
 const {isNegative}=require('../editing/tone');
+// Whole words only: 'gia' inside 'giai tri', 'tang' (tầng) or 'qua' (quá) must not sound like money or a gift.
 const INTENTS=[
-  [/\b\d+ ?k\b|dong|gia|cuoc|nghin|trieu/,['cash','run','bell','impact']],
-  [/tang|mien phi|uu dai|qua|voucher|0 ?d\b/,['bell','cash','tone','pop']],
-  [/ngoai hang|bong da|premier|world cup|tran/,['impact','bell','whoosh','run']],
+  [/\b\d+ ?k\b|\b\d[\d.,]* ?(dong|d|nghin|trieu)\b|\bgia (chi|tu|cuoc|re|uu dai|goc)\b|\bgoi cuoc\b|\bcuoc phi\b|\b(tiet kiem|re hon|chi phi)\b/,['cash','run','bell','impact']],
+  [/^tang\b|\btang (ngay|kem|them|mien phi|camera|modem|thiet bi|\d)|\bmien phi\b|\buu dai\b|\bqua tang\b|\bvoucher\b|\b0 ?d\b/,['bell','cash','tone','pop']],
+  [/\b(ngoai hang|bong da|premier|world cup|tran dau|cau thu|ban thang)\b/,['impact','bell','whoosh','run']],
   [/camera|an ninh|giam sat|dam thoai|nhan dien/,['mech','pop','tone','run']],
   [/wifi|modem|internet|toc do|bang thong|gbps|mbps|cap quang|game|lag|mang/,['run','whoosh','tone','pop']],
   [/fpt play|phim|truyen hinh|kenh|4k/,['bell','tone','pop','run']],
   [/dang ky|lien he|goi ngay/,['bell','cash','tone']]
 ];
-const GENERAL=['pop','tone','bell','run','impact','whoosh','mech','cash'];
+// Fallback for any phrase: money is never heard on a phrase that is not about money.
+const GENERAL=['pop','tone','run','impact','whoosh','mech','bell'];
 function familiesFor(text){if(isNegative(text))return ['mech','impact','tone','run'];const t=normalize(text);return (INTENTS.find(([re])=>re.test(t))||[null,GENERAL])[1];}
 // ---- selection ----------------------------------------------------------------------------------------
 const hash=text=>parseInt(crypto.createHash('sha256').update(String(text)).digest('hex').slice(0,8),16);

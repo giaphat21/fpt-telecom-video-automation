@@ -89,14 +89,27 @@ const BUILT_IN_BROLLS = [
     name: 'Gaming Tốc Độ Cao',
     icon: '🎮',
     keywords: [
-      'chơi game', 'choi game', 'gaming', 'ping thấp', 'ping thap', 'không giật lag', 'khong giat lag', 'độ trễ', 'do tre',
-      'esport', 'game thủ', 'game thu', 'combat', 'liên quân', 'tốc chiến', 'fifa'
+      // "chơi game" and the like now bring the user's game footage (stock_lienminh / stock_lienquan, 24/11/2026)
+      'ping thấp', 'ping thap', 'không giật lag', 'khong giat lag', 'độ trễ', 'do tre', 'combat', 'tốc chiến', 'fifa'
     ],
     file: 'broll_stock_gaming.mp4',
     thumb: 'thumb_stock_gaming.jpg',
     defaultLayout: 'top_half',
     duration: 3.8,
     description: 'Chơi game trực tuyến tốc độ cao và đa nhiệm nhiều thiết bị'
+  },
+  // Game footage supplied by the user (24/11/2026), kept in assets/broll-user under userFile.
+  {
+    id: 'stock_lienminh', name: 'Liên Minh Huyền Thoại', icon: '🎮', userFile: 'lien_minh.mp4', file: 'lien_minh.mp4', thumb: 'thumb_stock_lienminh.jpg', defaultLayout: 'top_half', duration: 4,
+    keywords: ['liên minh', 'lien minh', 'liên minh huyền thoại', 'lien minh huyen thoai', 'lmht', 'lol', 'league of legends', 'chung kết thế giới', 'chung ket the gioi', 'cktg', 'faker',
+      'chơi game', 'choi game', 'game', 'gaming', 'game thủ', 'game thu', 'esport', 'esports', 'leo rank', 'đánh rank', 'danh rank'],
+    description: 'Trận đấu Liên Minh Huyền Thoại (clip do bạn cung cấp)'
+  },
+  {
+    id: 'stock_lienquan', name: 'Liên Quân Mobile', icon: '🎮', userFile: 'lien_quan.mp4', file: 'lien_quan.mp4', thumb: 'thumb_stock_lienquan.jpg', defaultLayout: 'top_half', duration: 4,
+    keywords: ['liên quân', 'lien quan', 'liên quân mobile', 'lien quan mobile', 'aov', 'arena of valor', 'đấu trường danh vọng', 'dau truong danh vong', 'đtdv',
+      'chơi game', 'choi game', 'game', 'gaming', 'game thủ', 'game thu', 'esport', 'esports', 'leo rank', 'đánh rank', 'danh rank'],
+    description: 'Trận đấu Liên Quân Mobile (clip do bạn cung cấp)'
   },
   // Motion graphics drawn for the project (scripts/assets/generate_motion_graphics.js): explain the idea, in the centre card.
   {
@@ -121,7 +134,7 @@ const BUILT_IN_BROLLS = [
   },
   {
     id: 'mg_lag', name: 'Mạng giật lag', icon: '⏳', file: 'mg_lag_buffer.mp4', thumb: 'mg_lag_buffer.jpg', defaultLayout: 'pip', duration: 4,
-    keywords: ['giật lag', 'giat lag', 'bị giật', 'bi giat', 'lag', 'đứng hình', 'dung hinh', 'quay vòng', 'quay vong', 'tải chậm', 'tai cham', 'load chậm', 'mạng chậm', 'mang cham', 'chậm xuống', 'cham xuong', 'độ trễ cao', 'ping cao', 'treo máy'],
+    keywords: ['giật lag', 'giat lag', 'bị giật', 'bi giat', 'lag', 'đứng hình', 'dung hinh', 'quay vòng', 'quay vong', 'xoay vòng', 'xoay vong', 'tải chậm', 'tai cham', 'load chậm', 'mạng chậm', 'mang cham', 'chậm xuống', 'cham xuong', 'độ trễ cao', 'ping cao', 'treo máy'],
     description: 'Video đứng hình, vòng tải quay, độ trễ nhảy'
   }
 ];
@@ -145,6 +158,7 @@ function getBrollCatalog() {
         fPath = userNha;
       }
     }
+    if (b.userFile && fs.existsSync(path.join(BROLL_USER_DIR, b.userFile))) fPath = path.join(BROLL_USER_DIR, b.userFile);
     const assigned = assignments[b.id] && path.join(BROLL_USER_DIR, path.basename(assignments[b.id]));
     if (assigned && fs.existsSync(assigned)) fPath = assigned;
     // No verified stock for the topic: use the motion clip made from the supplied FPT product photo, never an unrelated scene.
@@ -160,7 +174,9 @@ function getBrollCatalog() {
     const autoEligible = available && (userProvided || (['metadata_verified', ...GENERATED].includes(source?.status) && source.fileSize === fs.statSync(fPath).size));
     return {
       ...b,
-      defaultLayout: file === b.productFile && b.productLayout ? b.productLayout : b.defaultLayout,
+      // One layout for every topic (user, 24/11/2026): the picture sits behind the cut-out presenter.
+      // Three layouts to choose from (user, 24/11/2026); every B-roll starts on the upper half.
+      defaultLayout: 'top_half', generated: GENERATED.includes(source?.status),
       description: userProvided ? 'Clip do bạn cung cấp cho chủ đề này.' : (source?.title || 'Nguồn stock cũ, chưa xác nhận nội dung/giấy phép.'),
       autoEligible, sourcePage: source?.sourcePage || null,
       sourceWarning: autoEligible ? null : (source?.reason || 'Cần clip đúng chủ đề hoặc nguồn được xác nhận.'),
@@ -172,7 +188,8 @@ function getBrollCatalog() {
 
   // Thêm video user upload vào
   if (fs.existsSync(BROLL_USER_DIR)) {
-    const userFiles = fs.readdirSync(BROLL_USER_DIR).filter(f => /\.(mp4|mov|mkv)$/i.test(f));
+    const claimed = new Set(BUILT_IN_BROLLS.map(b => b.userFile).filter(Boolean));
+    const userFiles = fs.readdirSync(BROLL_USER_DIR).filter(f => /\.(mp4|mov|mkv)$/i.test(f) && !claimed.has(f));
     userFiles.forEach((f, i) => {
       catalog.push({
         id: 'user_' + Buffer.from(f).toString('base64url'),
@@ -183,7 +200,7 @@ function getBrollCatalog() {
         filePath: path.join(BROLL_USER_DIR, f),
         thumb: null,
         thumbUrl: null,
-        defaultLayout: 'cutaway',
+        defaultLayout: 'top_half',
         duration: 3.0,
         description: 'Video B-Roll tự tải lên',
         available: true,
@@ -207,7 +224,7 @@ function normalizeBrollSpec(spec) {
   if (!Number.isFinite(start) || !Number.isFinite(end) || start < 0 || end <= start)
     throw new Error('B-roll cần start/end hữu hạn, start >= 0 và end > start.');
   const layout = spec.layout || 'cutaway';
-  if (!['cutaway', 'top_half', 'pip'].includes(layout)) throw new Error('Layout B-roll không hợp lệ: ' + layout);
+  if (!['cutaway', 'top_half', 'pip', 'behind', 'above_sub'].includes(layout)) throw new Error('Layout B-roll không hợp lệ: ' + layout);
   return { ...spec, start: round(start), end: round(end), duration: round(end - start), layout };
 }
 function autoDetectReferenceBrolls(subtitles,hookDur=3.5,outroStart=25,allowedIds=null){
@@ -227,6 +244,8 @@ function selectBrollSpecs(job, subtitles, hookDur, outroStart) {
 }
 // The illustration card sits in the centre, below the Highlight and above the host's face and the subtitles.
 const CARD = Object.freeze({ width: 720, height: 406, x: 180, y: 610 });
+// 'above_sub': the same rounded card, fixed just above the Sub lines (Sub sits at y 1580).
+const ABOVE_SUB_Y = 1030;
 // Rounded illustration card: alpha mask, white frame and soft shadow.
 function pipArtwork(directory) {
   const { createCanvas } = require('@napi-rs/canvas');
@@ -245,27 +264,56 @@ function pipArtwork(directory) {
   return { mask: maskPath, frame: framePath, pad, width, height };
 }
 // Filters and inputs for every B-roll cue, so the final render can compose them in one pass. Input 0 is the base picture.
+// Behind the presenter (layout 'behind'): the picture covers about 70% of the frame and melts away just below; the
+// presenter, cut out with the matte from src/media/matting.js, is laid back on top (user, 24/11/2026). No outline.
+// Full screen fills the 9:16 frame (user, 24/11/2026). Drawn graphics have a portrait version, <name>_portrait.mp4
+// (scripts/assets/generate_motion_graphics.js), so nothing of the design is cropped away.
+function portraitOf(file) {
+  if (!file || !/\.mp4$/i.test(file)) return null;
+  const p = file.replace(/\.mp4$/i, '_portrait.mp4');
+  return fs.existsSync(p) ? p : null;
+}
+const BEHIND = Object.freeze({ solid: 1200, height: 1340 });
+// Upper half (layout 'top_half'): the picture runs a little past the split line and melts into the presenter's panel
+// instead of ending on a hard edge (user, 24/11/2026).
+const TOP = Object.freeze({ split: 780, solid: 700, height: 900 });
+function fadeMask(directory, { solid, height }, name) {
+  const { createCanvas } = require('@napi-rs/canvas');
+  const c = createCanvas(1080, height), g = c.getContext('2d'), grad = g.createLinearGradient(0, solid, 0, height);
+  for (let i = 0; i <= 10; i++) { const k = i / 10, a = 1 - k * k * (3 - 2 * k); grad.addColorStop(k, 'rgba(255,255,255,' + a.toFixed(3) + ')'); }
+  g.fillStyle = '#000'; g.fillRect(0, 0, 1080, height); g.fillStyle = '#fff'; g.fillRect(0, 0, 1080, solid); g.fillStyle = grad; g.fillRect(0, solid, 1080, height - solid);
+  const file = path.join(directory, name + '_mask.png'); fs.writeFileSync(file, c.toBuffer('image/png')); return file;
+}
+const behindMask = directory => fadeMask(directory, BEHIND, 'behind');
 function brollGraph(brollSpecs, { artDir, base = '0:v', firstInput = 1, onLog = () => {} } = {}) {
-  const sorted = (brollSpecs || []).map(normalizeBrollSpec).filter(Boolean).sort((a, b) => a.start - b.start);
+  const sorted = (brollSpecs || []).map(normalizeBrollSpec).filter(Boolean).map(s => s.layout === 'behind' && !s.matte ? { ...s, layout: 'top_half' } : s.layout === 'above_sub' ? { ...s, layout: 'pip', cardY: ABOVE_SUB_Y, cardParts: null } : s).sort((a, b) => a.start - b.start);
   const inputs = [], filters = ['[' + base + ']setsar=1[base]'];
+  const mask = sorted.some(s => s.layout === 'behind') ? behindMask(artDir) : null;
+  const topMask = sorted.some(s => s.layout === 'top_half') ? fadeMask(artDir, TOP, 'top') : null;
   let prev = 'base', nextInput = firstInput;
   const art = sorted.some(s => s.layout === 'pip') ? pipArtwork(artDir) : null;
   sorted.forEach((spec, i) => {
     if (!spec.file || !fs.existsSync(spec.file)) throw new Error('Thiếu B-roll: ' + (spec.file || spec.brollId));
     const duration = spec.duration, st = spec.start, en = spec.end;
     const clipInput = nextInput++;
-    inputs.push('-stream_loop', '-1', '-t', String(duration), '-i', spec.file);
+    inputs.push('-stream_loop', '-1', '-t', String(duration), '-i', (spec.layout === 'cutaway' && portraitOf(spec.file)) || spec.file);
     const enable = "gte(t," + st + ")*lt(t," + en + ")";
     let width = 1080, height = 1920, x = 0, y = 0;
     if (spec.layout === 'pip') { width = CARD.width; height = CARD.height; x = CARD.x; y = Number.isFinite(spec.cardY) ? spec.cardY : CARD.y; }
+    const behind = spec.layout === 'behind';
+    if (behind) {
+      height = BEHIND.height;
+      filters.push('[' + prev + ']split=2[keep' + i + '][fg' + i + ']');
+      prev = 'keep' + i;
+    }
     if (spec.layout === 'top_half') {
-      height = 780;
+      height = TOP.height;
       // Place the chosen subject focus around the upper third of the lower panel, above captions.
       const focusY = spec.hostFocusY != null && Number.isFinite(Number(spec.hostFocusY)) ? Math.max(0, Math.min(1, Number(spec.hostFocusY))) : 0.55;
       filters.push('[' + prev + ']split=2[keep' + i + '][host' + i + ']');
       filters.push('[host' + i + ']scale=1080:1140:force_original_aspect_ratio=increase,' +
         "crop=1080:1140:(iw-ow)/2:'max(0,min(ih-oh,ih*" + focusY + "-oh*0.3))',setsar=1[lower" + i + ']');
-      filters.push('[keep' + i + '][lower' + i + "]overlay=0:780:enable='" + enable + "'[split" + i + ']');
+      filters.push('[keep' + i + '][lower' + i + "]overlay=0:" + TOP.split + ":enable='" + enable + "'[split" + i + ']');
       prev = 'split' + i;
     }
     // Adjacent spoken topics cut on the word boundary; avoid flashing the host between two B-rolls.
@@ -281,6 +329,13 @@ function brollGraph(brollSpecs, { artDir, base = '0:v', firstInput = 1, onLog = 
     const push = ",scale=w='2*trunc(" + width / 2 + '*' + zoom + ")':h='2*trunc(" + height / 2 + '*' + zoom + ")':eval=frame:flags=bicubic,crop=" + width + ':' + height;
     let chain = '[' + clipInput + ':v]trim=duration=' + duration + ',setpts=PTS-STARTPTS,scale=' + width + ':' + height +
       ':force_original_aspect_ratio=increase:flags=lanczos,crop=' + width + ':' + height + ',setsar=1,fps=30' + push + ',setsar=1,format=rgba';
+    // Behind the presenter every picture, drawn graphics included, fills the area sharp (user, 24/11/2026): no blurred fill.
+    if (behind || spec.layout === 'top_half') {
+      const maskInput = nextInput++;
+      inputs.push('-loop', '1', '-t', String(duration), '-r', '30', '-i', behind ? mask : topMask);
+      filters.push(chain + '[pic' + i + ']', '[' + maskInput + ':v]format=gray[mask' + i + ']');
+      chain = '[pic' + i + '][mask' + i + ']alphamerge';
+    }
     if (spec.layout === 'pip') {
       const maskInput = nextInput++, frameInput = nextInput++;
       inputs.push('-loop', '1', '-t', String(duration), '-r', '30', '-i', art.mask, '-loop', '1', '-t', String(duration), '-r', '30', '-i', art.frame);
@@ -298,10 +353,14 @@ function brollGraph(brollSpecs, { artDir, base = '0:v', firstInput = 1, onLog = 
       : spec.layout === 'pip' ? stepped(y) + '+150*' + enter + '+90*' + leave + '+3*sin((t-' + st + ')*2.2)*(1-' + enter + ')' : String(y);
     filters.push('[' + prev + '][br' + i + "]overlay=x='" + xPos + "':y='" + yPos + "':enable='" + enable + "':eof_action=pass:repeatlast=0[v" + i + ']');
     prev = 'v' + i;
-    if (spec.layout === 'top_half') {
-      const bars = ['0x0066B3', '0xF37021', '0x00A651'].map((color, k) => 'drawbox=x=' + k * 360 + ':y=774:w=360:h=12:color=' + color + ":t=fill:enable='" + enable + "'");
-      filters.push('[' + prev + ']' + bars.join(',') + '[bar' + i + ']');
-      prev = 'bar' + i;
+    if (behind) {
+      // the presenter, cut out with the shared matte (firmer edge: alpha cubed), goes back on top of the picture
+      const m = nextInput++, a = round(spec.matte.start);
+      inputs.push('-c:v', 'libvpx-vp9', '-i', spec.matte.file);
+      filters.push('[' + m + ':v]format=yuva420p,alphaextract,scale=1080:1920:flags=bicubic,setpts=PTS-STARTPTS+' + a + '/TB[ma' + i + ']',
+        '[fg' + i + ']trim=start=' + a + ':end=' + round(spec.matte.end ?? (a + duration + 2)) + ',setpts=PTS[fgs' + i + ']', '[ma' + i + "]lut=c0='pow(val/255,3)*255'[mt" + i + ']', '[fgs' + i + '][mt' + i + ']alphamerge[person' + i + ']',
+        '[' + prev + '][person' + i + "]overlay=0:0:enable='" + enable + "':eof_action=pass:repeatlast=0[vp" + i + ']');
+      prev = 'vp' + i;
     }
     onLog('[B-ROLL] ' + (spec.name || spec.brollId) + ' ' + spec.layout + ' @ ' + st + '–' + en + 's');
   });
@@ -366,7 +425,7 @@ function resolveBrollSpec(spec) {
     if (fs.existsSync(userPath) && fs.statSync(userPath).isFile()) return { ...normalized, file: userPath };
   }
   const entry = getBrollCatalog().find(b => b.id === spec.brollId);
-  if (entry && entry.available) return { ...normalized, file: entry.filePath, name: spec.name || entry.name };
+  if (entry && entry.available) return { ...normalized, file: entry.filePath, name: spec.name || entry.name, fit: !!entry.generated };
   throw new Error('Không tìm thấy media cho B-roll: ' + (spec.brollId || spec.file || 'unknown'));
 }
 
@@ -390,6 +449,10 @@ function assignBrollUpload(brollId, fileName) {
 }
 
 module.exports = {
+  portraitOf,
+  BEHIND,
+  TOP,
+  ABOVE_SUB_Y,
   brollGraph,
   autoDetectReferenceBrolls,
   getBrollWarnings,

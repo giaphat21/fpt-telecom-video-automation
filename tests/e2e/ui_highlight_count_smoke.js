@@ -1,3 +1,5 @@
+// Never drive the person's own Studio: these tests run only against the server started by run_studio_smoke.js.
+if(!process.env.FPT_STUDIO_PORT||process.env.FPT_STUDIO_PORT==='3457'){console.error('Chạy qua npm run test:ui (máy chủ thử riêng), không chạy thẳng vào Studio đang mở.');process.exit(2);}
 const PATHS=require('../../config/paths.js');
 'use strict';
 const fs = require('fs'), path = require('path'), { spawn } = require('child_process');

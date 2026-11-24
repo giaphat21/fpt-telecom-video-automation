@@ -1,6 +1,8 @@
 'use strict';
 // Drives the real Studio in a browser: analysis -> live preview -> edits with the mouse -> export, and checks that the
 // MP4 is built from exactly what the timeline shows. Needs a running Studio (FPT_STUDIO_PORT) and FPT_OUTPUT_DIR.
+// Never drive the person's own Studio: these tests run only against the server started by run_studio_smoke.js.
+if(!process.env.FPT_STUDIO_PORT||process.env.FPT_STUDIO_PORT==='3457'){console.error('Chạy qua npm run test:ui (máy chủ thử riêng), không chạy thẳng vào Studio đang mở.');process.exit(2);}
 const fs=require('fs'),path=require('path'),{spawn}=require('child_process'),assert=require('node:assert/strict');
 const PATHS=require('../../config/paths.js');
 const out=path.join(PATHS.qa,'ui_long');fs.mkdirSync(out,{recursive:true});

@@ -11,6 +11,8 @@ const set=text=>new Set(text.split(' '));
 const STARTERS=set('mà nhưng thì và hay hoặc để với vì nên do nếu khi dù thế vậy còn chỉ dành cũng đặc lại như giúp đôi từ bằng sau trước ngoài riêng');
 const LEANING=set('của cho những các một là có được sẽ đang đã rất quá với để trong bộ cái và hay hoặc từ đến bằng như mà thì khi nếu vì do tại ở trên dưới về theo cùng mỗi mọi vẫn cũng lại nên phải cần muốn bị hơn bao đâu chẳng không chưa hãy đừng mấy chiếc gói giá làm còn chỉ hết ngôi số lắp khiến giúp nhiều ít đầy thêm');
 const TRAILING=set('nha nhé nhá ạ à á đó đấy nè rồi luôn lắm vậy ta hen ha thôi không chứ đi nhỉ');
+// Particles that end a sentence ("…của FPT nha"): the next word opens a new thought, never the same phrase.
+const FINAL=set('nha nhé nhá ạ nè hen nhỉ');
 const UNIT=/^(k|nghìn|ngàn|triệu|đồng|tháng|ngày|tài|kênh|chiều|gbps|mbps|gb|trận|thiết|người|năm|giờ|tầng|phòng|mét|m2|%)/;
 const joined=(a,b)=>PAIRS.has(a+' '+b)||(/\d$/.test(a)&&UNIT.test(b));
 // words: [{raw,start,end}] in seconds. cuts: picture cuts (real pauses in the recording) on the same clock.
@@ -24,6 +26,7 @@ function boundaryCost(words,i,cuts){
   if(STARTERS.has(b))cost-=1.5;
   if(LEANING.has(a))cost+=2.8;
   if(TRAILING.has(b)&&gap<.2)cost+=2.6;
+  if(FINAL.has(a))cost-=5;
   return cost;
 }
 function segment(words,{ideal=4.5,min=2,max=6,maxSeconds=2.8,cuts=[],weight=.35}={}){

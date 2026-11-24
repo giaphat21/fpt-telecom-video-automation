@@ -6,7 +6,7 @@ const P=require('../../config/paths'),pkg=require('../../package.json');
 const name='FPT-Video-Studio-'+pkg.version+'-win-x64',dist=path.join(P.root,'dist'),target=path.join(dist,name);
 const UPLOAD=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}_/i;
 const SECRET=/^(\.env(\..*)?|.*\.(pem|key|pfx|p12|log|upload|part))$/i;
-const INCLUDE=['src','public','config','scripts','assets','runtime/whisper','runtime/caddy','skills/broll-crawler','skills/reference-editing','tests',
+const INCLUDE=['src','public','config','scripts','assets','runtime/whisper','runtime/caddy','runtime/models','skills/broll-crawler','skills/reference-editing','tests',
   'docs','CHANGELOG.md','package.json','package-lock.json','README.md','AGENTS.md','.env.example'];
 const EXCLUDE=[/^assets[\\/]source-(videos|audio)([\\/]|$)/,/^docs[\\/]development([\\/]|$)/];
 // The small model stays as the fallback that the program selects when the large one is missing.
@@ -24,7 +24,7 @@ function notices(){
     rows.push('| '+key.replace(/^.*node_modules\//,'')+' | '+info.version+' | '+(typeof license==='string'?license:license?.type||'xem gói')+' |');
   }
   return '# Thông báo bản quyền bên thứ ba\n\n| Thành phần | Phiên bản | Giấy phép |\n|---|---|---|\n'+
-    '| Node.js (runtime/node) | '+process.version+' | MIT |\n| FFmpeg (ffmpeg-static) | 6.1.1 | GPL-3.0-or-later |\n| FFprobe (ffprobe-static) | 4.0.2 | GPL |\n| whisper.cpp | 1.9.5 | MIT |\n| Whisper large-v3-turbo, small (ggml) | q5 | MIT |\n| Caddy | runtime/caddy | Apache-2.0 |\n| Montserrat, Be Vietnam Pro, Barlow | assets/fonts | SIL OFL 1.1 |\n'+rows.sort().join('\n')+
+    '| Node.js (runtime/node) | '+process.version+' | MIT |\n| FFmpeg (ffmpeg-static) | 6.1.1 | GPL-3.0-or-later |\n| FFprobe (ffprobe-static) | 4.0.2 | GPL |\n| whisper.cpp | 1.9.5 | MIT |\n| MODNet tách nền (runtime/models/modnet.onnx, Hugging Face Xenova/modnet) | onnx | Apache-2.0 |\n| Whisper large-v3-turbo, small (ggml) | q5 | MIT |\n| Caddy | runtime/caddy | Apache-2.0 |\n| Montserrat, Be Vietnam Pro, Barlow | assets/fonts | SIL OFL 1.1 |\n'+rows.sort().join('\n')+
     '\n\n## Nội dung doanh nghiệp cần tự xác nhận quyền sử dụng\n\n- `assets/broll-user`: hình trận đấu.\n- `assets/custom-music`: nhạc nền do người dùng tải lên.\n- `assets/sfx-user`: bộ SFX người dùng cung cấp (bộ duy nhất được dùng).\n- `assets/broll-images`, logo, ảnh sản phẩm FPT.\n';
 }
 const walk=dir=>fs.readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(path.join(dir,e.name)):[path.join(dir,e.name)]);

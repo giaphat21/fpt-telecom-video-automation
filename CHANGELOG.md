@@ -1,5 +1,29 @@
 # Nhật ký thay đổi
 
+## Phiên bản 1.8.0 — 24/11/2026
+
+- Chuyển cảnh tự động không chói sáng: 8 kiểu (lia ngang, lia dọc, zoom mờ, đẩy vào nhanh, kéo ra, xoay chuyển, giật hình, nảy hình) luân phiên ở các điểm cắt cảnh, có tiếng whoosh trúng điểm cắt; đổi kiểu hoặc xóa từng chuyển cảnh trên timeline.
+- 6 kiểu chữ Highlight theo B-roll: Game tâm ngắm, Game chiến thắng, Bóng đá bảng tỉ số, Camera đang ghi, FPT Play cuộn phim, FPT Play nút phát. Highlight hiện trên B-roll nào thì tự dùng kiểu hợp chủ đề đó; có thể chọn tay trên timeline.
+- Thêm 2 B-roll game do người dùng gửi: Liên Minh Huyền Thoại và Liên Quân Mobile, tự chèn khi VJ nhắc tên game hoặc chỉ nói "chơi game" (luân phiên hai clip).
+- B-roll có 4 bố cục chọn trên timeline: Nửa trên màn hình (mặc định), Sau VJ, Khung trên Sub, Toàn màn hình.
+- Kiểu Sau VJ: đồ họa phủ kín vùng phía trên, nét, không còn nền nhòe.
+- Kiểu Nửa trên màn hình: mép dưới tan dần vào khung VJ, bỏ vạch màu.
+- Kiểu Toàn màn hình: phủ kín khung dọc; 8 đồ họa động có thêm bản dọc 1080×1920 bố trí lại (FPT Play xếp lưới 2×2, thiết bị xếp chồng…), không bị cắt mất thông tin.
+- Sửa lỗi bản xem trước không hiện B-roll kiểu Sau VJ (bản xuất vẫn đúng).
+- Tối ưu độ chính xác (kiểm bằng 6 clip quay thật VID 1–6):
+  - B-roll không còn chớp nhoáng: một câu chỉ đổi hình khi mỗi phần đủ ≥ 1 giây; mẩu ngắn dính sát cảnh khác được gộp, cùng chủ đề liền nhau thành một cảnh (14 → 10 cảnh trong video thử, cảnh ngắn nhất 0,17 s → 0,7 s).
+  - Câu nói về sự cố ("xem phim thì xoay vòng", "đặt quá xa", "gói cước chậm") hiện đồ họa giật lag/tường chặn thay vì sản phẩm, dùng kiểu chữ và SFX cho vấn đề.
+  - SFX đúng ý nghĩa: tiếng tiền chỉ khi nói về giá/gói cước, tiếng quà chỉ khi có tặng/ưu đãi; "tầng", "quá", "giải trí" không còn bị hiểu nhầm là quà hoặc giá.
+  - Kiểu chữ Nổ giá và Vé ưu đãi chỉ đặt lên câu về giá/ưu đãi.
+  - Highlight không ghép qua tiểu từ cuối câu ("…của FPT nha / Thiết bị này" tách đúng hai ý).
+  - "Bật lại chuyển cảnh tự động" giữ nguyên kiểu chuyển cảnh bạn đã chọn tay.
+- Đo lại: tải lên 25 MB trong 0,11 giây (gồm đọc thông tin video); lập kế hoạch dựng 37 ms; kéo/cuộn/phóng timeline 66 giây dưới 40 ms/khung.
+
+## Phiên bản 1.7.2 — 24/11/2026
+
+- B-roll nằm sau lưng VJ: phủ khoảng 70% khung hình phía trên, mép dưới tan nhẹ; VJ được tách nền (model MODNet, chạy GPU) và đứng phía trước, không viền. Đồ họa hiện trọn trên nền nhòe của chính nó. Thêm thư viện onnxruntime-node 1.31.1 và model runtime/models/modnet.onnx (Apache-2.0).
+- Các thay đổi thử nghiệm khác (mở đầu mạnh, chuyển cảnh mới, chuỗi tự chạy) đã bỏ theo yêu cầu; bản này giữ nguyên mọi thứ khác như 1.7.1.
+
 ## Phiên bản 1.7.1 — 23/11/2026
 
 - FPT Play dựng lại theo kiểu video SaaS: giao diện TV với hàng thẻ nội dung và ô danh mục, con trỏ chọn từng ô; sau đó TV, laptop, điện thoại cùng phát.

@@ -6,7 +6,7 @@ const NEGATIVE=new RegExp([
   '(song|mang|wifi|wi fi|tin hieu|ket noi|internet|duong truyen)( bi| rat| qua| hoi| cu| van)? (yeu|kem|cham|chap chon)',
   '\\b(yeu|kem) (song|qua|lam|xiu)\\b','\\b(bi|rat|qua|hoi) (yeu|cham)\\b','\\bcham (qua|lam|ri|xuong|chap|chap)\\b',
   '\\b(toc do|tai|load|vao mang|xem phim)( bi| rat| qua| hoi| thi| lai)? cham\\b',
-  '\\bgiat (lag|giat|hinh|cuc)\\b','\\bbi giat\\b','\\blag\\b','\\bchap chon\\b','\\brot mang\\b','\\bdung hinh\\b','\\bquay vong\\b','\\bdo tre cao\\b','\\bping cao\\b',
+  '\\bgiat (lag|giat|hinh|cuc)\\b','\\bbi giat\\b','\\blag\\b','\\bchap chon\\b','\\brot mang\\b','\\bdung hinh\\b','\\b(quay|xoay) vong\\b','\\bgoi cuoc (\\w+ )?cham\\b','\\bdat qua xa\\b','\\bdo tre cao\\b','\\bping cao\\b',
   '\\bmat (song|ket noi|mang|tin hieu|wifi)\\b','\\bbuc tuong\\b','\\btuong (day|ngan|gach|be tong|chan)\\b','\\b(nhieu|qua|cach) (buc )?tuong\\b',
   '\\b(ngan can|can tro|chan song|cham song|goc chet|tac nghen|nghen mang|khong vao duoc|khong ket noi duoc|khong xem duoc|loading mai)\\b',
   '\\b(phien phuc|kho chiu|bat tien|buc minh|uc che)\\b'

@@ -95,27 +95,56 @@ const Live=(()=>{
   }
   // ---- drawing
   const ease=p=>Math.pow(1-Math.min(Math.max(p,0),1),3);
+  let behindLayer=null,personLayer=null,tinyLayer=null;
+  // A cheap blur: draw very small, then scale back up with smoothing (no canvas filter per frame).
+  function tiny(source,sw,sh,w,h){const c=tinyLayer||(tinyLayer=document.createElement('canvas'));if(c.width!==w||c.height!==h){c.width=w;c.height=h;}const g=c.getContext('2d');g.clearRect(0,0,w,h);g.imageSmoothingQuality='high';g.drawImage(source,0,0,sw,sh,0,0,w,h);return c;}
+  // The presenter cut out with the shared matte (same file as the export, edge firmed as alpha cubed) and drawn on top.
+  function drawPerson(matte,t){
+    const mv=mediaFor(matte.url),v=video();if(!mv)return;
+    const mt=Math.max(0,t-matte.start);mv.loop=false;
+    if(v.paused){if(Math.abs(mv.currentTime-mt)>.04&&!mv.seeking)mv.currentTime=mt;if(!mv.paused)mv.pause();}
+    else{if(mv.paused)mv.play().catch(()=>{});if(Math.abs(mv.currentTime-mt)>.12&&!mv.seeking)mv.currentTime=mt;}
+    if(mv.readyState<2||v.readyState<2)return;
+    const p=personLayer||(personLayer=Object.assign(document.createElement('canvas'),{width:W,height:H})),q=p.getContext('2d');
+    q.globalCompositeOperation='source-over';q.clearRect(0,0,W,H);q.drawImage(mv,0,0,W,H);q.globalCompositeOperation='source-in';q.drawImage(v,0,0,W,H);
+    q.globalCompositeOperation='destination-in';q.drawImage(mv,0,0,W,H);q.drawImage(mv,0,0,W,H);q.globalCompositeOperation='source-over';ctx.drawImage(p,0,0);
+  }
+  // The picture over the top S pixels, solid down to SOLID and melting away below it (same curve as the export masks).
+  // Only the melting strip goes through an offscreen canvas; the solid part is drawn straight away (keeps scrubbing fast).
+  const bands={};
+  function drawFading(el,S,SOLID,zoom,y0=0){
+    const B=S-SOLID,band=bands[B]||(bands[B]={c:Object.assign(document.createElement('canvas'),{width:W,height:B})}),o=band.c.getContext('2d');
+    if(!band.g){band.g=o.createLinearGradient(0,0,0,B);for(let i=0;i<=10;i++){const k=i/10;band.g.addColorStop(k,'rgba(0,0,0,'+(1-k*k*(3-2*k)).toFixed(3)+')');}}
+    ctx.save();ctx.beginPath();ctx.rect(0,y0,W,SOLID);ctx.clip();cover(el,el.videoWidth,el.videoHeight,0,y0,W,S,zoom);ctx.restore();
+    o.globalCompositeOperation='source-over';o.clearRect(0,0,W,B);const keep=ctx;ctx=o;cover(el,el.videoWidth,el.videoHeight,0,-SOLID,W,S,zoom);ctx=keep;
+    o.globalCompositeOperation='destination-in';o.fillStyle=band.g;o.fillRect(0,0,W,B);o.globalCompositeOperation='source-over';ctx.drawImage(band.c,0,y0+SOLID);
+  }
   function cover(image,sw,sh,x,y,w,h,zoom=1){
     if(!sw||!sh)return;const s=Math.max(w/sw,h/sh)*zoom,cw=w/s,ch=h/s;ctx.drawImage(image,(sw-cw)/2,(sh-ch)/2,cw,ch,x,y,w,h);
   }
   const easeOf=(b,key,dur)=>Math.max(.03,Math.min(plan.brolls?.find(p=>p.uid===b.uid)?.[key]??.25,dur/2));
   function drawBroll(b,t){
-    const place=preview.brolls.find(p=>p.uid===b.uid)||{},el=mediaFor(place.url);if(!el)return;
-    const dur=b.end-b.start,local=t-b.start,fadeIn=easeOf(b,'easeIn',dur),fadeOut=easeOf(b,'easeOut',dur),enter=ease(local/fadeIn),leave=b.layout==='top_half'?0:Math.pow(Math.max(0,(local-(dur-fadeOut))/fadeOut),3),zoom=1+.05*local/dur;
+    const place=preview.brolls.find(p=>p.uid===b.uid)||{},el=mediaFor(b.layout==='cutaway'&&place.portrait||place.url);if(!el)return;
+    const dur=b.end-b.start,local=t-b.start,fadeIn=easeOf(b,'easeIn',dur),fadeOut=easeOf(b,'easeOut',dur),enter=ease(local/fadeIn),leave=(b.layout==='top_half'||(b.layout==='behind'&&!place.matte))?0:Math.pow(Math.max(0,(local-(dur-fadeOut))/fadeOut),3),zoom=1+.05*local/dur;
     const want=el.duration?local%el.duration:local;
     if(video().paused){if(Math.abs(el.currentTime-want)>.06&&!el.seeking)el.currentTime=want;if(!el.paused)el.pause();}
     else{if(el.paused)el.play().catch(()=>{});if(Math.abs(el.currentTime-want)>.35)el.currentTime=want;}
     if(el.readyState<2)return;
     const alpha=Math.min(1,local/fadeIn)*Math.min(1,(dur-local)/fadeOut);
     ctx.save();
+    // full screen fills the 9:16 frame; drawn graphics use their portrait version (same file as the export)
     if(b.layout==='cutaway'){ctx.globalAlpha=Math.max(0,alpha);cover(el,el.videoWidth,el.videoHeight,0,0,W,H,zoom+.1*ease(local/.35));}
-    else if(b.layout==='top_half'){
+    else if(b.layout==='behind'&&place.matte){
+      // behind the presenter: the picture covers about 70% of the frame and melts away just below, as in the export
+      ctx.globalAlpha=Math.max(0,alpha);drawFading(el,1340,1200,zoom);ctx.globalAlpha=1;drawPerson(place.matte,t);
+    }
+    else if(b.layout==='top_half'||b.layout==='behind'){
       const v=video(),focus=b.focusChosen?b.hostFocusY:place.hostFocusY??b.hostFocusY??.55,cropY=Math.max(0,Math.min(H-1140,H*focus-1140*.3)),k=v.videoHeight/H;
       if(v.readyState>=2)ctx.drawImage(v,0,cropY*k,v.videoWidth,1140*k,0,780,W,1140);
-      ctx.beginPath();ctx.rect(0,0,W,780);ctx.clip();cover(el,el.videoWidth,el.videoHeight,0,-780*enter,W,780,zoom);ctx.restore();ctx.save();
-      ['#0066B3','#F37021','#00A651'].forEach((c,i)=>{ctx.fillStyle=c;ctx.fillRect(i*360,774,360,12);});
+      // the picture runs past the split line and melts into the presenter's panel (TOP in broll_compositor.js)
+      drawFading(el,900,700,zoom,-900*enter);
     }else{
-      const card=preview.card,x=card.x,y=((place.cardParts||[]).filter(p=>t>=p.start-.001).at(-1)?.y??place.cardY??card.y)+150*enter+90*leave+3*Math.sin(local*2.2)*(1-enter);
+      const card=preview.card,x=card.x,y=(b.layout==='above_sub'?(card.aboveSubY??1030):((place.cardParts||[]).filter(p=>t>=p.start-.001).at(-1)?.y??place.cardY??card.y))+150*enter+90*leave+3*Math.sin(local*2.2)*(1-enter);
       ctx.globalAlpha=Math.max(0,alpha);
       ctx.save();ctx.beginPath();ctx.roundRect(x,y,card.width,card.height,34);ctx.clip();cover(el,el.videoWidth,el.videoHeight,x,y,card.width,card.height,zoom);ctx.restore();
       ctx.strokeStyle='#fff';ctx.lineWidth=10;ctx.beginPath();ctx.roundRect(x,y,card.width,card.height,34);ctx.stroke();
@@ -156,10 +185,10 @@ const Live=(()=>{
     if(!ctx||mode!=='live'||!plan)return;
     const t=time();
     ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,canvas.width,canvas.height);ctx.setTransform(SCALE,0,0,SCALE,0,0);
-    const f0=fxList.length?window.FptEngine.fx.frameFx(fxList,t):null,moving=f0&&(f0.zoom!==1||f0.dx||f0.dy||f0.blur>.2);
-    if(moving){const v=video();if(v.readyState>=2){ctx.save();if(f0.blur>.2)ctx.filter='blur('+(f0.blur*SCALE).toFixed(1)+'px)';const z=f0.zoom,mx=(z-1)*W/2,my=(z-1)*H/2;ctx.drawImage(v,-mx-Math.max(-mx,Math.min(mx,f0.dx)),-my-Math.max(-my,Math.min(my,f0.dy)),W*z,H*z);ctx.restore();}}
+    const f0=fxList.length?window.FptEngine.fx.frameFx(fxList,t):null,moving=f0&&(f0.zoom!==1||f0.dx||f0.dy||f0.blur>.2||f0.spin);
+    if(moving){const v=video();if(v.readyState>=2){ctx.save();if(f0.blur>.2)ctx.filter='blur('+(f0.blur*SCALE).toFixed(1)+'px)';const z=f0.zoom,mx=(z-1)*W/2,my=(z-1)*H/2;if(f0.spin){ctx.translate(W/2,H/2);ctx.rotate(f0.spin);ctx.translate(-W/2,-H/2);}ctx.drawImage(v,-mx-Math.max(-mx,Math.min(mx,f0.dx)),-my-Math.max(-my,Math.min(my,f0.dy)),W*z,H*z);ctx.restore();}}
     let used=new Set();
-    for(const b of brolls)if(b.enabled!==false&&t>=b.start&&t<b.end){drawBroll(b,t);used.add(preview.brolls.find(p=>p.uid===b.uid)?.url);}
+    for(const b of brolls)if(b.enabled!==false&&t>=b.start&&t<b.end){drawBroll(b,t);const pl=preview.brolls.find(p=>p.uid===b.uid);used.add(b.layout==='cutaway'&&pl?.portrait||pl?.url);if(pl?.matte)used.add(pl.matte.url);}
     media.forEach((el,url)=>{if(!used.has(url)&&!el.paused)el.pause();});
     if(f0&&f0.light){ctx.fillStyle=f0.light>0?'rgba(255,255,255,'+Math.min(1,f0.light)+')':'rgba(0,0,0,'+Math.min(1,-f0.light)+')';ctx.fillRect(0,0,W,H);}
     const layer=typography(t);if(layer)ctx.drawImage(layer,0,window.FptEngine.typography.TOP);

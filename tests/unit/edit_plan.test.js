@@ -83,7 +83,7 @@ test('The browser engine is the render engine and has no Node dependency',()=>{
   const code=require('../../src/web/engine_bundle').engineBundle(),sandbox={};
   new Function('window',code)(sandbox);
   const engine=sandbox.FptEngine.typography;
-  assert.equal(Object.keys(engine.STYLES).length,24+8);assert.equal(Object.keys(engine.HOOKS).length,HOOK_STYLES.length);
+  assert.equal(Object.keys(engine.STYLES).length,24+8+6);assert.equal(Object.keys(engine.HOOKS).length,HOOK_STYLES.length);
   assert.ok(!/require\('(fs|path|child_process|@napi)/.test(code));
 });
 test('Titles, sounds, music and Sub looks edited on the timeline reach the plan',()=>{
@@ -129,7 +129,7 @@ test('Export is never blocked by a style finding; repeats are named so they can 
 test('Picture effects: the preview curve and the export expression agree',()=>{
   const {KINDS,frameFx,fxFilters,normalizeFx}=require('../../src/pipeline/picture_fx');
   assert.equal(normalizeFx([{kind:'zoom_in',start:1,end:99},{kind:'nope',start:0,end:1},{kind:'flash',start:2,end:2}],10).length,1);
-  for(const kind of Object.keys(KINDS)){const list=normalizeFx([{kind,start:1,end:2}],10),a=frameFx(list,1.02),b=frameFx(list,3);assert.deepEqual(b,{zoom:1,dx:0,dy:0,light:0,blur:0});assert.notDeepEqual(kind==='blur'||kind==='dip'?frameFx(list,1.5):a,b,kind);assert.ok(fxFilters(list).includes('1.000'),kind);}
+  for(const kind of Object.keys(KINDS)){const list=normalizeFx([{kind,start:1,end:2}],10),a=frameFx(list,1.02),b=frameFx(list,3);assert.deepEqual(b,{zoom:1,dx:0,dy:0,light:0,blur:0,spin:0});assert.notDeepEqual(kind==='blur'||kind==='dip'||kind==='bounce'?frameFx(list,1.5):a,b,kind);assert.ok(fxFilters(list).includes('1.000'),kind);}
   assert.equal(fxFilters([]),'');
 });
 
@@ -157,8 +157,77 @@ test('Problem looks and premium titles stay inside the frame and keep compounds 
 });
 test('Motion-graphic B-roll: every topic has a verified clip and the spoken topic picks it',()=>{
   const b=require('../../src/broll/broll_compositor'),cat=b.getBrollCatalog();
-  for(const id of ['stock_wifi6','stock_fptplay','stock_camera','mg_signal','mg_wall','mg_mesh','mg_speed','mg_lag']){const c=cat.find(x=>x.id===id);assert.ok(c&&c.autoEligible&&c.available,id);assert.equal(c.defaultLayout,'pip',id);}
+  for(const id of ['stock_wifi6','stock_fptplay','stock_camera','mg_signal','mg_wall','mg_mesh','mg_speed','mg_lag']){const c=cat.find(x=>x.id===id);assert.ok(c&&c.autoEligible&&c.available,id);assert.equal(c.defaultLayout,'top_half',id);}
   const sub=(text,start)=>{const w=text.split(' ');return {text,start,end:start+w.length*.3,words:w.map((x,i)=>({word:x,startMs:Math.round((start+i*.3)*1000),endMs:Math.round((start+i*.3+.25)*1000)}))};};
   const got=b.autoDetectBrollFromSubtitles([sub('vì có quá nhiều bức tường ngăn cản',4),sub('xem video thì quay vòng mãi',8),sub('lắp thêm Mesh phủ sóng mọi góc',12),sub('sóng 5G cũng không bằng',16)],3.5,30).map(s=>s.brollId);
   assert.deepEqual(got,['mg_wall','mg_lag','mg_mesh','mg_signal']);
+});
+
+test('B-roll behind the presenter: about 70% of the frame, the cut-out presenter on top, no outline',()=>{
+  const {brollGraph,BEHIND,getBrollCatalog}=require('../../src/broll/broll_compositor'),os=require('os');
+  const clip=path.join(__dirname,'..','fixtures','silent_video.mp4'),dir=fs.mkdtempSync(path.join(os.tmpdir(),'fpt_behind_'));
+  const g=brollGraph([{start:4,end:6,layout:'behind',file:clip,matte:{file:clip,start:4,end:7}}],{artDir:dir}),text=g.filters.join(';');
+  assert.ok(text.includes('alphaextract')&&text.includes('alphamerge[person0]')&&g.output==='vp0',text);
+  assert.ok(!/color=white/.test(text),'no outline');assert.ok(BEHIND.height/1920<.71&&BEHIND.solid/1920>.6);
+  const fit=brollGraph([{start:4,end:6,layout:'behind',file:clip,fit:true,matte:{file:clip,start:4,end:7}}],{artDir:dir}).filters.join(';');
+  assert.ok(!fit.includes('gblur')&&!fit.includes('overlay=0:560')&&fit.includes('crop=1080:1340'),'a drawn graphic fills the area sharp, no blurred fill');
+  const none=brollGraph([{start:4,end:6,layout:'behind',file:clip}],{artDir:dir}).filters.join(';');
+  assert.ok(!none.includes('alphaextract')&&none.includes('overlay=0:780'),'without a matte the split screen is used');
+  assert.ok(getBrollCatalog().every(c=>c.defaultLayout==='top_half'),'every B-roll starts on the upper half');
+  const above=brollGraph([{start:4,end:6,layout:'above_sub',file:clip}],{artDir:dir}).filters.join(';');
+  assert.ok(above.includes("y='"+(require('../../src/broll/broll_compositor').ABOVE_SUB_Y-24))&&!above.includes('alphaextract'),'card just above the Sub');
+  fs.rmSync(dir,{recursive:true,force:true});
+});
+
+test('upper half melts into the presenter panel; full screen uses portrait graphics',()=>{
+  const {brollGraph,TOP}=require('../../src/broll/broll_compositor'),os=require('os');
+  const clip=path.join(__dirname,'..','fixtures','silent_video.mp4'),dir=fs.mkdtempSync(path.join(os.tmpdir(),'fpt_top_'));
+  const top=brollGraph([{start:4,end:6,layout:'top_half',file:clip}],{artDir:dir}).filters.join(';');
+  assert.ok(top.includes('crop=1080:'+TOP.height)&&top.includes('alphamerge')&&!top.includes('drawbox'),'soft bottom edge, no hard bars');
+  const {portraitOf}=require('../../src/broll/broll_compositor'),lib=path.join(__dirname,'..','..','assets','broll-library');
+  for(const n of ['mg_wifi6_modem','mg_signal_5g','mg_wall_block','mg_mesh_cover','mg_fptplay','mg_camera_ai','mg_speed_gauge','mg_lag_buffer'])assert.ok(portraitOf(path.join(lib,n+'.mp4')),n+' has a portrait version');
+  const g=brollGraph([{start:4,end:6,layout:'cutaway',file:path.join(lib,'mg_camera_ai.mp4')}],{artDir:dir});
+  assert.ok(g.inputs.some(i=>/mg_camera_ai_portrait\.mp4$/.test(i)),'full screen uses the portrait graphic');
+  fs.rmSync(dir,{recursive:true,force:true});
+});
+
+test('game footage from the user: League of Legends and Arena of Valor clips are matched by name',()=>{
+  const {getBrollCatalog}=require('../../src/broll/broll_compositor'),cat=getBrollCatalog();
+  for(const [id,file] of [['stock_lienminh','lien_minh.mp4'],['stock_lienquan','lien_quan.mp4']]){const c=cat.find(x=>x.id===id);assert.ok(c&&c.available&&c.autoEligible&&c.filePath.endsWith(file),id);}
+  assert.ok(!cat.some(c=>c.isUserUpload&&/lien_(minh|quan)/.test(c.file)),'not listed twice');
+  assert.ok(!cat.find(c=>c.id==='stock_gaming').keywords.includes('liên quân'));
+  const {autoDetectBrollFromSubtitles}=require('../../src/broll/broll_compositor'),mk=(text,s)=>({start:s,end:s+2.4,text,words:text.split(' ').map((w,i)=>({word:w,start:s+i*.3,end:s+i*.3+.25}))});
+  const got=autoDetectBrollFromSubtitles([mk('Tối nay chơi game thả ga',5),mk('Bữa sau lại chơi game tiếp',12)],3.5,25).map(s=>s.brollId);
+  assert.deepEqual(got,['stock_lienminh','stock_lienquan'],'"chơi game" brings the game clips, taking turns');
+});
+
+test('B-roll looks: a Highlight on a B-roll takes the look of its picture, without repeats',()=>{
+  const {applyTypographyVariety,BROLL_STYLES,BROLL_THEMES}=require('../../src/typography/brand_rules');
+  const engine=require('../../src/typography/kinetic_core');for(const s of BROLL_STYLES)assert.ok(engine.STYLES[s],s);
+  const brolls=[{brollId:'stock_lienquan',start:4,end:12},{brollId:'stock_football',start:14,end:18},{brollId:'stock_fptplay',start:20,end:24},{brollId:'stock_camera',start:26,end:30}];
+  const items=[['Tối nay mình',4.2],['leo rank thật mượt',6.5],['không lo mất mạng',9],['Xem trọn mùa giải',14.5],['Kho nội dung khổng lồ',20.5],['Theo dõi cả ngày',26.5],['Giá chỉ 195K',32]].map(([text,start],i)=>({uid:'h'+i,text,start,end:start+1.9}));
+  for(const seed of [null,'p1']){
+    const out=applyTypographyVariety(items,{seed,brolls});
+    const themeOf=i=>BROLL_THEMES.find(th=>th.styles.includes(out[i].typo))?.topic;
+    assert.deepEqual([0,1,3,4,5].map(themeOf),['game','game','football','fptplay','camera'],JSON.stringify(out.map(h=>h.typo)));
+    if(seed==null)assert.ok(out[0].typo==='fpt_game_crosshair'&&out[3].typo==='fpt_score_bar'&&out[4].typo==='fpt_play_cinema'&&out[5].typo==='fpt_cam_rec');
+    out.forEach((h,i)=>assert.ok(!out.slice(Math.max(0,i-2),i).some(p=>p.typo===h.typo),'no repeat'));
+    assert.ok(!BROLL_STYLES.includes(out[6].typo),'a price is not dressed as a picture look');
+  }
+  // the next video turns the picture's looks over
+  const first=applyTypographyVariety(items,{seed:'p1',brolls}),next=applyTypographyVariety(items,{seed:'p2',brolls,videos:[first.map(h=>h.typo)]});
+  assert.notEqual(next[3].typo+next[5].typo,first[3].typo+first[5].typo);
+});
+
+test('Transitions at picture cuts: motion only (no glare), peak on the cut, rotating, each one removable or changeable',()=>{
+  const {TRANSITIONS,KINDS}=require('../../src/pipeline/picture_fx');
+  assert.ok(Object.keys(TRANSITIONS).length>=8&&!['flash','dip','glare'].some(k=>TRANSITIONS[k]),'no light effects among transitions');
+  const p=plan('tr_a');assert.ok(p.autoFx.length>=2,JSON.stringify(p.autoFx));
+  for(const e of p.autoFx){const cut=scenes[e.cut].start;assert.ok(e.start<=cut&&e.end>cut&&Math.abs(e.start+TRANSITIONS[e.kind].pre-cut)<.002,e.kind);assert.ok(e.start>=p.hookDur-TRANSITIONS[e.kind].pre&&e.end<=p.outroStart);
+}
+  assert.ok(p.autoFx.some(e=>p.sfx.some(s=>s.anchor==='cut:'+e.cut)),'cut sounds still placed by the sound rules');
+  p.autoFx.forEach((e,i)=>assert.ok(!p.autoFx.slice(Math.max(0,i-2),i).some(x=>x.kind===e.kind),'no repeat'));
+  const first=p.autoFx[0],gone=plan('tr_a',[],{fx:{['auto:'+first.uid]:{off:true}}});assert.ok(!gone.autoFx.some(e=>e.uid===first.uid));
+  const changed=plan('tr_a',[],{fx:{['auto:'+first.uid]:{kind:'spin'}}});assert.equal(changed.autoFx.find(e=>e.uid===first.uid).kind,'spin');
+  const kinds=new Set(['a','b','c','d','e'].flatMap(s=>plan('tr_'+s).autoFx.map(e=>e.kind)));assert.ok(kinds.size>=4,'different videos, different transitions');
 });

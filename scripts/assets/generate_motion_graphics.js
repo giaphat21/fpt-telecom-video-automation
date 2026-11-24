@@ -7,7 +7,10 @@
 const fs=require('fs'),path=require('path'),{spawn,execFileSync}=require('child_process');
 const {createCanvas,loadImage,GlobalFonts}=require('@napi-rs/canvas');
 const P=require('../../config/paths');
-const W=1280,H=720,FPS=30,DUR=10,LIB=path.join(P.assets,'broll-library'),TAU=Math.PI*2;
+// W×H is the drawing space. The portrait versions (for full-screen B-roll, user 24/11/2026) draw the same scenes in a
+// 810×1440 space, scaled 4/3 to a 1080×1920 frame: positions follow the frame, element sizes stay as designed.
+let W=1280,H=720,OUT=1;const PORTRAIT={w:810,h:1440,scale:4/3};
+const FPS=30,DUR=10,LIB=path.join(P.assets,'broll-library'),TAU=Math.PI*2;
 GlobalFonts.registerFromPath(path.join(P.fonts,'Montserrat-Bold.ttf'),'MgHead');
 GlobalFonts.registerFromPath(path.join(P.fonts,'BeVietnamPro-Black.ttf'),'MgBody');
 GlobalFonts.registerFromPath(path.join(P.fonts,'Barlow-Black.ttf'),'MgWide');
@@ -320,6 +323,12 @@ CLIPS.mg_mesh_cover={title:'Wi-Fi Mesh phủ sóng cả nhà — đồ họa đ�
 const SHOWS=['ball','toon','drama','music','kids'];
 const CATS=[['truyền hình',['#1B86D6','#0B4F9C']],['thể thao',['#2A6FE0','#1B3FA8']],['phim bộ',['#19C46F','#0E8F7A']],['phim lẻ',['#FF9550','#F37021']],['thiếu nhi',['#FFB27A','#E8601C']]];
 function playLayout(){
+  if(H>W){// portrait: the four shows in a 2×2 grid, the categories on two rows (3 + 2)
+    const pw=W*.9,ph=H*.7,px=(W-pw)/2,py=(H-ph)/2,gap=22,cw=(pw-60-gap)/2,th=70,tw=(pw-60-2*18)/3,ch=(ph-86-2*th-18-54-gap)/2;
+    const cards=[0,1,2,3].map(i=>({x:px+30+(i%2)*(cw+gap),y:py+86+Math.floor(i/2)*(ch+gap),w:cw,h:ch}));
+    const tiles=CATS.map((_,i)=>{const row=i<3?0:1,col=i<3?i:i-3,n=row?2:3,rowW=n*tw+(n-1)*18;return {x:px+(pw-rowW)/2+col*(tw+18),y:py+ph-34-th-(1-row)*(th+18),w:tw,h:th};});
+    return {px,py,pw,ph,cards,tiles};
+  }
   const pw=W*.86,ph=H*.82,px=(W-pw)/2,py=(H-ph)/2,cw=pw*.36,ch=ph*.42,gap=22;
   const cards=[0,1,2,3].map(i=>({x:px+30+i*(cw+gap),y:py+86,w:cw,h:ch}));
   const tw=(pw-60-4*18)/5,th=ph*.2,ty=py+ph-th-34,tiles=CATS.map((_,i)=>({x:px+30+i*(tw+18),y:ty,w:tw,h:th}));
@@ -411,21 +420,23 @@ function playInterface(x,t,T,L){
   if(T>.9&&T<4.4)pointer(x,cur.x,cur.y+lift,press);
 }
 function playDevices(x,t,at){
-  x.fillStyle='rgba(255,255,255,.08)';rr(x,W*.06,H*.8,W*.88,14,7);x.fill();x.fillStyle='rgba(0,0,0,.25)';x.fillRect(W*.07,H*.8+14,W*.86,10);
+  x.fillStyle='rgba(255,255,255,.08)';rr(x,W*.06,H*(H>W?.82:.8),W*.88,14,7);x.fill();x.fillStyle='rgba(0,0,0,.25)';x.fillRect(W*.07,H*(H>W?.82:.8)+14,W*.86,10);
   const show=(X,Y,w,h,r)=>{x.save();rr(x,X,Y,w,h,r);x.clip();showArt(x,X,Y,w,h,'ball',t);
     if(playLogo){const lh=h*.14,lw=lh*playLogo.width/playLogo.height;x.globalAlpha*=.9;x.drawImage(playLogo,X+w-lw-h*.05,Y+h*.05,lw,lh);}
     sweep(x,t+.3,2.6,()=>rr(x,X,Y,w,h,r),.4);x.restore();};
   // each device rises on its own, with a little overshoot and a soft trail; the TV is the nearest layer
   const rise=(d,fn)=>{const k=spring(born(at,d,.55)),float=Math.sin(t*1.4+d*7)*3;x.save();x.translate(0,(1-k)*110+float);x.globalAlpha*=clamp(k*2);fn();x.restore();};
-  rise(0,()=>{const w=W*.46,h=w*.58,X=W*.08,Y=H*.8-h-60;glow(x,'rgba(0,0,0,.5)',40);x.fillStyle='#05080F';rr(x,X-10,Y-10,w+20,h+20,14);x.fill();noGlow(x);show(X,Y,w,h,6);
+  // portrait: the TV on top, laptop and phone on the shelf below it
+  const tall=H>W,shelf=tall?H*.82:H*.8;
+  rise(0,()=>{const w=tall?W*.84:W*.46,h=w*.58,X=W*.08,Y=tall?H*.24:H*.8-h-60;glow(x,'rgba(0,0,0,.5)',40);x.fillStyle='#05080F';rr(x,X-10,Y-10,w+20,h+20,14);x.fill();noGlow(x);show(X,Y,w,h,6);
     x.fillStyle='#0A0E17';x.fillRect(X+w/2-10,Y+h+10,20,42);x.fillRect(X+w/2-90,Y+h+48,180,10);});
-  rise(.15,()=>{const w=W*.27,h=w*.62,X=W*.58,Y=H*.8-h-26;glow(x,'rgba(0,0,0,.45)',30);x.fillStyle='#1A2338';rr(x,X-10,Y-10,w+20,h+20,10);x.fill();noGlow(x);show(X,Y,w,h,4);
+  rise(.15,()=>{const w=tall?W*.52:W*.27,h=w*.62,X=tall?W*.1:W*.58,Y=shelf-h-26;glow(x,'rgba(0,0,0,.45)',30);x.fillStyle='#1A2338';rr(x,X-10,Y-10,w+20,h+20,10);x.fill();noGlow(x);show(X,Y,w,h,4);
     x.fillStyle='#AEB8C7';x.beginPath();x.moveTo(X-40,Y+h+26);x.lineTo(X+w+40,Y+h+26);x.lineTo(X+w+18,Y+h+12);x.lineTo(X-18,Y+h+12);x.closePath();x.fill();});
-  rise(.3,()=>{const w=86,h=170,X=W*.885,Y=H*.8-h;glow(x,'rgba(0,0,0,.45)',24);x.fillStyle='#10192B';rr(x,X-w/2,Y,w,h,16);x.fill();noGlow(x);show(X-w/2+6,Y+8,w-12,h-16,10);});
+  rise(.3,()=>{const w=86,h=170,X=tall?W*.82:W*.885,Y=shelf-h;glow(x,'rgba(0,0,0,.45)',24);x.fillStyle='#10192B';rr(x,X-w/2,Y,w,h,16);x.fill();noGlow(x);show(X-w/2+6,Y+8,w-12,h-16,10);});
   const hub={x:W*.5,y:H*.12};
   if(playLogo){const k=spring(born(at,.4,.5)),lh=64*k,lw=lh*playLogo.width/playLogo.height,breathe=1+.03*Math.sin(t*3);x.save();x.translate(hub.x,hub.y);x.scale(breathe,breathe);
     glow(x,'rgba(243,112,33,.6)',30);x.fillStyle='rgba(255,255,255,.96)';rr(x,-lw/2-22,-lh/2-14,lw+44,lh+28,22);x.fill();noGlow(x);x.drawImage(playLogo,-lw/2,-lh/2,lw,lh);x.restore();}
-  [[W*.31,H*.3],[W*.715,H*.5],[W*.885,H*.6]].forEach(([X,Y],i)=>{const k=outCubic(born(at,.55+i*.1,.45));if(k<=0)return;
+  (tall?[[W*.5,H*.26],[W*.36,H*.64],[W*.82,H*.7]]:[[W*.31,H*.3],[W*.715,H*.5],[W*.885,H*.6]]).forEach(([X,Y],i)=>{const k=outCubic(born(at,.55+i*.1,.45));if(k<=0)return;
     const mx=(hub.x+X)/2,my=hub.y+60,pt=s=>({x:(1-s)*(1-s)*hub.x+2*(1-s)*s*mx+s*s*X,y:(1-s)*(1-s)*(hub.y+44)+2*(1-s)*s*my+s*s*Y});
     x.save();x.strokeStyle='rgba(255,149,80,.85)';x.lineWidth=3;x.setLineDash([8,10]);x.lineDashOffset=-t*50;x.beginPath();for(let s=0;s<=k;s+=.02){const p=pt(s);x[s?'lineTo':'moveTo'](p.x,p.y);}x.stroke();x.setLineDash([]);
     if(k>=1){for(let j=0;j<2;j++){const p=pt((t*.8+i/3+j/2)%1);glow(x,C.o,14);x.fillStyle=C.w;x.beginPath();x.arc(p.x,p.y,6,0,TAU);x.fill();}
@@ -567,7 +578,7 @@ CLIPS.mg_speed_gauge={title:'Tốc độ cao — đồ họa động',draw(x,t){
 // 7. Lag: a video freezes, the spinner turns, the progress bar is stuck, latency bars jump; glitch slices.
 CLIPS.mg_lag_buffer={title:'Mạng giật lag, quay vòng — đồ họa động',draw(x,t){
   gloom(x,t);
-  const px=W*.14,py=H*.12,pw=W*.72,ph=pw*9/16*.86,enter=spring(born(t,0,.4));
+  const tall=H>W,px=tall?W*.06:W*.14,py=tall?H*.2:H*.12,pw=tall?W*.88:W*.72,ph=pw*9/16*.86,enter=spring(born(t,0,.4));
   x.save();x.translate(0,(1-enter)*60);x.globalAlpha=clamp(enter*2);
   glow(x,'rgba(0,0,0,.6)',40);x.fillStyle='#0A111F';rr(x,px-10,py-10,pw+20,ph+60,18);x.fill();noGlow(x);
   // frozen frame: a simple dim landscape (sky, hills, sun)
@@ -589,10 +600,10 @@ CLIPS.mg_lag_buffer={title:'Mạng giật lag, quay vòng — đồ họa độn
   x.fillStyle='rgba(255,255,255,.85)';x.fillRect(px+22,by-10,6,20);x.fillRect(px+34,by-10,6,20);
   x.restore();
   // latency bars jumping on the right
-  const lx=W*.9,ly=H*.62;x.fillStyle='rgba(11,31,63,.8)';rr(x,lx-48,ly-150,96,170,16);x.fill();
+  const lx=tall?W*.5:W*.9,ly=tall?H*.66:H*.62;x.fillStyle='rgba(11,31,63,.8)';rr(x,lx-48,ly-150,96,170,16);x.fill();
   for(let i=0;i<4;i++){const hgt=20+110*Math.abs(Math.sin(t*(3+i)+i*1.7));x.fillStyle=hgt>90?C.o:C.grey;rr(x,lx-36+i*20,ly+6-hgt,14,hgt,4);x.fill();}
   // a controller that shakes when the picture freezes
-  const shake=gl?6:1.5;x.save();x.translate(W*.075+Math.sin(t*40)*shake,H*.86+Math.cos(t*33)*shake);x.scale(.9,.9);x.fillStyle='#E9EEF5';x.beginPath();x.ellipse(-30,0,40,30,0,0,TAU);x.ellipse(30,0,40,30,0,0,TAU);x.fill();x.fillRect(-30,-30,60,50);
+  const shake=gl?6:1.5;x.save();x.translate((tall?W*.5:W*.075)+Math.sin(t*40)*shake,(tall?H*.82:H*.86)+Math.cos(t*33)*shake);x.scale(tall?1.6:.9,tall?1.6:.9);x.fillStyle='#E9EEF5';x.beginPath();x.ellipse(-30,0,40,30,0,0,TAU);x.ellipse(30,0,40,30,0,0,TAU);x.fill();x.fillRect(-30,-30,60,50);
   x.fillStyle=C.n;x.fillRect(-48,-6,24,8);x.fillRect(-40,-14,8,24);x.fillStyle=C.o;x.beginPath();x.arc(36,-8,6,0,TAU);x.fill();x.fillStyle=C.b;x.beginPath();x.arc(50,4,6,0,TAU);x.fill();x.restore();
   vignette(x,.6);
 }};
@@ -602,15 +613,19 @@ function drawFrame(clip,x,t){
   x.save();x.translate(W/2+dx,H/2+dy);x.rotate(r);x.scale(z,z);x.translate(-W/2,-H/2);clip.draw(x,t);x.restore();
 }
 // ---- render ------------------------------------------------------------------------------------------------
-async function render(name){
-  const clip=CLIPS[name],out=path.join(LIB,name+'.mp4'),canvas=createCanvas(W,H),x=canvas.getContext('2d');
-  const child=spawn(P.ffmpeg,['-y','-v','error','-f','rawvideo','-pix_fmt','rgba','-s',W+'x'+H,'-r',String(FPS),'-i','pipe:0','-an','-c:v','libx264','-preset','slow','-crf','17','-pix_fmt','yuv420p','-movflags','+faststart',out],{stdio:['pipe','inherit','inherit'],windowsHide:true});
+function setPortrait(on){W=on?PORTRAIT.w:1280;H=on?PORTRAIT.h:720;OUT=on?PORTRAIT.scale:1;}
+const portraitName=name=>name+'_portrait';
+async function render(name,portrait=false){
+  setPortrait(portrait);
+  const PW=Math.round(W*OUT),PH=Math.round(H*OUT),clip=CLIPS[name],out=path.join(LIB,(portrait?portraitName(name):name)+'.mp4'),canvas=createCanvas(PW,PH),x=canvas.getContext('2d');
+  const child=spawn(P.ffmpeg,['-y','-v','error','-f','rawvideo','-pix_fmt','rgba','-s',PW+'x'+PH,'-r',String(FPS),'-i','pipe:0','-an','-c:v','libx264','-preset','slow','-crf','17','-pix_fmt','yuv420p','-movflags','+faststart',out],{stdio:['pipe','inherit','inherit'],windowsHide:true});
   const closed=new Promise((res,rej)=>{child.once('error',rej);child.once('close',c=>c===0?res():rej(Error('FFmpeg '+c)));});
   for(let f=0;f<DUR*FPS;f++){
-    x.setTransform(1,0,0,1,0,0);x.globalAlpha=1;noGlow(x);x.setLineDash([]);drawFrame(clip,x,f/FPS);
-    if(!child.stdin.write(Buffer.from(x.getImageData(0,0,W,H).data.buffer)))await new Promise(r=>child.stdin.once('drain',r));
+    x.setTransform(OUT,0,0,OUT,0,0);x.globalAlpha=1;noGlow(x);x.setLineDash([]);drawFrame(clip,x,f/FPS);
+    if(!child.stdin.write(Buffer.from(x.getImageData(0,0,PW,PH).data.buffer)))await new Promise(r=>child.stdin.once('drain',r));
   }
   child.stdin.end();await closed;
+  if(portrait){console.log(portraitName(name),(fs.statSync(out).size/1024).toFixed(0)+' KB');setPortrait(false);return;}
   execFileSync(P.ffmpeg,['-y','-v','error','-ss','3','-i',out,'-frames:v','1','-update','1','-vf','scale=480:-2',path.join(LIB,name+'.jpg')]);
   const file=path.join(LIB,'sources.json'),manifest=JSON.parse(fs.readFileSync(file,'utf8'));
   manifest[name+'.mp4']={status:'brand_motion_graphic',title:clip.title,generator:'scripts/assets/generate_motion_graphics.js',fileSize:fs.statSync(out).size};
@@ -620,7 +635,8 @@ async function render(name){
 async function loadAssets(){playLogo=await loadImage(path.join(P.assets,'brand','fptplay-logo.png'));}
 if(require.main===module)(async()=>{
   playLogo=await loadImage(path.join(P.assets,'brand','fptplay-logo.png'));
-  const names=process.argv.slice(2).length?process.argv.slice(2):Object.keys(CLIPS);
-  for(const name of names){if(!CLIPS[name])throw Error('Không có clip '+name);await render(name);}
+  const args=process.argv.slice(2),portrait=args.includes('--portrait'),names=args.filter(a=>a!=='--portrait').length?args.filter(a=>a!=='--portrait'):Object.keys(CLIPS);
+  // --portrait renders only the 1080×1920 versions; without it, the 16:9 clips and then their portrait versions.
+  for(const name of names){if(!CLIPS[name])throw Error('Không có clip '+name);if(!portrait)await render(name);await render(name,true);}
 })().catch(e=>{console.error(e);process.exitCode=1;});
-module.exports={CLIPS,loadAssets,drawFrame,W,H};
+module.exports={CLIPS,loadAssets,drawFrame,setPortrait,PORTRAIT,get W(){return W;},get H(){return H;}};

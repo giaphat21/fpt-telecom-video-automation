@@ -255,6 +255,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
   let resolvedSpecs;
   try { resolvedSpecs = await layoutBrolls(rawConcat, userBrollSpecs.map(s => resolveBrollSpec(s)).filter(Boolean), CARD, plan.scenes.map(s => s.start)); }
   catch (error) { throw new Error('Không thể dựng B-roll đã chọn: ' + error.message); }
+  resolvedSpecs = await withMattes(rawConcat, resolvedSpecs, log);
   const hookStill = path.join(overlayDir, 'intro_hook.png');
   renderStill(plan.typographyPlan, hookDur > 0 ? plan.hookStart + Math.min(1.2, (hookDur - plan.hookStart) / 2) : 0, hookStill);
   const thumbPath = path.join(workDir, `${safeName}_thumbnail.jpg`);
@@ -270,7 +271,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
   const graph = resolvedSpecs.length ? brollGraph(resolvedSpecs, { artDir: tempDir, firstInput: nextIdx, onLog: log }) : { inputs: [], filters: ['[0:v]setsar=1[base]'], output: 'base', nextInput: nextIdx };
   inputs.push(...graph.inputs); filterParts.push(...graph.filters); nextIdx = graph.nextInput;
   let prevV = graph.output;
-  const fx = fxFilters(plan.customFx);
+  const fx = fxFilters([...(plan.autoFx || []), ...plan.customFx]);
   if (fx) { filterParts.push(`[${prevV}]${fx}[vfx]`); prevV = 'vfx'; }
   // Music plays in the pieces the user left on the timeline; one piece over the whole video by default.
   const bgmDefault = singleMasterVoice ? referenceProfile.audio.bgmWithVoice : referenceProfile.audio.bgmWithoutVoice;
@@ -353,4 +354,15 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
   return { outMp4, thumbPath, safeName, styleSeed: seed, totalDur, subtitles, highlights, clipWindows, brollCutaways: userBrollSpecs, hook: plan.hook, hookStyle: plan.hook.style, outroStyle: plan.outro.style,
     outro: plan.outro, mediaWarnings, qualityReport };
 }
-module.exports = { runFptPipeline, chooseMusic, musicStart, musicSegments };
+// B-roll behind the presenter needs the presenter's matte; without one it falls back to the split screen.
+const matting = require('../media/matting');
+async function withMattes(video, specs, log = () => {}) {
+  if (!matting.available()) return specs;
+  const out = [];
+  for (const s of specs) {
+    if (s.layout !== 'behind') { out.push(s); continue; }
+    try { out.push({ ...s, matte: await matting.matteSpan(video, s.start, s.end) }); } catch (e) { log('[TÁCH NỀN] ' + e.message); out.push(s); }
+  }
+  return out;
+}
+module.exports = { withMattes, runFptPipeline, chooseMusic, musicStart, musicSegments };

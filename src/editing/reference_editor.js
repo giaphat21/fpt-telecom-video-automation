@@ -4,6 +4,11 @@ const PATHS=require('../../config/paths.js');
 const {wordTimeline,findPhrase,normalize,boundaries,round}=require('./timeline_rules');
 const {correctSubtitles}=require('../speech/transcript_formatter');
 const {applyTypographyVariety,topicStyles}=require('../typography/brand_rules');
+const {isNegative}=require('./tone');
+// Problem pictures (lag, walls): a sentence about a problem shows the problem, not the product it mentions in passing.
+const PROBLEM_CLIPS=/^(mg_lag|mg_wall)$/;
+// A picture shorter than this reads as a flash, not as an illustration.
+const MIN_PICTURE=0.9,MIN_SWITCH=1.0;
 const {meaningfulWords,emphasisScore,isFiller}=require('./phrase_rules');
 const {segment,clean,joined,STARTERS,TRAILING}=require('../speech/phrase_segmenter');
 const profile=require('../../config/approved_reference.json');
@@ -150,9 +155,13 @@ function createReferenceBrolls(subtitles,totalDuration,catalog,allowedIds=null,l
   }
   matches.sort((a,b)=>a.start-b.start||b.length-a.length);
   const hits=[];let covered=-1;
-  for(const hit of matches){
-    if(hit.index<covered)continue;
-    hits.push(hit);covered=hit.index+hit.length;
+  // One phrase shared by several clips ("chơi game" → Liên Minh or Liên Quân): take turns, least used first.
+  const uses={};
+  for(let i=0;i<matches.length;i++){
+    const hit=matches[i];if(hit.index<covered)continue;
+    const tied=matches.filter(m=>m.index===hit.index&&m.length===hit.length);
+    const pick=tied.reduce((best,m)=>(uses[m.clip.id]||0)<(uses[best.clip.id]||0)?m:best,tied[0]);
+    uses[pick.clip.id]=(uses[pick.clip.id]||0)+1;hits.push(pick);covered=hit.index+hit.length;
   }
   const spans=[];let active=null;
   // A picture stays while its topic is being talked about: the sentence that names it and the one that completes it.
@@ -171,7 +180,8 @@ function createReferenceBrolls(subtitles,totalDuration,catalog,allowedIds=null,l
     spans.push(active);named=section.end;
   };
   for(const section of sections){
-    const local=hits.filter(h=>h.start>=section.start-.001&&h.start<section.end-.001);
+    let local=hits.filter(h=>h.start>=section.start-.001&&h.start<section.end-.001);
+    if(local.length&&isNegative(section.text)&&local.some(h=>PROBLEM_CLIPS.test(h.clip.id)))local=local.filter(h=>PROBLEM_CLIPS.test(h.clip.id));
     const commercial=/^(gia chi|chi tu|dang ky|nhan uu dai|lien he|goi ngay)\b/.test(normalize(section.text));
     if(!local.length){
       if(commercial){active=null;continue;}
@@ -180,7 +190,9 @@ function createReferenceBrolls(subtitles,totalDuration,catalog,allowedIds=null,l
       }
       continue;
     }
-    const changes=local.filter((h,i)=>!i||h.clip.id!==local[i-1].clip.id);
+    // A second topic inside one sentence gets its own picture only when both parts last long enough to be seen.
+    const changes=[];
+    for(const h of local){const last=changes.at(-1);if(!last){changes.push(h);continue;}if(h.clip.id===last.clip.id)continue;if(h.start-Math.max(section.start,last.start)>=MIN_SWITCH&&section.end-h.start>=MIN_SWITCH)changes.push(h);}
     const cuts=[section.start];
     for(const hit of changes.slice(1)){
       let cut=hit.start;
@@ -194,7 +206,16 @@ function createReferenceBrolls(subtitles,totalDuration,catalog,allowedIds=null,l
       if(words.length)append({start:cuts[i],end:Math.min(next,words.at(-1).end)},hit);
     });
   }
-  return spans.filter(s=>s.available&&s.autoEligible!==false&&(!allowed||allowed.has(s.brollId)))
+  // No flashes: a short picture wedged against another one is dropped and the picture before it covers its words;
+  // pictures of the same topic that now touch become one. A short mention standing alone keeps its own span.
+  const steady=[];
+  spans.forEach((s,i)=>{
+    const prev=steady.at(-1),next=spans[i+1],touchPrev=prev&&s.start-prev.end<=.1,touchNext=next&&next.start-s.end<=.1;
+    if(s.end-s.start<MIN_PICTURE&&(touchPrev||touchNext)){if(touchPrev){prev.end=prev.speechEnd=s.end;prev.duration=round(prev.end-prev.start);}return;}
+    if(touchPrev&&prev.brollId===s.brollId){prev.end=prev.speechEnd=s.end;prev.duration=round(prev.end-prev.start);return;}
+    steady.push(s);
+  });
+  return steady.filter(s=>s.available&&s.autoEligible!==false&&(!allowed||allowed.has(s.brollId)))
     .map(({available,autoEligible,...s})=>s);
 }
 module.exports={speechBoundaries,spokenSections,createReferenceHighlights,createReferenceBrolls};

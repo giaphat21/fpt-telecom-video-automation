@@ -1,6 +1,8 @@
 'use strict';
 // Drives the real Studio in a browser: analysis -> live preview -> edits with the mouse -> export, and checks that the
 // MP4 is built from exactly what the timeline shows. Needs a running Studio (FPT_STUDIO_PORT) and FPT_OUTPUT_DIR.
+// Never drive the person's own Studio: these tests run only against the server started by run_studio_smoke.js.
+if(!process.env.FPT_STUDIO_PORT||process.env.FPT_STUDIO_PORT==='3457'){console.error('Chạy qua npm run test:ui (máy chủ thử riêng), không chạy thẳng vào Studio đang mở.');process.exit(2);}
 const fs=require('fs'),path=require('path'),{spawn}=require('child_process'),assert=require('node:assert/strict');
 const PATHS=require('../../config/paths.js');
 const out=path.join(PATHS.qa,'ui_timeline');fs.mkdirSync(out,{recursive:true});
@@ -48,7 +50,7 @@ function connect(url){return new Promise((resolve,reject)=>{
     assert.deepEqual(same,{sfx:true,hl:true,fx:true});
     await shot('1-timeline');
     // 2. every track can be inspected
-    await run('TL.select("highlight",2)');await until('document.querySelectorAll(".tl-style").length===32','bảng 32 kiểu chữ');await sleep(1200);await shot('2-highlight');
+    await run('TL.select("highlight",2)');await until('document.querySelectorAll(".tl-style").length===38','bảng 38 kiểu chữ');await sleep(1200);await shot('2-highlight');
     for(const [type,index] of [['sub',1],['hook',0],['outro',0],['broll',1],['video',2],['sfx','hook:open'],['fx','cut:1'],['music',0]]){await run('TL.select('+JSON.stringify(type)+','+JSON.stringify(index)+')');await sleep(120);assert.ok(await run('document.querySelector("#tlInspector h4")!==null'),'Không mở được '+type);}
     // 3. drag a Highlight with the mouse; frames must stay smooth
     let key=await run('TL.model.find(i=>i.track==="highlight"&&i.index===3).key'),b=await box(key),before=await run('({a:currentHighlights[3].start,b:currentHighlights[3].end,others:currentHighlights.map(h=>h.typo),sounds:studioPlan.sfx.map(s=>s.id)})');

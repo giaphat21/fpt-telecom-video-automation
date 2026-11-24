@@ -51,7 +51,7 @@ function cardTop(face,card,{top=610,bottom=1490}={}){
 // cuts: where the picture changes; the host can stand somewhere else after each of them.
 async function layoutBrolls(video,specs,card,cuts=[]){
   return Promise.all(specs.map(async spec=>{
-    if(spec.layout==='cutaway')return spec;
+    if(spec.layout==='cutaway'||spec.layout==='behind'||spec.layout==='above_sub')return spec;
     if(spec.layout==='pip'){
       const edges=[spec.start,...cuts.filter(c=>c>spec.start+.25&&c<spec.end-.25),spec.end],parts=await Promise.all(edges.slice(0,-1).map(async(start,i)=>({start,face:await detectFace(video,start,edges[i+1],edges.length>2?5:7)})));
       const known=parts.find(p=>p.face)?.face||null,cardParts=parts.map(p=>({start:p.start,y:cardTop(p.face||known,card)}));

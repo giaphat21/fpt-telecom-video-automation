@@ -1,6 +1,6 @@
 {
   "name": "fpt-telecom-video-automation",
-  "version": "1.7.1",
+  "version": "1.8.0",
   "private": true,
   "description": "FPT Telecom speech-synchronized video automation studio",
   "type": "commonjs",
@@ -24,6 +24,7 @@
   "dependencies": {
     "@napi-rs/canvas": "1.2.0",
     "ffmpeg-static": "5.3.0",
-    "ffprobe-static": "3.1.0"
+    "ffprobe-static": "3.1.0",
+    "onnxruntime-node": "1.31.1"
   }
 }

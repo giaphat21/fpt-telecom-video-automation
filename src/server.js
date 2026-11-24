@@ -94,13 +94,14 @@ const server=http.createServer(async(req,res)=>{
       if(route==='/studio/engine.js'){res.writeHead(200,{'Content-Type':'text/javascript; charset=utf-8','Cache-Control':'private, no-cache'});return res.end(engineBundle());}
       if(route.startsWith('/studio/'))return serveStatic(req,res,confinedPath(path.join(PATHS.root,'public/studio'),decodeURIComponent(route.slice(8))));
       if(/^\/preview\/[0-9a-f]{24}\/proxy\.mp4$/.test(route))return serveStatic(req,res,confinedPath(BASE_DIR,route.slice(9)));
+      if(/^\/matte\/[0-9a-f]{24}\.webm$/.test(route))return serveStatic(req,res,confinedPath(require('./media/matting').MATTE_DIR,route.slice(7)));
       if(route.startsWith('/output/'))return serveStatic(req,res,confinedPath(OUTPUT_DIR,decodeURIComponent(route.slice(8))));
       if(route.startsWith('/assets/'))return serveStatic(req,res,confinedPath(ASSETS_DIR,decodeURIComponent(route.slice(8))));
     }
     if(req.method==='GET'){
       if(route==='/api/config')return sendJson(res,200,{webMode:WEB,version:VERSION,busy:queue.busy,output:{width:1080,height:1920,fps:30},maxUploadMB:Number(process.env.FPT_MAX_UPLOAD_MB||2048)});
       if(route==='/api/version')return sendJson(res,200,{running:VERSION,installed:diskVersion(),busy:queue.busy,canRestart:!WEB&&Boolean(process.env.FPT_LAUNCHED)});
-      if(route==='/api/styles')return sendJson(res,200,{highlight:BRAND_STYLES,hook:HOOK_STYLES,motion:MOTIONS});
+      if(route==='/api/styles')return sendJson(res,200,{highlight:[...BRAND_STYLES,...require('./typography/brand_rules').BROLL_STYLES],hook:HOOK_STYLES,motion:MOTIONS});
       if(route==='/api/fpt-hub')return sendJson(res,200,{ok:true,hub:FPT_KNOWLEDGE_BASE});
       if(['/api/tech-sfx','/api/sfx-catalog'].includes(route))
         return sendJson(res,200,{ok:true,...sfxCatalog()});
@@ -164,6 +165,18 @@ const server=http.createServer(async(req,res)=>{
         if(media.videoFiles.length&&!queue.busy)autosub(payload,media).catch(()=>{});
         return sendJson(res,200,{ok:true});
       }
+      if(route==='/api/mattes'){
+        // Which presenter mattes of the preview are ready: a file check only, never a queued task.
+        const key=String(payload.key||'');if(!/^[0-9a-f]{24}$/.test(key))throw httpError(400,'Khóa xem trước không hợp lệ.');
+        const matting=require('./media/matting'),raw=path.join(require('./pipeline/base_cache').ROOT,key,'raw.mp4');
+        if(!fs.existsSync(raw))return sendJson(res,200,{ok:true,ready:[],pending:0});
+        const ready=[];let pending=0;
+        for(const w of (Array.isArray(payload.spans)?payload.spans:[]).slice(0,200)){
+          const m=matting.cachedSpan(raw,Number(w.start),Number(w.end));
+          if(m)ready.push({uid:w.uid??null,url:'/matte/'+m.name,start:m.start,end:m.end});else{pending++;matting.matteSpan(raw,Number(w.start),Number(w.end)).catch(()=>{});}
+        }
+        return sendJson(res,200,{ok:true,ready,pending});
+      }
       if(route==='/api/plan'||route==='/api/prepare'){
         const media=selectedMedia(payload);
         if(!media.videoFiles.length||!Array.isArray(payload.clipWindows)||!payload.clipWindows.length)throw httpError(400,'Cần video và khoảng cắt.');
@@ -172,7 +185,10 @@ const server=http.createServer(async(req,res)=>{
         const plan=planForClient(job,windows);
         const task={windows,voiceSpeed:voiceSpeedOf(payload),fx:payload.fx||{},brolls:plan.brolls,projectName:payload.projectName,bgm:{disableBgm:payload.disableBgm,bgmMode:payload.bgmMode,customBgm:payload.customBgm,bgmFromStart:payload.bgmFromStart}};
         const preview=await once('prepare:'+JSON.stringify(task),()=>queue.enqueue('prepare',task));
-        return sendJson(res,200,{ok:true,preview});
+        // Missing presenter mattes are made here, in the long-lived server, so the preview task ends at once.
+        const {_matteJobs:jobs=[],...shown}=preview;
+        for(const j of jobs)require('./media/matting').matteSpan(j.video,j.start,j.end).catch(()=>{});
+        return sendJson(res,200,{ok:true,preview:shown});
       }
       if(route==='/api/detect-brolls'){
         const subs=payload.subtitles||[],total=Number(payload.totalDuration)||Math.max(0,...subs.map(s=>Number(s.end)||0));

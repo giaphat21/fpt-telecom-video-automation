@@ -263,7 +263,7 @@ input[type=range]{padding:0;accent-color:var(--fpt-orange)}
     let autoBrollEnabled = true;
 
     // Danh sách các ID chủ đề B-Roll được phép (mặc định tích chọn cả 5)
-    const ALL_BROLL_TOPICS = ['stock_football', 'stock_wifi6', 'stock_camera', 'stock_fptplay', 'stock_gaming', 'mg_signal', 'mg_wall', 'mg_mesh', 'mg_speed', 'mg_lag'];
+    const ALL_BROLL_TOPICS = ['stock_football', 'stock_wifi6', 'stock_camera', 'stock_fptplay', 'stock_gaming', 'stock_lienminh', 'stock_lienquan', 'mg_signal', 'mg_wall', 'mg_mesh', 'mg_speed', 'mg_lag'];
     let enabledBrollIds = new Set(ALL_BROLL_TOPICS);
 
     // ─── Missing global state declarations ───
@@ -275,8 +275,10 @@ input[type=range]{padding:0;accent-color:var(--fpt-orange)}
     let dragSrcIdx = null;
 
     const LAYOUT_INFO = {
-      cutaway: { label: 'Cut-Away Full', icon: '✂️' },
+      cutaway: { label: 'Toàn màn hình', icon: '✂️' },
       top_half: { label: 'Top-Half (40%)', icon: '↕️' },
+      behind: { label: 'Sau VJ', icon: '🧍' },
+      above_sub: { label: 'Khung trên Sub', icon: '🔲' },
       pip: { label: 'Khung chính giữa', icon: '📱' }
     };
 
@@ -566,7 +568,7 @@ input[type=range]{padding:0;accent-color:var(--fpt-orange)}
   const active = currentBrollCutaways.filter(b=>b.enabled!==false && (!ALL_BROLL_TOPICS.includes(b.brollId)||enabledBrollIds.has(b.brollId)));
   document.getElementById('brollCountLabel').textContent = active.length;
   document.getElementById('clearBrollBtn').style.display = active.length ? 'inline-flex' : 'none';
-  const layouts = {cutaway:'Toàn màn hình',top_half:'Chia màn hình',pip:'Khung chính giữa'};
+  const layouts = {cutaway:'Toàn màn hình',top_half:'Chia màn hình',pip:'Khung chính giữa',behind:'Sau VJ',above_sub:'Khung trên Sub',top_half:'Nửa trên màn hình'};
   document.getElementById('brollQueueList').innerHTML = active.map(b=>{
     const index = currentBrollCutaways.indexOf(b);
     return `<div class="broll-item"><div><strong>${escapeStudioText(b.name||'B-roll')}</strong><small>${Number(b.start).toFixed(1)} – ${Number(b.end).toFixed(1)}s</small></div>

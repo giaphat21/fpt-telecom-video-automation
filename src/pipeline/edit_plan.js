@@ -17,12 +17,30 @@ const {prepareHighlightsForRender,boundaries,scheduleSfx,normalize,wordTimeline,
 const {punchCuts,timelineLength,frameGrid}=require('./base_cache');
 const {inspectPlan}=require('./quality_gate');
 const {subStyle}=require('../typography/subtitle_style');
-const {normalizeFx}=require('./picture_fx');
+const {normalizeFx,KINDS:FX_KINDS,TRANSITIONS}=require('./picture_fx');
 const {FPS}=require('./clip_assembler');
 
 const round=n=>Math.round(n*1000)/1000;
 const safeProject=name=>(name||'FPT_Telecom_Auto').replace(/[^a-zA-Z0-9_-]/g,'_');
 const filled=cfg=>Boolean(cfg)&&['line1','line2','line3','line4'].some(k=>String(cfg[k]||'').trim());
+// A transition at each picture cut that also gets a cut sound (cuts 2.2 s apart, outside Hook and Outro), in an order
+// that changes per video. Each one is a block on the timeline: fx['auto:cut<i>'] = {off} removes it, {kind} changes it.
+// A cut is heard as a whoosh (7.2), whatever the transition.
+const CUT_SOUND=['whoosh'];
+function autoTransitions({scenes,hookDur,outroStart,totalDur,seed,fx}){
+  const kinds=Object.keys(TRANSITIONS),h=[...String(seed)].reduce((a,c)=>(a*31+c.charCodeAt(0))>>>0,7),order=kinds.map((_,i)=>kinds[(i+h)%kinds.length]);
+  const out=[],recent=[];let lastCut=-1e9,n=0;
+  scenes.forEach((scene,i)=>{
+    if(!i||scene.start-lastCut<2.2||scene.start<=hookDur||scene.start>=outroStart-1)return;
+    lastCut=scene.start;
+    const own=fx?.['auto:cut'+i]||{};if(own.off)return;
+    let kind=order[n++%order.length];while(recent.slice(-2).includes(kind))kind=order[n++%order.length];
+    if(TRANSITIONS[own.kind])kind=own.kind;
+    const start=round(Math.max(0,scene.start-TRANSITIONS[kind].pre)),end=round(Math.min(totalDur,start+FX_KINDS[kind].dur));
+    if(end-start>=.2){out.push({uid:'cut'+i,kind,start,end,auto:true,cut:i,chosen:!!TRANSITIONS[own.kind]});recent.push(kind);}
+  });
+  return out;
+}
 function wrapSafeLine(text,maxChars=22){
   const clean=String(text||'').replace(/\s+/g,' ').trim();
   if(!clean)return '';
@@ -80,11 +98,12 @@ function createEditPlan({job,seed,subtitles,highlights,totalDur,scenes=[],brolls
     return {uid:String(t.uid||'t'+i),line1:typed(t.line1),line2:typed(t.line2),line3:typed(t.line3),line4:typed(t.line4),y:320,scale:1.3,style:HOOK_STYLES.includes(t.style)?t.style:hook.style,start,end};
   }).filter(t=>filled(t)&&t.end-t.start>=.3);
   const outroCta=(!job.outroCta||job.outroCta==='220K Ngoại hạng Anh')?(autoOutroCta||smart.outroCta||''):job.outroCta;
-  // ---- highlights
+  // ---- highlights (styled after the B-roll they sit on)
+  const brollSource=brolls||selectBrollSpecs(job,subtitles,hookDur,hasOutro?outroStart:totalDur);
   const styled=applyTypographyVariety(prepareHighlightsForRender(withIds(highlights,'h').filter(h=>h&&String(h.text||'').trim())
     .map(h=>({...h,text:wrapSafeLine(h.text),start:Number(h.start),end:Number(h.end)||Number(h.start)+2,y:350,scale:1.4}))
     .sort((a,b)=>a.start-b.start),hookDur,outroStart,totalDur),
-    {seed:project,videos:others.slice(0,6).map(h=>h.typos||[])});
+    {seed:project,videos:others.slice(0,6).map(h=>h.typos||[]),brolls:brollSource});
   const items=styled.map(h=>({...h,dur:round(h.end-h.start)})).filter(h=>h.dur>=.35||h.timingPolicy==='preserve_all');
   const hlSpecs=items.map((h,i)=>({uid:h.uid,file:'hl_'+i+'.png',timingPolicy:h.timingPolicy,text:h.text,y:350,scale:1.4,typo:h.typo,motion:h.motion,sfx:h.sfx,
     autoDetected:h.autoDetected,edited:h.edited,start:round(h.start),dur:h.dur}));
@@ -113,7 +132,7 @@ function createEditPlan({job,seed,subtitles,highlights,totalDur,scenes=[],brolls
   const titleSync=(cfg,from,to)=>({...cfg,spokenAt:['line1','line2','line3','line4'].map(k=>cfg[k]?spokenAt(cfg[k],from,to):null)});
   const typographyPlan={totalDur,hookStart,hookDur,outroStart,outroEnd,hook:titleSync(hook,hookStart,hookDur),outro:hasOutro?titleSync(outro,outroStart,outroEnd):null,titles:titles.map(t=>titleSync(t,t.start,t.end)),
     highlights:hlSpecs.filter(h=>h.file!=='hl_outro.png').map(h=>{const text=h.text.replace(/\s+/g,' ');return {...h,text,wordOffsets:wordOffsets(text,h.start,h.start+h.dur+.1)};})};
-  const brollSpecs=withIds(brolls||selectBrollSpecs(job,subtitles,hookDur,hasOutro?outroStart:totalDur),'b').map(s=>({...s,hostFocusY:s.hostFocusY??job.hostFocusY??.55,
+  const brollSpecs=withIds(brollSource,'b').map(s=>({...s,hostFocusY:s.hostFocusY??job.hostFocusY??.55,
     easeIn:given(job.fx?.['in:'+s.uid]?.dur)?Number(job.fx['in:'+s.uid].dur):undefined,easeOut:given(job.fx?.['out:'+s.uid]?.dur)?Number(job.fx['out:'+s.uid].dur):undefined}));
   // ---- sound
   const cues=buildCues({...typographyPlan,highlights:[]}),hookTimes=titleTimeline(cues.find(c=>c.kind==='hook')),outroTimes=titleTimeline(cues.find(c=>c.kind==='outro'));
@@ -149,10 +168,12 @@ function createEditPlan({job,seed,subtitles,highlights,totalDur,scenes=[],brolls
     hookTimes.spoken.forEach((t,i)=>{if(i&&t!=null&&t>hookTimes.landed+.7&&t<hookDur-.4)place('hook:spoken'+(i+1),'Nhấn dòng '+(i+1),['pop','tone'],t,.24,{priority:40,minGap:.6});});
   }
   let lastCut=0;
+  const autoFx=autoTransitions({scenes,hookDur,outroStart,totalDur,seed:project,fx:job.fx&&typeof job.fx==='object'?job.fx:{}});
   scenes.forEach((scene,i)=>{
     if(!i||scene.start-lastCut<2.2||scene.start<=hookDur||scene.start>=outroStart-1)return;
     lastCut=scene.start;
-    if(!job.fx?.['cut:'+i]?.off)place('cut:'+i,'Chuyển cảnh',['whoosh'],scene.start,.3,{priority:70,minGap:.95,only:true});
+    const tr=autoFx.find(e=>e.cut===i);
+    if(!job.fx?.['cut:'+i]?.off||tr)place('cut:'+i,'Chuyển cảnh'+(tr?' · '+FX_KINDS[tr.kind].name:''),tr?CUT_SOUND:['whoosh'],scene.start,.3,{priority:70,minGap:.95,only:true});
   });
   brollSpecs.forEach(b=>{if(b.start>hookDur&&b.start<outroStart)place('broll:'+b.uid,'B-roll '+(b.name||''),['whoosh','riser'],b.start,.32,{priority:70,minGap:.95,only:true});});
   // A price or a gift keeps its own sound even when it arrives together with a cut.
@@ -178,7 +199,7 @@ function createEditPlan({job,seed,subtitles,highlights,totalDur,scenes=[],brolls
   let fadeDur=round(Math.max(.35,Math.min(1,totalDur-lastSpoken)));
   if(fx.fade?.off)fadeDur=.02;else if(given(fx.fade?.dur))fadeDur=round(Math.max(.1,Math.min(Number(fx.fade.dur),totalDur-.2)));
   const customFx=normalizeFx(job.customFx,totalDur);
-  return {customFx,seed:project,totalDur,hookStart,hookDur,outroDur,outroStart,outroEnd,titles,hook,outro,hasOutro,outroCta,subtitles,highlights:items,hlSpecs,typographyPlan,hookTimes,outroTimes,
+  return {customFx,autoFx,seed:project,totalDur,hookStart,hookDur,outroDur,outroStart,outroEnd,titles,hook,outro,hasOutro,outroCta,subtitles,highlights:items,hlSpecs,typographyPlan,hookTimes,outroTimes,
     brolls:brollSpecs,sfx,mutedSfx:muted,events,settle,scenes,hiddenSubs,userAudio:userEvents.length>0||muted.length>0||sfx.some(s=>s.user),
     fade:{start:round(Math.max(0,totalDur-fadeDur)),duration:fadeDur},strictSpeech};
 }
@@ -195,12 +216,13 @@ function planForClient(job,windows){
   return {totalDur,hookStart:plan.hookStart,hookDur:plan.hookDur,outroStart:plan.outroStart,outroEnd:plan.outroEnd,titles:plan.typographyPlan.titles,outroDur:plan.outroDur,seed:plan.seed,
     hook:plan.typographyPlan.hook,outro:plan.typographyPlan.outro,hookTimes:plan.hookTimes,outroTimes:plan.outroTimes,
     highlights:plan.highlights.map(h=>{const spec=plan.typographyPlan.highlights.find(x=>x.uid===h.uid);return {...h,text:spec.text,wordOffsets:spec.wordOffsets};}),
-    hiddenSubs:plan.subtitles.map((s,i)=>plan.hiddenSubs.has(s)?i:-1).filter(i=>i>=0),subtitles:plan.subtitles,subStyle:subStyle(job.subStyle),brolls:plan.brolls,customFx:plan.customFx,
+    hiddenSubs:plan.subtitles.map((s,i)=>plan.hiddenSubs.has(s)?i:-1).filter(i=>i>=0),subtitles:plan.subtitles,subStyle:subStyle(job.subStyle),brolls:plan.brolls,customFx:plan.customFx,autoFx:plan.autoFx,
     sfx:plan.sfx.map(s=>({anchor:s.anchor,label:s.label,id:s.id,family:s.family,start:s.start,base:s.base,vol:s.vol,gain:s.gain,from:s.from,lead:s.lead,duration:s.duration,full:s.full??s.duration,trimIn:s.trimIn||0,trimOut:s.trimOut||0,user:s.user,url:asset(s.file)})),
     mutedSfx:plan.mutedSfx,scenes,fade:plan.fade,
     effects:[...scenes.flatMap((s,i)=>i?[{key:'cut:'+i,kind:'cut',start:s.start,duration:punched.has(i)?punched.get(i):.04,on:punched.has(i),eligible:punchCuts(windows,{}).has(i)}]:[]),
       ...plan.brolls.flatMap(b=>[{key:'in:'+b.uid,kind:'broll-in',start:b.start,duration:easeOf(b,'easeIn')},...(b.layout==='top_half'?[]:[{key:'out:'+b.uid,kind:'broll-out',start:round(b.end-easeOf(b,'easeOut')),duration:easeOf(b,'easeOut')}])]),
       ...(job.fx?.fade?.off?[]:[{key:'fade',kind:'fade',start:plan.fade.start,duration:plan.fade.duration}]),
+      ...plan.autoFx.map(e=>({key:'auto:'+e.uid,kind:'transition',fxKind:e.kind,start:e.start,duration:round(e.end-e.start),auto:true,chosen:e.chosen})),
       ...plan.customFx.map(e=>({key:'fx:'+e.uid,kind:e.kind,start:e.start,duration:round(e.end-e.start),custom:true}))],
     repeats:gate.repeats,
     warnings:[...getBrollWarnings(plan.subtitles).map(w=>({code:w.code,text:w.text})),...gate.errors.map(e=>({code:e.code,text:e.detail,blocking:true})),...gate.warnings.map(w=>({code:w.code,text:w.detail})),

@@ -2,7 +2,7 @@
 // Timeline editor. It shows the server's edit plan (exactly what will be rendered) and sends every change back through it:
 // nothing on screen is estimated, and nothing in the video is missing from a track.
 let timelineCurrentTime=0,timelineZoom=1,isTimelineScrubbing=false,selectedTimelineItem=null,studioPlan=null;
-const STYLE_NAMES={fpt_editorial_stack:'Editorial FPT',fpt_offset_echo:'Echo ba màu',fpt_bracket_focus:'Khung tiêu điểm',fpt_ribbon_cut:'Ruy băng cắt',fpt_price_burst:'Nổ giá',fpt_voucher_3d:'Vé ưu đãi',fpt_football_match:'Trận cầu',fpt_speed_hud:'HUD tốc độ',fpt_camera_smart:'Camera AI',fpt_neon_glass:'Kính FPT',fpt_split_kicker:'Dòng đôi',fpt_tricolor_slab:'Dải 3 màu',fpt_orange_block:'Khối cam',fpt_blue_pill:'Viên xanh dương',fpt_green_badge:'Thẻ xanh lá',fpt_stack_outline:'Viền nổi',fpt_logo_blocks:'Khối logo',fpt_fiber_line:'Sợi quang',fpt_signal_bars:'Vạch sóng',fpt_wifi_wave:'Sóng Wi-Fi',fpt_router_led:'Đèn router',fpt_data_stream:'Dòng dữ liệu',fpt_speed_gauge:'Đồng hồ tốc độ',fpt_connect_nodes:'Nút kết nối',neg_wall_block:'Vấp tường',neg_weak_signal:'Sóng yếu',neg_lag_glitch:'Giật lag',neg_strike_cross:'Gạch bỏ',neg_warning_tape:'Băng cảnh báo',neg_crack_sink:'Nứt vỡ',neg_wifi_off:'Mất Wi-Fi',neg_down_trend:'Tụt dốc',
+const STYLE_NAMES={fpt_game_crosshair:'Game: tâm ngắm',fpt_game_victory:'Game: chiến thắng',fpt_score_bar:'Bóng đá: bảng tỉ số',fpt_cam_rec:'Camera: đang ghi',fpt_play_cinema:'FPT Play: cuộn phim',fpt_play_button:'FPT Play: nút phát',fpt_editorial_stack:'Editorial FPT',fpt_offset_echo:'Echo ba màu',fpt_bracket_focus:'Khung tiêu điểm',fpt_ribbon_cut:'Ruy băng cắt',fpt_price_burst:'Nổ giá',fpt_voucher_3d:'Vé ưu đãi',fpt_football_match:'Trận cầu',fpt_speed_hud:'HUD tốc độ',fpt_camera_smart:'Camera AI',fpt_neon_glass:'Kính FPT',fpt_split_kicker:'Dòng đôi',fpt_tricolor_slab:'Dải 3 màu',fpt_orange_block:'Khối cam',fpt_blue_pill:'Viên xanh dương',fpt_green_badge:'Thẻ xanh lá',fpt_stack_outline:'Viền nổi',fpt_logo_blocks:'Khối logo',fpt_fiber_line:'Sợi quang',fpt_signal_bars:'Vạch sóng',fpt_wifi_wave:'Sóng Wi-Fi',fpt_router_led:'Đèn router',fpt_data_stream:'Dòng dữ liệu',fpt_speed_gauge:'Đồng hồ tốc độ',fpt_connect_nodes:'Nút kết nối',neg_wall_block:'Vấp tường',neg_weak_signal:'Sóng yếu',neg_lag_glitch:'Giật lag',neg_strike_cross:'Gạch bỏ',neg_warning_tape:'Băng cảnh báo',neg_crack_sink:'Nứt vỡ',neg_wifi_off:'Mất Wi-Fi',neg_down_trend:'Tụt dốc',
   slab_stack:'Dải nghiêng',logo_blocks:'Khối logo',mega_outline:'Chữ lớn viền',glass_card:'Thẻ kính',ribbon_wave:'Ruy băng',signal_pop:'Bật tín hiệu',ticket_banner:'Vé ưu đãi',fiber_neon:'Sợi quang',type_terminal:'Gõ chữ',stamp_seal:'Đóng dấu',swing_tag:'Thẻ đung đưa',curtain_bar:'Mở rèm',glitch_cut:'Nhiễu sóng',wave_bounce:'Chữ nhảy sóng',corner_frame:'Khung góc',spotlight_ring:'Xoay vào',arrow_rush:'Lao tới',tri_blocks:'Ba khối nối mạng',neon_glow:'Neon phát sáng',extrude_pop:'Chữ khối 3D',split_open:'Mở đôi',light_beam:'Tia sáng quét'};
 const MOTION_NAMES={pop_bounce:'Bật nảy',slide_left:'Trượt trái',slide_right:'Trượt phải',slam_drop:'Dập xuống'};
 const TL=(()=>{
@@ -61,7 +61,9 @@ const TL=(()=>{
     currentSubtitles.forEach((s,i)=>add('sub','sub',i,'s'+(s.id??i)+'_'+i,Number(s.start),Number(s.end),s.text,{trim:true,edited:s.edited,bad:badSubs.has(i),title:badSubs.get(i)||s.text+'\n'+fmt(s.start)+'–'+fmt(s.end)+'s'}));
     const FX={'cut':'Zoom cảnh','broll-in':'B-roll vào','broll-out':'B-roll ra','fade':'Tối dần'},kinds=window.FptEngine.fx.KINDS;
     customFx.forEach(e=>add('fx','fx','fx:'+e.uid,'cfx'+e.uid,e.start,e.end,kinds[e.kind].name,{color:'#7a4fa3',trim:true,edited:true,min:22,title:kinds[e.kind].name+' · '+fmt(e.start)+'–'+fmt(e.end)+'s'}));
-    (plan?.effects||[]).filter(e=>!e.custom&&!(e.kind==='cut'&&!e.on)).forEach(e=>add('fx','fx',e.key,'fx'+e.key,e.start,e.start+e.duration,FX[e.kind],{color:e.kind==='cut'?'#6b5a2e':e.kind==='fade'?'#23262d':'#4b5a6b',fixed:true,trimLeft:e.kind==='broll-out'||e.kind==='fade',trimRight:e.kind==='broll-in'||(e.kind==='cut'&&e.on),off:e.kind==='cut'&&!e.on,min:18,title:FX[e.kind]+' · '+fmt(e.start)+'s'+(e.kind==='cut'?(e.on?' · đang bật':' · đang tắt'):'')}));
+    // transitions the plan puts at picture cuts: fixed to their cut, kind can be changed or the block deleted
+    (plan?.effects||[]).filter(e=>e.kind==='transition').forEach(e=>add('fx','fx',e.key,'fx'+e.key,e.start,e.start+e.duration,kinds[e.fxKind]?.name||'Chuyển cảnh',{color:'#2f5f8a',fixed:true,min:22,edited:e.chosen,title:'Chuyển cảnh: '+(kinds[e.fxKind]?.name||'')+' · '+fmt(e.start)+'s'}));
+    (plan?.effects||[]).filter(e=>!e.custom&&e.kind!=='transition'&&!(e.kind==='cut'&&!e.on)).forEach(e=>add('fx','fx',e.key,'fx'+e.key,e.start,e.start+e.duration,FX[e.kind],{color:e.kind==='cut'?'#6b5a2e':e.kind==='fade'?'#23262d':'#4b5a6b',fixed:true,trimLeft:e.kind==='broll-out'||e.kind==='fade',trimRight:e.kind==='broll-in'||(e.kind==='cut'&&e.on),off:e.kind==='cut'&&!e.on,min:18,title:FX[e.kind]+' · '+fmt(e.start)+'s'+(e.kind==='cut'?(e.on?' · đang bật':' · đang tắt'):'')}));
     const lanes=[-1,-1,-1];
     [...(plan?.sfx||[]),...(plan?.mutedSfx||[])].sort((a,b)=>a.start-b.start).forEach(s=>{
       const from=Math.max(0,s.start-(s.lead||0)),to=from+Math.max(.1,s.duration||.3);
@@ -157,7 +159,7 @@ const TL=(()=>{
   const analysed=()=>currentSubtitles.length>0&&currentClipWindows.length>0&&currentClipWindows.every(w=>!w.estimated);
   function pushLive(){
     if(studioPlan)studioPlan.musicOff=musicOff();
-    Live.update({plan:studioPlan,highlights:currentHighlights,subtitles:currentSubtitles,brolls:currentBrollCutaways,titles:extraTitles,fx:customFx,music:Live.preview?.music?musicPieces():[],subStyle:subStyleId});
+    Live.update({plan:studioPlan,highlights:currentHighlights,subtitles:currentSubtitles,brolls:currentBrollCutaways,titles:extraTitles,fx:[...(studioPlan?.autoFx||[]),...customFx],music:Live.preview?.music?musicPieces():[],subStyle:subStyleId});
   }
   async function refreshPlan(){
     if(!analysed())return;
@@ -188,6 +190,20 @@ const TL=(()=>{
     if(selectedTimelineItem&&!$('tlInspector').contains(document.activeElement))inspector();
   }
   const activeBrolls=()=>currentBrollCutaways.filter(b=>b.enabled!==false&&(!ALL_BROLL_TOPICS.includes(b.brollId)||enabledBrollIds.has(b.brollId)));
+  async function pollMattes(version,preview){
+    let wanted=preview.wantedMattes.slice();
+    for(let round=0;round<120&&wanted.length;round++){
+      await new Promise(r=>setTimeout(r,3000));
+      if(version!==prepareVersion||Live.preview!==preview)return;
+      try{
+        const data=await fetch('/api/mattes',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({key:preview.key,spans:wanted})}).then(r=>r.json());
+        if(!data.ok||version!==prepareVersion)return;
+        for(const m of data.ready){const b=preview.brolls.find(x=>x.uid===m.uid);if(b)b.matte={url:m.url,start:m.start,end:m.end};}
+        wanted=wanted.filter(w=>!data.ready.some(m=>m.uid===w.uid));
+        if(data.ready.length)pushLive();
+      }catch(_){}
+    }
+  }
   async function refreshPreview(){
     if(!analysed())return;
     const payload=buildRenderPayload(),key=JSON.stringify([payload.clipWindows,payload.voiceSpeed,payload.fx,payload.brollCutaways.map(b=>[b.uid,b.brollId,b.file,b.layout,b.start,b.end]),payload.customBgm,payload.bgmMode,payload.disableBgm]);
@@ -198,6 +214,8 @@ const TL=(()=>{
       if(!response.ok||!data.ok)throw Error(data.error||'Không dựng được bản xem trước.');
       if(version!==prepareVersion)return;
       Live.setPreview(data.preview);Live.status('Xem trước trực tiếp: chữ, B-roll và âm thanh như bản xuất');render();pushLive();
+      // presenter mattes still being made: ask which are ready (a file check, not a new preview) and add them in place
+      if(data.preview.wantedMattes?.length)pollMattes(version,data.preview);
     }catch(error){if(version===prepareVersion){prepareKey='';Live.status('Chưa xem trước được: '+error.message);}}
   }
   // ---- undo
@@ -440,7 +458,7 @@ const TL=(()=>{
     }else if(sel.type==='broll'){
       const b=currentBrollCutaways[sel.index];if(!b){selectedTimelineItem=null;return inspector();}
       box.innerHTML=head('B-roll: '+(b.name||''),b.timingSource==='manual'?'đã chỉnh tay':'theo lời nói')+'<div class="tl-fields">'+field('Nguồn','<select class="w-sel" id="tlSource">'+brollCatalogData.map(c=>'<option value="'+esc(c.id)+'" '+(c.id===b.brollId?'selected':'')+(c.available===false?' disabled':'')+'>'+esc(c.icon+' '+c.name)+(c.available===false?' (chưa có clip)':'')+'</option>').join('')+'</select>')+timeFields(b.start,b.end)+
-        field('Bố cục','<select class="w-sel" id="tlLayout">'+[['pip','Khung chính giữa'],['top_half','Nửa trên'],['cutaway','Toàn màn hình']].map(([k,n])=>'<option value="'+k+'" '+(b.layout===k?'selected':'')+'>'+n+'</option>').join('')+'</select>')+del+'</div>';
+        field('Bố cục','<select class="w-sel" id="tlLayout">'+[['top_half','Nửa trên màn hình'],['behind','Sau VJ'],['above_sub','Khung trên Sub'],['cutaway','Toàn màn hình'],...(b.layout&&!['top_half','behind','above_sub','cutaway'].includes(b.layout)?[[b.layout,{pip:'Khung chính giữa (cũ)'}[b.layout]||b.layout]]:[])].map(([k,n])=>'<option value="'+k+'" '+(b.layout===k?'selected':'')+'>'+n+'</option>').join('')+'</select>')+del+'</div>';
       bind('tlSource',v=>{remember();const c=brollCatalogData.find(x=>x.id===v);Object.assign(b,{brollId:v,name:c.name,icon:c.icon,file:undefined});renderBrollQueue();changed({prepare:true});});
       bind('tlLayout',v=>{remember();b.layout=v;renderBrollQueue();changed({prepare:true});});
       bindTimes((a,e)=>{const it=itemOf('broll',sel.index);if(it){const [x,y]=limits(it,a,e,a!==it.start?'l':'r');commit(it,r3(x),r3(y));}});
@@ -461,6 +479,14 @@ const TL=(()=>{
         bind('tlDel',()=>removeSelected(),'click');return;
       }
       const e=studioPlan?.effects.find(x=>x.key===sel.index);if(!e){selectedTimelineItem=null;return inspector();}
+      if(e.kind==='transition'){
+        const kinds=window.FptEngine.fx.KINDS,names=Object.keys(window.FptEngine.fx.TRANSITIONS);
+        box.innerHTML=head('Chuyển cảnh',(e.chosen?'bạn chọn':'tự luân phiên')+' · '+fmt(e.start)+'s')+'<div class="tl-fields">'+field('Kiểu','<select class="w-sel" id="tlKind">'+names.map(k=>'<option value="'+k+'" '+(k===e.fxKind?'selected':'')+'>'+kinds[k].name+'</option>').join('')+'</select>')+'<button type="button" class="tl-btn" id="tlSee">Xem thử</button>'+(e.chosen?'<button type="button" class="tl-btn" id="tlFxAuto">Về tự luân phiên</button>':'')+del+'<span class="note">Đi theo điểm cắt cảnh; xóa nếu muốn cắt thẳng.</span></div>';
+        bind('tlKind',v=>{remember();fxState[e.key]={kind:v};changed({now:true});setTimeout(inspector,300);});
+        bind('tlSee',()=>{seekTimeline(Math.max(0,e.start-.5));setTimeout(()=>{if(!Live.playing)Live.toggle();setTimeout(()=>{if(Live.playing)Live.toggle();},(e.duration+1.2)*1000);},150);},'click');
+        bind('tlFxAuto',()=>{remember();delete fxState[e.key];changed({now:true});setTimeout(inspector,300);},'click');
+        bind('tlDel',()=>removeSelected(),'click');return;
+      }
       const name={cut:'Zoom chuyển cảnh','broll-in':'B-roll vào','broll-out':'B-roll ra',fade:'Tối dần cuối video'}[e.kind];
       box.innerHTML=head(name,fmt(e.start)+'s')+'<div class="tl-fields">'+(e.kind==='cut'?(e.eligible?'<button type="button" class="tl-btn '+(e.on?'on':'')+'" id="tlFx">'+(e.on?'Đang bật: bấm để tắt':'Đang tắt: bấm để bật')+'</button>':'<span class="note">Cảnh này quá sát cảnh trước nên cắt thẳng, không zoom.</span>'):'<span class="note">'+(e.kind==='fade'?'Mặc định bắt đầu sau lời nói cuối cùng.':'Đi theo B-roll: kéo B-roll để dời hiệu ứng.')+'</span>')+(e.kind!=='cut'||e.on?field('Độ dài (giây)','<input class="w-time" id="tlFxDur" type="number" step="0.05" min="0.03" value="'+fmt(e.duration)+'">'):'')+(fxState[e.key]?.dur!=null?'<button type="button" class="tl-btn" id="tlFxAuto">Mặc định</button>':'')+del+'</div>';
       bind('tlFxDur',v=>{const it=itemOf('fx',e.key);if(!it)return;remember();const d=Number(v)||.2,side=it.trimLeft?'l':'r',r=limits(it,side==='l'?it.end-d:it.start,side==='l'?it.end:it.start+d,side);commit(it,r3(r[0]),r3(r[1]),side);});
@@ -659,7 +685,7 @@ const TL=(()=>{
       remember();const c=currentClipWindows[sel.index],a=c.timelineStart,b=a+c.timelineDur;currentClipWindows.splice(sel.index,1);ripple(a,b,-(b-a));syncClipWindows();selectedTimelineItem=null;lists();inspector();changed({prepare:true,now:true});
     }else if(sel.type==='video')note('Video cần ít nhất một cảnh.');
     else if(sel.type==='fx'&&String(sel.index).startsWith('fx:')){remember();customFx=customFx.filter(x=>'fx:'+x.uid!==sel.index);selectedTimelineItem=null;inspector();changed({now:true});}
-    else if(sel.type==='fx'){const gone=sel.index;remember();selectedTimelineItem=null;setTimeout(inspector,0);fxState[gone]=String(gone).startsWith('cut:')||gone==='fade'?{off:true}:{dur:.03};changed({prepare:true,now:true});}
+    else if(sel.type==='fx'){const gone=sel.index;remember();selectedTimelineItem=null;setTimeout(inspector,0);fxState[gone]=String(gone).startsWith('cut:')||String(gone).startsWith('auto:')||gone==='fade'?{off:true}:{dur:.03};changed({prepare:true,now:true});}
   }
   function addHighlight(){
     const t=r3(timelineCurrentTime),sub=currentSubtitles.find(s=>t>=s.start&&t<s.end);
@@ -687,8 +713,8 @@ const TL=(()=>{
     $('tlSnapBtn').onclick=()=>{snapOn=!snapOn;$('tlSnapBtn').classList.toggle('on',snapOn);};
     $('tlZoom').oninput=e=>setZoom(Math.pow(MAX_ZOOM,e.target.value/100));$('tlFit').onclick=()=>setZoom(1);
     $('tlAddHl').onclick=addHighlight;$('tlAddSub').onclick=addSub;$('tlAddSfx').onclick=addSfx;$('tlAddTitle').onclick=addTitle;$('tlFixStyles').onclick=fixStyles;
-    const fxMenu=$('tlAddFx');fxMenu.innerHTML='<option value="">+ Hiệu ứng</option>'+Object.entries(window.FptEngine.fx.KINDS).map(([k,x])=>'<option value="'+k+'">'+x.name+'</option>').join('')+'<option value="fade">Tối dần cuối video</option><option value="cuts">Bật lại zoom các cảnh</option>';
-    fxMenu.onchange=()=>{const v=fxMenu.value;fxMenu.value='';fxMenu.blur();if(v==='fade'){remember();delete fxState.fade;changed({now:true});}else if(v==='cuts'){remember();for(const k of Object.keys(fxState))if(k.startsWith('cut:'))delete fxState[k];changed({prepare:true,now:true});}else if(v)addFx(v);};$('tlCopy').onclick=copy;$('tlPaste').onclick=()=>paste();$('tlDup').onclick=duplicate;
+    const fxMenu=$('tlAddFx');fxMenu.innerHTML='<option value="">+ Hiệu ứng</option>'+Object.entries(window.FptEngine.fx.KINDS).map(([k,x])=>'<option value="'+k+'">'+x.name+'</option>').join('')+'<option value="fade">Tối dần cuối video</option><option value="cuts">Bật lại zoom các cảnh</option><option value="transitions">Bật lại chuyển cảnh tự động</option>';
+    fxMenu.onchange=()=>{const v=fxMenu.value;fxMenu.value='';fxMenu.blur();if(v==='fade'){remember();delete fxState.fade;changed({now:true});}else if(v==='cuts'){remember();for(const k of Object.keys(fxState))if(k.startsWith('cut:'))delete fxState[k];changed({prepare:true,now:true});}else if(v==='transitions'){remember();for(const k of Object.keys(fxState))if(k.startsWith('auto:')&&fxState[k].off)delete fxState[k];changed({now:true});}else if(v)addFx(v);};$('tlCopy').onclick=copy;$('tlPaste').onclick=()=>paste();$('tlDup').onclick=duplicate;
     const picker=$('subStyleSelect');picker.innerHTML=Object.entries(window.FptEngine.subtitle.SUB_STYLES).map(([id,s])=>'<option value="'+id+'">'+esc(s.name)+'</option>').join('');picker.value=subStyleId;
     picker.onchange=()=>{remember();subStyleId=picker.value;currentSubtitles.forEach(x=>{delete x.subStyle;});changed({now:true});if(selectedTimelineItem?.type==='sub')inspector();};$('tlAddBroll').onclick=promptAddManualBroll;$('tlShuffle').onclick=reshuffle;$('tlPlayBtn').onclick=()=>toggleTimelinePlay();
     buttons();inspector();
