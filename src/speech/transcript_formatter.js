@@ -1,5 +1,30 @@
 'use strict';
 const {polishText}=require('./text_quality');
+const LEXICON=require('../../config/lexicon.json');
+// ---- near misses of the usual FPT phrases ("trang hình ngay" → "trang bị ngay", "họ sắp xem bóng đá" → "thỏa sức xem
+// bóng đá"). Same number of syllables only, so every word keeps its own time; at most one syllable differs (two in a
+// phrase of five or more), the first or the last one must match, and a tone-only difference counts as a match.
+const bare=s=>String(s).normalize('NFC').toLocaleLowerCase('vi').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d').replace(/[^a-z0-9]/g,'');
+const FUZZY=(LEXICON.fuzzy||[]).map(p=>({phrase:p.split(' '),keys:p.split(' ').map(bare)})).filter(p=>p.keys.length>=3).sort((a,b)=>b.keys.length-a.keys.length);
+function editDistance(a,b){const d=Array.from({length:a.length+1},(_,i)=>[i]);for(let j=1;j<=b.length;j++)d[0][j]=j;for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));return d[a.length][b.length];}
+function fixNearMisses(text){
+  const words=text.split(' ');
+  for(let i=0;i<words.length;i++)for(const {phrase,keys} of FUZZY){
+    const n=keys.length;if(i+n>words.length)continue;
+    const span=words.slice(i,i+n);if(span.slice(0,-1).some(w=>/[.,!?;:]$/.test(w)))continue;
+    const got=span.map(bare),diff=got.reduce((d,k,j)=>d+(k===keys[j]?0:1),0);
+    if(!diff||diff>(n>=5?2:1)||(got[0]!==keys[0]&&got[n-1]!==keys[n-1]))continue;
+    // two changed syllables must each sound alike ("tu"/"ưu", "họ sắp"/"thỏa sức"), not be other words ("bóng đá"/"xem trọn")
+    if(diff===2&&got.some((k,j)=>k!==keys[j]&&editDistance(k,keys[j])>2))continue;
+    // a three-syllable phrase is restored only through its middle, or when the odd syllable sounds alike ("tốc độ Wi-Fi" stays)
+    if(n===3&&diff===1&&got[1]===keys[1]&&got.some((k,j)=>k!==keys[j]&&editDistance(k,keys[j])>1))continue;
+    // a single changed syllable must not be a number: "đi kèm 3 tài khoản" stays as said
+    if(got.some((k,j)=>k!==keys[j]&&(/\d/.test(k)||/\d/.test(keys[j]))))continue;
+    phrase.forEach((w,j)=>{const tail=(span[j].match(/[.,!?;:]+$/)||[''])[0];words[i+j]=(j===0&&/^\p{Lu}/u.test(span[0])?w.charAt(0).toLocaleUpperCase('vi')+w.slice(1):w)+tail;});
+    i+=n-1;break;
+  }
+  return words.join(' ');
+}
 function cleanFptTranscript(text) {
   if (!text) return '';
   let t = text
@@ -76,7 +101,7 @@ function cleanFptTranscript(text) {
   for (const [re, rep] of replacements) {
     t = t.replace(re, rep);
   }
-  return polishText(t);
+  return polishText(fixNearMisses(t));
 }
 
 function alignCleanWords(words,cleanText) {
@@ -144,4 +169,4 @@ function correctSubtitles(subtitles=[]) {
     return {...sub,text:display||text,words,start:Number.isFinite(start)?start:sub.start,end:Number.isFinite(end)?end:sub.end};
   }).filter(Boolean);
 }
-module.exports={cleanFptTranscript,alignCleanWords,correctSubtitles};
+module.exports={cleanFptTranscript,alignCleanWords,correctSubtitles,fixNearMisses};

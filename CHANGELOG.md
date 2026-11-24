@@ -1,5 +1,13 @@
 # Nhật ký thay đổi
 
+## Phiên bản 1.9.0 — 24/11/2026
+
+- Mở đầu Hook mạnh: 8 hiệu ứng mở đầu luân phiên giữa các video (vệt tốc độ kiểu truyện tranh như ảnh mẫu, tia bung ba màu FPT, sóng chấn, lia vào, zoom đập, xoay, hai nhịp đập…), tiếng đập ngay khung hình đầu và tiếng lướt/dâng khi chữ đáp, to hơn trước. Không chói sáng. Có khối "Mở đầu" trên timeline để đổi kiểu hoặc xóa; vệt tốc độ, tia bung, sóng chấn cũng thêm tay được ở menu Hiệu ứng.
+- Sub text với video dính nhạc: tự nhận ra nhạc nền, nghe thêm bản đã lọc giọng và chọn cụm đáng tin hơn; cắt khoảng nghỉ theo khoảng trống giữa các từ. Bộ sửa các câu quen thuộc của video FPT ("trang bị ngay", "thỏa sức xem bóng đá", "đàm thoại 2 chiều", "nhận ưu đãi liền tay"…) khi nghe sai 1–2 âm tiết. Thử với nhạc to hơn giọng: từ 4 cụm sai xuống 0, video ngắn lại nhờ cắt được khoảng nghỉ.
+- Chuyển cảnh không nhồi nhét: tối đa một chuyển cảnh mỗi 4,5 giây, không trùng lúc B-roll vào/ra, tự động chỉ dùng kiểu mượt (bỏ giật hình, nảy hình khỏi tự động); tiếng whoosh chỉ ở chỗ có chuyển cảnh.
+- 2 đồ họa B-roll mới theo ảnh mẫu: Xem phim FPT Play (giao diện web, chọn phim rồi phát) và Làm việc, học online (laptop họp video, soạn tài liệu); có bản dọc.
+- Highlight: đo lại trên video thật, cụm tự động hiện đúng từ đầu tiên (lệch 0 giây).
+
 ## Phiên bản 1.8.0 — 24/11/2026
 
 - Chuyển cảnh tự động không chói sáng: 8 kiểu (lia ngang, lia dọc, zoom mờ, đẩy vào nhanh, kéo ra, xoay chuyển, giật hình, nảy hình) luân phiên ở các điểm cắt cảnh, có tiếng whoosh trúng điểm cắt; đổi kiểu hoặc xóa từng chuyển cảnh trên timeline.

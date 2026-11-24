@@ -91,4 +91,14 @@ function findUncovered(words,pauses,durationMs,minMs=2000){
 }
 const soundEdge=(envelope,fromEnd)=>{const E=envelope.values;let k=fromEnd?E.length-1:0;while(k>=0&&k<E.length&&E[k]<envelope.speech)k+=fromEnd?-1:1;return Math.max(0,Math.min(E.length,k+(fromEnd?1:0)))*HOP;};
 const firstSound=envelope=>soundEdge(envelope,false),lastSound=envelope=>soundEdge(envelope,true);
-module.exports={firstSound,lastSound,findUncovered,readEnvelope,alignWords,findPauses,speechRegions};
+// Music under the voice: the quietest tenth of the recording stays within ~20 dB of its loudest parts (clean speech
+// drops close to silence between words). Measured: clean takes 25–27 dB, a voice under music 17–19 dB.
+function musicBed(envelope){const v=Float32Array.from(envelope.values).sort();return v.length>20&&envelope.peak-v[Math.floor(v.length*.1)]<20.5;}
+// With music, the waveform has no quiet gaps: the pauses between recognised words stand in for them (longer gaps and
+// wider margins than for real silence, so speech is never cut).
+function wordPauses(words,durationMs,minMs=420,margin=110){
+  const out=[],edges=[{endMs:0},...words,{startMs:durationMs}];
+  for(let i=1;i<edges.length;i++){const a=(edges[i-1].endMs||0)+(i>1?margin:0),b=(edges[i].startMs??durationMs)-(i<edges.length-1?margin:0);if(b-a>=minMs-2*margin)out.push({startMs:Math.round(a),endMs:Math.round(b)});}
+  return out;
+}
+module.exports={firstSound,lastSound,findUncovered,readEnvelope,alignWords,findPauses,speechRegions,musicBed,wordPauses};

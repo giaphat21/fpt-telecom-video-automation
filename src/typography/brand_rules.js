@@ -22,8 +22,8 @@ const BROLL_THEMES = [
   {topic:'game',ids:/^(stock_lienminh|stock_lienquan|stock_gaming)$/,text:/lien minh|lien quan|choi game|\bgame\b|gaming|esports?|leo rank|game thu/,styles:['fpt_game_crosshair','fpt_game_victory','fpt_speed_hud']},
   {topic:'football',ids:/^stock_football$/,text:/ngoai hang|bong da|premier|champions|world cup|tran dau|cau thu|ban thang/,styles:['fpt_score_bar','fpt_football_match']},
   {topic:'camera',ids:/^(stock_camera|mg_camera)/,text:/camera|an ninh|giam sat|dam thoai/,styles:['fpt_cam_rec','fpt_camera_smart','fpt_bracket_focus']},
-  {topic:'fptplay',ids:/^stock_fptplay$/,text:/fpt play|kho phim|xem phim|truyen hinh/,styles:['fpt_play_cinema','fpt_play_button','fpt_neon_glass']},
-  {topic:'network',ids:/^(stock_wifi6|mg_mesh|mg_speed|mg_signal)$/,text:null,styles:['fpt_wifi_wave','fpt_router_led','fpt_signal_bars','fpt_speed_gauge','fpt_fiber_line']}
+  {topic:'fptplay',ids:/^(stock_fptplay|mg_movie)$/,text:/fpt play|kho phim|xem phim|truyen hinh/,styles:['fpt_play_cinema','fpt_play_button','fpt_neon_glass']},
+  {topic:'network',ids:/^(stock_wifi6|mg_mesh|mg_speed|mg_signal|mg_work)$/,text:null,styles:['fpt_wifi_wave','fpt_router_led','fpt_signal_bars','fpt_speed_gauge','fpt_fiber_line']}
 ];
 // The theme of the B-roll on screen when the Highlight appears. Words alone keep the softer topical preference below,
 // so the same script still gets different looks from one video to the next.

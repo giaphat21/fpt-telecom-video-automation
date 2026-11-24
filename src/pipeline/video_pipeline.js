@@ -10,7 +10,8 @@ const { execFileSync, spawn } = require('child_process');
 const {requirePlan,inspectOutput}=require('./quality_gate');
 const {normalizeClipWindows,mapConcurrent}=require('./render_inputs');
 const {prepareBase,voiceGain}=require('./base_cache');
-const {fxFilters}=require('./picture_fx');
+const {fxFilters,KINDS:FX_KINDS}=require('./picture_fx');
+const {renderOverlay}=require('./overlay_fx');
 const {createEditPlan,prepareContent,gateInput,safeProject}=require('./edit_plan');
 const {probeMedia,portraitFilter}=require('../media/media_profile');
 const {reviewTexts}=require('../speech/text_quality');
@@ -273,6 +274,15 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
   let prevV = graph.output;
   const fx = fxFilters([...(plan.autoFx || []), ...plan.customFx]);
   if (fx) { filterParts.push(`[${prevV}]${fx}[vfx]`); prevV = 'vfx'; }
+  // Graphic overlays (speed lines, burst, shock wave) above the picture and below the titles.
+  const overlays = [...(plan.autoFx || []), ...plan.customFx].filter(e => FX_KINDS[e.kind]?.overlay);
+  for (const [k, e] of overlays.entries()) {
+    const file = path.join(tempDir, 'overlay_' + k + '.mov'), idx = nextIdx++, a = e.start.toFixed(3), b = e.end.toFixed(3);
+    await renderOverlay(e, file);
+    inputs.push('-i', file);
+    filterParts.push(`[${idx}:v]format=rgba,setpts=PTS-STARTPTS+${a}/TB[ol${k}]`, `[${prevV}][ol${k}]overlay=0:0:eof_action=pass:enable='between(t,${a},${b})'[vol${k}]`);
+    prevV = 'vol' + k;
+  }
   // Music plays in the pieces the user left on the timeline; one piece over the whole video by default.
   const bgmDefault = singleMasterVoice ? referenceProfile.audio.bgmWithVoice : referenceProfile.audio.bgmWithoutVoice;
   const musicPieces = activeBgm ? musicSegments(job, totalDur, () => job.bgmFromStart ? 0 : musicStart(activeBgm, totalDur), bgmDefault) : [];
@@ -344,7 +354,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
     referenceProfile: referenceProfile.id, qualityReport, ...job, styleSeed: seed, hookStyle: plan.hook.style, outroStyle: plan.outro.style,
     brollCutaways: userBrollSpecs, renderedHighlights: hlSpecs, renderedSfx: sfxHits, mediaWarnings, subtitles, highlights, clipWindows,
     hook: plan.hook, outroCta: plan.outroCta, totalDur, outMp4, thumbPath, safeName }, null, 2), 'utf8');
-  remember({ project: seed, at: new Date().toISOString(), hookStyle: plan.hook.style, outroStyle: plan.hasOutro ? plan.outro.style : null, sfx: sfxHits.map(sx => sx.id), typos: hlSpecs.map(h => h.typo).filter(Boolean) });
+  remember({ project: seed, at: new Date().toISOString(), hookStyle: plan.hook.style, openerStyle: plan.opener || null, outroStyle: plan.hasOutro ? plan.outro.style : null, sfx: sfxHits.map(sx => sx.id), typos: hlSpecs.map(h => h.typo).filter(Boolean) });
 
   for (const dir of [tempDir, overlayDir, voiceWorkDir]) {
     try { fs.rmSync(dir, { recursive: true, force: true }); } catch (_) {}

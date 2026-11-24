@@ -17,7 +17,7 @@ const {prepareHighlightsForRender,boundaries,scheduleSfx,normalize,wordTimeline,
 const {punchCuts,timelineLength,frameGrid}=require('./base_cache');
 const {inspectPlan}=require('./quality_gate');
 const {subStyle}=require('../typography/subtitle_style');
-const {normalizeFx,KINDS:FX_KINDS,TRANSITIONS}=require('./picture_fx');
+const {normalizeFx,KINDS:FX_KINDS,TRANSITIONS,OPENERS,openerEffects}=require('./picture_fx');
 const {FPS}=require('./clip_assembler');
 
 const round=n=>Math.round(n*1000)/1000;
@@ -27,11 +27,15 @@ const filled=cfg=>Boolean(cfg)&&['line1','line2','line3','line4'].some(k=>String
 // that changes per video. Each one is a block on the timeline: fx['auto:cut<i>'] = {off} removes it, {kind} changes it.
 // A cut is heard as a whoosh (7.2), whatever the transition.
 const CUT_SOUND=['whoosh'];
-function autoTransitions({scenes,hookDur,outroStart,totalDur,seed,fx}){
-  const kinds=Object.keys(TRANSITIONS),h=[...String(seed)].reduce((a,c)=>(a*31+c.charCodeAt(0))>>>0,7),order=kinds.map((_,i)=>kinds[(i+h)%kinds.length]);
+// Not crowded (user, 24/11/2026: "đừng nhồi nhét, bị giật khung hình"): one transition every 4.5 s at most, none where a
+// B-roll already changes the picture, and only the smooth kinds; glitch and bounce stay available by hand.
+const AUTO_TRANSITIONS=['whip','zoom_blur','pull_out','whip_v','push_in','spin'],TRANSITION_GAP=4.5,BROLL_EDGE=.35;
+function autoTransitions({scenes,hookDur,outroStart,totalDur,seed,fx,brolls=[]}){
+  const kinds=AUTO_TRANSITIONS,h=[...String(seed)].reduce((a,c)=>(a*31+c.charCodeAt(0))>>>0,7),order=kinds.map((_,i)=>kinds[(i+h)%kinds.length]);
   const out=[],recent=[];let lastCut=-1e9,n=0;
   scenes.forEach((scene,i)=>{
-    if(!i||scene.start-lastCut<2.2||scene.start<=hookDur||scene.start>=outroStart-1)return;
+    if(!i||scene.start-lastCut<TRANSITION_GAP||scene.start<=hookDur+.6||scene.start>=outroStart-1)return;
+    if(brolls.some(b=>Math.abs(Number(b.start)-scene.start)<BROLL_EDGE||Math.abs(Number(b.end)-scene.start)<BROLL_EDGE))return;
     lastCut=scene.start;
     const own=fx?.['auto:cut'+i]||{};if(own.off)return;
     let kind=order[n++%order.length];while(recent.slice(-2).includes(kind))kind=order[n++%order.length];
@@ -160,20 +164,25 @@ function createEditPlan({job,seed,subtitles,highlights,totalDur,scenes=[],brolls
   const recipe=hookTimes?.sfx||{open:['whoosh','impact'],line:'pop',land:'tone'};
   // The second layer lands when the first line settles, so a whoosh or riser is heard whole instead of cut at frame 0.
   const settle=hookTimes?Math.max(openAt+.26,hookTimes.lines[0]+.26):.26;
-  place('hook:open','Mở màn',[recipe.open[0]],openAt,.44,{priority:100,group:'opener'});
-  place('hook:settle','Hook vào vị trí',[recipe.open[1]],settle,.36,{priority:99,group:'opener'});
+  // The opening: a strong picture effect on the first frames of the Hook, a different kind from the last videos, with
+  // an impact on frame 0 and its own second hit as the first line settles, both louder.
+  const openFx=job.fx&&typeof job.fx==='object'?job.fx['auto:open']||{}:{};
+  const opener=hookTimes&&!openFx.off?chooseStyle('openerStyle',Object.keys(OPENERS),project,{requested:openFx.recipe,history}):null,openSfx=opener?OPENERS[opener].sfx:null;
+  place('hook:open','Mở màn',openSfx?[openSfx[0],recipe.open[0]]:[recipe.open[0]],openAt,openSfx?.6:.44,{priority:100,group:'opener'});
+  place('hook:settle','Hook vào vị trí',openSfx?[openSfx[1],recipe.open[1]]:[recipe.open[1]],settle,openSfx?.5:.36,{priority:99,group:'opener'});
   if(hookTimes){
     hookTimes.lines.slice(1).forEach((t,i)=>place('hook:line'+(i+2),'Hook dòng '+(i+2),[recipe.line],t,.28,{priority:96,group:'opener'}));
     place('hook:land','Hook hoàn chỉnh',[recipe.land],hookTimes.landed,.3,{priority:97,group:'opener'});
     hookTimes.spoken.forEach((t,i)=>{if(i&&t!=null&&t>hookTimes.landed+.7&&t<hookDur-.4)place('hook:spoken'+(i+1),'Nhấn dòng '+(i+1),['pop','tone'],t,.24,{priority:40,minGap:.6});});
   }
   let lastCut=0;
-  const autoFx=autoTransitions({scenes,hookDur,outroStart,totalDur,seed:project,fx:job.fx&&typeof job.fx==='object'?job.fx:{}});
+  const autoFx=[...(opener?openerEffects(opener,openAt,totalDur):[]),...autoTransitions({scenes,hookDur,outroStart,totalDur,seed:project,fx:job.fx&&typeof job.fx==='object'?job.fx:{},brolls:brollSpecs})];
   scenes.forEach((scene,i)=>{
     if(!i||scene.start-lastCut<2.2||scene.start<=hookDur||scene.start>=outroStart-1)return;
     lastCut=scene.start;
     const tr=autoFx.find(e=>e.cut===i);
-    if(!job.fx?.['cut:'+i]?.off||tr)place('cut:'+i,'Chuyển cảnh'+(tr?' · '+FX_KINDS[tr.kind].name:''),tr?CUT_SOUND:['whoosh'],scene.start,.3,{priority:70,minGap:.95,only:true});
+    // the cut is heard only where a transition marks it, so sounds do not pile up on every jump cut
+    if(tr)place('cut:'+i,'Chuyển cảnh'+(tr?' · '+FX_KINDS[tr.kind].name:''),tr?CUT_SOUND:['whoosh'],scene.start,.3,{priority:70,minGap:.95,only:true});
   });
   brollSpecs.forEach(b=>{if(b.start>hookDur&&b.start<outroStart)place('broll:'+b.uid,'B-roll '+(b.name||''),['whoosh','riser'],b.start,.32,{priority:70,minGap:.95,only:true});});
   // A price or a gift keeps its own sound even when it arrives together with a cut.
@@ -199,7 +208,7 @@ function createEditPlan({job,seed,subtitles,highlights,totalDur,scenes=[],brolls
   let fadeDur=round(Math.max(.35,Math.min(1,totalDur-lastSpoken)));
   if(fx.fade?.off)fadeDur=.02;else if(given(fx.fade?.dur))fadeDur=round(Math.max(.1,Math.min(Number(fx.fade.dur),totalDur-.2)));
   const customFx=normalizeFx(job.customFx,totalDur);
-  return {customFx,autoFx,seed:project,totalDur,hookStart,hookDur,outroDur,outroStart,outroEnd,titles,hook,outro,hasOutro,outroCta,subtitles,highlights:items,hlSpecs,typographyPlan,hookTimes,outroTimes,
+  return {customFx,autoFx,opener,seed:project,totalDur,hookStart,hookDur,outroDur,outroStart,outroEnd,titles,hook,outro,hasOutro,outroCta,subtitles,highlights:items,hlSpecs,typographyPlan,hookTimes,outroTimes,
     brolls:brollSpecs,sfx,mutedSfx:muted,events,settle,scenes,hiddenSubs,userAudio:userEvents.length>0||muted.length>0||sfx.some(s=>s.user),
     fade:{start:round(Math.max(0,totalDur-fadeDur)),duration:fadeDur},strictSpeech};
 }
@@ -222,7 +231,8 @@ function planForClient(job,windows){
     effects:[...scenes.flatMap((s,i)=>i?[{key:'cut:'+i,kind:'cut',start:s.start,duration:punched.has(i)?punched.get(i):.04,on:punched.has(i),eligible:punchCuts(windows,{}).has(i)}]:[]),
       ...plan.brolls.flatMap(b=>[{key:'in:'+b.uid,kind:'broll-in',start:b.start,duration:easeOf(b,'easeIn')},...(b.layout==='top_half'?[]:[{key:'out:'+b.uid,kind:'broll-out',start:round(b.end-easeOf(b,'easeOut')),duration:easeOf(b,'easeOut')}])]),
       ...(job.fx?.fade?.off?[]:[{key:'fade',kind:'fade',start:plan.fade.start,duration:plan.fade.duration}]),
-      ...plan.autoFx.map(e=>({key:'auto:'+e.uid,kind:'transition',fxKind:e.kind,start:e.start,duration:round(e.end-e.start),auto:true,chosen:e.chosen})),
+      ...(plan.opener?[{key:'auto:open',kind:'opener',recipe:plan.opener,name:OPENERS[plan.opener].name,start:Math.min(...plan.autoFx.filter(e=>e.group==='open').map(e=>e.start)),duration:round(Math.max(...plan.autoFx.filter(e=>e.group==='open').map(e=>e.end))-Math.min(...plan.autoFx.filter(e=>e.group==='open').map(e=>e.start))),auto:true,chosen:!!job.fx?.['auto:open']?.recipe}]:[]),
+      ...plan.autoFx.filter(e=>e.group!=='open').map(e=>({key:'auto:'+e.uid,kind:'transition',fxKind:e.kind,start:e.start,duration:round(e.end-e.start),auto:true,chosen:e.chosen})),
       ...plan.customFx.map(e=>({key:'fx:'+e.uid,kind:e.kind,start:e.start,duration:round(e.end-e.start),custom:true}))],
     repeats:gate.repeats,
     warnings:[...getBrollWarnings(plan.subtitles).map(w=>({code:w.code,text:w.text})),...gate.errors.map(e=>({code:e.code,text:e.detail,blocking:true})),...gate.warnings.map(w=>({code:w.code,text:w.detail})),

@@ -138,6 +138,7 @@ Theo xác nhận mới nhất của người dùng, quy tắc này ưu tiên hơ
 - Mọi B-roll có chuyển động vào, đẩy máy nhẹ trong cảnh và chuyển động ra; cảnh chia đôi kết thúc bằng cắt thẳng.
 - ✔ Bắt đầu/kết thúc theo đoạn lời nói liên quan, không chồng nhau, không lấn Hook/Outro.
 - ✔ Không chớp hình (1.8.0): trong một câu chỉ đổi B-roll khi mỗi phần dài ≥ 1 giây; cảnh < 0,9 giây dính sát cảnh khác bị bỏ và cảnh trước phủ lời của nó; hai cảnh cùng chủ đề chạm nhau thành một. Câu nói về sự cố (`src/editing/tone.js`) ưu tiên đồ họa sự cố (giật lag, tường chặn) hơn sản phẩm được nhắc trong câu.
+- ✔ Thêm 2 đồ họa động (1.9.0, theo ảnh mẫu người dùng): **Xem phim FPT Play** (`mg_movie_browse`: cửa sổ web tối, lưới poster vẽ bằng code, rê chọn, phóng vào phát) cho "xem phim", "phim bộ", "cày phim"…; **Làm việc, học online** (`mg_work_online`: laptop trên bàn gỗ, họp video, soạn tài liệu, tải lên, huy hiệu Wi-Fi) cho "làm việc", "học online", "họp online"… Có bản dọc cho toàn màn hình. Không dùng poster hay hình thật trong ảnh mẫu.
 - Chỉ dùng nguồn đúng chủ đề: clip người dùng gán → stock đã xác minh → clip dựng từ ảnh sản phẩm FPT. Thiếu nguồn thì cảnh báo, không thay bằng cảnh sai.
 
 ## 8.3. Hook mở đầu sáng tạo
@@ -145,6 +146,7 @@ Theo xác nhận mới nhất của người dùng, quy tắc này ưu tiên hơ
 - ✔ Hook/Outro cao cấp hơn Highlight: lóe sáng khi vào (không để lại nền hay khung sau chữ), chữ viền có khối nổi navy, tia sáng quét qua từng dòng, hạt màu FPT bung ra khi mỗi dòng đáp, sao lấp lánh khi đã đứng yên.
 - ✔ Luân phiên giữa các video: luôn chọn kiểu lâu chưa dùng nhất (`src/editing/style_history.js`). Xuất lại cùng dự án giữ nguyên kiểu; có thể chỉ định `hookStyle`.
 - ✔ Hook có chữ ngay khung hình đầu, y320, scale 1.3. Outro dùng phong cách khác Hook.
+- ✔ **Hiệu ứng mở đầu mạnh** (1.9.0, `OPENERS` trong `src/pipeline/picture_fx.js`): 8 kiểu (vệt tốc độ kiểu truyện tranh như mẫu người dùng gửi, tia bung ba màu FPT, sóng chấn, lia vào, zoom đập, xoay, hai nhịp đập…) chạy ở những khung hình đầu của Hook, luân phiên giữa các video như kiểu Hook (`openerStyle` trong lịch sử). Tiếng đập (impact) ngay khung đầu và tiếng thứ hai khi dòng đầu đáp, to hơn các SFX khác. Không chói sáng, không chớp trắng. Một khối "Mở đầu" trên timeline: đổi kiểu, xem thử, xóa. Đồ họa phủ (`overlay_fx.js`) vẽ chung với bản xem trước.
 - ✔ Mỗi dòng Hook vào hình đều có âm thanh; dòng nào được VJ nói tới thì nhấn lại.
 
 ## 8.4. Âm thanh khớp hình
@@ -156,6 +158,7 @@ Theo xác nhận mới nhất của người dùng, quy tắc này ưu tiên hơ
 - ✔ SFX theo nghĩa nguyên từ (1.8.0): tiền chỉ cho giá/gói cước, chuông quà chỉ cho tặng/miễn phí/ưu đãi; "tầng", "quá", "giải trí" không bị hiểu là quà hay giá; bộ dự phòng không có tiếng tiền. Kiểu chữ Nổ giá/Vé ưu đãi cũng chỉ cho giá/ưu đãi.
 
 ## 8.5. Sub và Highlight đúng lời nói
+- ✔ **Video dính nhạc** (1.9.0): nhận ra nhạc nền khi phần êm nhất vẫn trong khoảng 20 dB so với phần to nhất (`musicBed` trong `word_timing.js`). Khi đó Whisper nghe thêm một bản đã lọc giọng (lọc dải tiếng nói + giảm nhiễu phổ) và từng cụm giữ bản có độ tin cậy cao hơn; chỗ cắt dùng khoảng nghỉ giữa các từ (≥ 0,42 giây, chừa 0,11 giây mỗi bên) vì sóng âm không còn khoảng lặng. Bộ sửa câu quen thuộc (`fuzzy` trong `config/lexicon.json`) đưa cụm nghe sai 1 âm tiết (2 âm tiết nếu cụm ≥ 5 âm tiết và nghe gần giống) về đúng câu, giữ nguyên số từ và mốc thời gian; không sửa số, không sửa khi đầu/cuối cụm đều khác. Đo trên 4 clip có nhạc to hơn giọng: hết 4 lỗi chữ.
 - Nhận dạng bằng Whisper `large-v3-turbo`; mốc từ lấy từ DTW rồi dò về điểm bật âm (`src/speech/word_timing.js`). Không dùng mốc segment mặc định: có thể lệch 0,6 giây. Không bật VAD của Whisper: đã đo thấy mất lời.
 - ✔ Chỉ cắt trong khoảng lặng thật ≥ 250ms đo trên sóng âm; không cắt cụt tiếng nói.
 - ✔ Sub lệch lời nói quá 0,12s, hai Sub chồng nhau, hoặc Highlight không có trong lời nói: ghi vào `quality_report.json`.
@@ -171,7 +174,7 @@ Theo xác nhận mới nhất của người dùng, quy tắc này ưu tiên hơ
 - ✔ Mọi khối có tay kéo hai đầu, dời, cắt (S, Ctrl+B), bỏ trái/phải kim (Q/W), sao chép, cắt, dán, nhân đôi (Ctrl+C/X/V/D), xóa và hoàn tác: video, B-roll, Hook, Outro, tiêu đề thêm, Highlight, Sub, SFX, nhạc; hiệu ứng kéo được độ dài. SFX người dùng đặt không đẩy SFX khác.
 - ✔ Xem trước trực tiếp dùng chính lõi chữ động của bản xuất (`src/typography/kinetic_core.js` chạy cả trong trình duyệt). Không viết bộ vẽ thứ hai.
 - ✔ Sửa một mục không được đổi mục khác; SFX đi theo chữ của nó; cắt clip thì chữ, B-roll, SFX phía sau dời theo. Highlight giữ khoảng cách 0,08 giây, B-roll không lấn Hook/Outro ngay khi kéo.
-- ✔ **Chuyển cảnh tự động không chói sáng** (người dùng yêu cầu 24/11/2026, `TRANSITIONS` trong `src/pipeline/picture_fx.js`, `autoTransitions` trong `src/pipeline/edit_plan.js`): ở mỗi điểm cắt cảnh có tiếng chuyển cảnh (cách nhau ≥ 2,2 giây, ngoài Hook/Outro), luân phiên 8 kiểu chỉ dùng chuyển động và nhòe: lia ngang, lia dọc, zoom mờ, đẩy vào nhanh, kéo ra, xoay chuyển, giật hình, nảy hình. Đỉnh hiệu ứng trúng điểm cắt, tiếng whoosh trúng điểm cắt. Không tự dùng chớp sáng, chớp tối hay chói lòa. Mỗi chuyển cảnh là một khối trên timeline: đổi kiểu, xem thử, xóa; menu Hiệu ứng có "Bật lại chuyển cảnh tự động". Thứ tự đổi theo từng video.
+- ✔ **Chuyển cảnh tự động không chói sáng** (người dùng yêu cầu 24/11/2026, `TRANSITIONS` trong `src/pipeline/picture_fx.js`, `autoTransitions` trong `src/pipeline/edit_plan.js`): không nhồi nhét (1.9.0) — tối đa một chuyển cảnh mỗi 4,5 giây, không đặt sát lúc B-roll vào/ra (±0,35 giây), tự động chỉ dùng 6 kiểu mượt (lia ngang, lia dọc, zoom mờ, đẩy vào nhanh, kéo ra, xoay chuyển); giật hình và nảy hình chỉ thêm tay. Tiếng whoosh của điểm cắt chỉ vang ở chỗ có chuyển cảnh. Đỉnh hiệu ứng trúng điểm cắt, tiếng whoosh trúng điểm cắt. Không tự dùng chớp sáng, chớp tối hay chói lòa. Mỗi chuyển cảnh là một khối trên timeline: đổi kiểu, xem thử, xóa; menu Hiệu ứng có "Bật lại chuyển cảnh tự động". Thứ tự đổi theo từng video.
 - Không hiện bảng lưu ý trên timeline. Kiểu chữ bị lặp: có nút **Tự đổi kiểu chữ bị lặp**. Từ nghi sai chính tả chỉ gạch chân trên khối Sub.
 - ✔ Hiệu ứng hình thêm, dời, kéo, cắt, chép, xóa được (`src/pipeline/picture_fx.js`: zoom nhấn, đẩy máy, thu máy, rung, lắc, chớp sáng, chớp tối, mờ); hiệu ứng mặc định xóa được và thêm lại được. Chữ và Sub không bị hiệu ứng làm rung.
 - ✔ Video dài: chỉ vẽ phần đang nhìn, chỉ dựng chữ gần kim; kéo, cuộn, phóng, tua, phát dưới 40 ms/khung ở 66 giây, 210 khối (`tests/e2e/ui_long_smoke.js`).

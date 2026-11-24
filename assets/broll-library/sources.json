@@ -84,5 +84,17 @@
     "title": "Camera AI FPT — nhận diện và cảnh báo, đồ họa động",
     "generator": "scripts/assets/generate_motion_graphics.js",
     "fileSize": 2674585
+  },
+  "mg_movie_browse.mp4": {
+    "status": "brand_motion_graphic",
+    "title": "Xem phim trên FPT Play — đồ họa động",
+    "generator": "scripts/assets/generate_motion_graphics.js",
+    "fileSize": 1588654
+  },
+  "mg_work_online.mp4": {
+    "status": "brand_motion_graphic",
+    "title": "Làm việc, học online — đồ họa động",
+    "generator": "scripts/assets/generate_motion_graphics.js",
+    "fileSize": 1185474
   }
 }

@@ -129,7 +129,7 @@ test('Export is never blocked by a style finding; repeats are named so they can 
 test('Picture effects: the preview curve and the export expression agree',()=>{
   const {KINDS,frameFx,fxFilters,normalizeFx}=require('../../src/pipeline/picture_fx');
   assert.equal(normalizeFx([{kind:'zoom_in',start:1,end:99},{kind:'nope',start:0,end:1},{kind:'flash',start:2,end:2}],10).length,1);
-  for(const kind of Object.keys(KINDS)){const list=normalizeFx([{kind,start:1,end:2}],10),a=frameFx(list,1.02),b=frameFx(list,3);assert.deepEqual(b,{zoom:1,dx:0,dy:0,light:0,blur:0,spin:0});assert.notDeepEqual(kind==='blur'||kind==='dip'||kind==='bounce'?frameFx(list,1.5):a,b,kind);assert.ok(fxFilters(list).includes('1.000'),kind);}
+  for(const kind of Object.keys(KINDS)){const list=normalizeFx([{kind,start:1,end:2}],10),a=frameFx(list,1.02),b=frameFx(list,3);assert.deepEqual(b,{zoom:1,dx:0,dy:0,light:0,blur:0,spin:0,overlays:[]});assert.notDeepEqual(kind==='blur'||kind==='dip'||kind==='bounce'?frameFx(list,1.5):a,b,kind);if(KINDS[kind].overlay)assert.equal(a.overlays.length,1,kind);else assert.ok(fxFilters(list).includes('1.000'),kind);}
   assert.equal(fxFilters([]),'');
 });
 
@@ -222,12 +222,44 @@ test('B-roll looks: a Highlight on a B-roll takes the look of its picture, witho
 test('Transitions at picture cuts: motion only (no glare), peak on the cut, rotating, each one removable or changeable',()=>{
   const {TRANSITIONS,KINDS}=require('../../src/pipeline/picture_fx');
   assert.ok(Object.keys(TRANSITIONS).length>=8&&!['flash','dip','glare'].some(k=>TRANSITIONS[k]),'no light effects among transitions');
-  const p=plan('tr_a');assert.ok(p.autoFx.length>=2,JSON.stringify(p.autoFx));
-  for(const e of p.autoFx){const cut=scenes[e.cut].start;assert.ok(e.start<=cut&&e.end>cut&&Math.abs(e.start+TRANSITIONS[e.kind].pre-cut)<.002,e.kind);assert.ok(e.start>=p.hookDur-TRANSITIONS[e.kind].pre&&e.end<=p.outroStart);
+  const dense=[0,3.067,4.3,6,9.5,10.2].map((start,i,a)=>({start,duration:(a[i+1]??standard.totalDur)-start}));
+  const planAt=(seed,extra={})=>{const job={projectName:seed,titleMode:'auto',brollMode:'manual',brollCutaways:standard.brolls,...extra};const content=prepareContent(job,{subtitles:standard.subtitles,highlights:[],totalDur:standard.totalDur});return createEditPlan({job,seed,...content,totalDur:standard.totalDur,scenes:dense,history:[],strictSpeech:true});};
+  const cuts=q=>q.autoFx.filter(e=>e.group!=='open');
+  const p0=planAt('tr_a'),p={...p0,autoFx:cuts(p0)};assert.ok(p.autoFx.length>=2,JSON.stringify(p.autoFx));
+  p.autoFx.forEach((e,i)=>{if(i)assert.ok(dense[e.cut].start-dense[p.autoFx[i-1].cut].start>=4.5,'not crowded');assert.ok(!['glitch','bounce'].includes(e.kind),'smooth kinds only');for(const b of p.brolls)assert.ok(Math.abs(b.start-dense[e.cut].start)>=.35&&Math.abs(b.end-dense[e.cut].start)>=.35,'not on a B-roll edge');});
+  assert.ok(p.sfx.filter(s=>s.anchor.startsWith('cut:')).every(s=>p.autoFx.some(e=>'cut:'+e.cut===s.anchor)),'a cut sound only with its transition');
+  for(const e of p.autoFx){const cut=dense[e.cut].start;assert.ok(e.start<=cut&&e.end>cut&&Math.abs(e.start+TRANSITIONS[e.kind].pre-cut)<.002,e.kind);assert.ok(e.start>=p.hookDur-TRANSITIONS[e.kind].pre&&e.end<=p.outroStart);
 }
-  assert.ok(p.autoFx.some(e=>p.sfx.some(s=>s.anchor==='cut:'+e.cut)),'cut sounds still placed by the sound rules');
   p.autoFx.forEach((e,i)=>assert.ok(!p.autoFx.slice(Math.max(0,i-2),i).some(x=>x.kind===e.kind),'no repeat'));
-  const first=p.autoFx[0],gone=plan('tr_a',[],{fx:{['auto:'+first.uid]:{off:true}}});assert.ok(!gone.autoFx.some(e=>e.uid===first.uid));
-  const changed=plan('tr_a',[],{fx:{['auto:'+first.uid]:{kind:'spin'}}});assert.equal(changed.autoFx.find(e=>e.uid===first.uid).kind,'spin');
-  const kinds=new Set(['a','b','c','d','e'].flatMap(s=>plan('tr_'+s).autoFx.map(e=>e.kind)));assert.ok(kinds.size>=4,'different videos, different transitions');
+  const first=p.autoFx[0],gone=planAt('tr_a',{fx:{['auto:'+first.uid]:{off:true}}});assert.ok(!cuts(gone).some(e=>e.uid===first.uid));
+  const changed=planAt('tr_a',{fx:{['auto:'+first.uid]:{kind:'spin'}}});assert.equal(cuts(changed).find(e=>e.uid===first.uid).kind,'spin');
+  const kinds=new Set(['a','b','c','d','e','f'].flatMap(s=>cuts(planAt('tr_'+s)).map(e=>e.kind)));assert.ok(kinds.size>=4,'different videos, different transitions');
+});
+
+test('Hook opening: strong, varied, graphics without glare, louder first sounds, one removable block',()=>{
+  const {OPENERS,frameFx,drawOverlay,KINDS}=require('../../src/pipeline/picture_fx');
+  assert.ok(Object.keys(OPENERS).length>=8);
+  for(const [name,o] of Object.entries(OPENERS)){assert.ok(o.fx.every(([k])=>KINDS[k]&&!['flash','dip','glare'].includes(k)),name);assert.equal(o.sfx[0],'impact',name);}
+  const p=plan('open_a');assert.ok(p.opener&&OPENERS[p.opener]);
+  const open=p.autoFx.filter(e=>e.group==='open');assert.ok(open.length>=3&&Math.min(...open.map(e=>e.start))===p.hookStart,'starts on the first frame');
+  const first=p.sfx.find(s=>s.anchor==='hook:open');assert.ok(first&&first.start===p.hookStart&&first.vol>=.6,'loud hit on frame 0');
+  // different videos open differently
+  const history=[];const seen=new Set();for(let v=0;v<6;v++){const q=plan('open_v'+v,history);seen.add(q.opener);history.unshift({project:'open_v'+v,openerStyle:q.opener});}
+  assert.ok(seen.size>=6,'six videos, six openings');
+  assert.equal(plan('open_a',[],{fx:{'auto:open':{off:true}}}).opener,null);
+  assert.equal(plan('open_a',[],{fx:{'auto:open':{recipe:'zoom_slam'}}}).opener,'zoom_slam');
+  // the overlays draw something on a canvas
+  const {createCanvas}=require('@napi-rs/canvas');for(const kind of ['speedlines','burst','shockwave']){const c=createCanvas(1080,1920),x=c.getContext('2d');drawOverlay(x,{uid:'o',kind,start:0,end:1},.3);const d=x.getImageData(0,0,1080,1920).data;let n=0;for(let i=3;i<d.length;i+=4*97)if(d[i])n++;assert.ok(n>50,kind);}
+});
+
+test('Sub under music: near-miss FPT phrases are restored without touching other speech; music bed detection',()=>{
+  const {cleanFptTranscript}=require('../../src/speech/transcript_formatter');
+  const fixed=s=>cleanFptTranscript(s).toLocaleLowerCase('vi');
+  for(const [heard,said] of [['Trang hình ngay','trang bị ngay'],['Họ sắp xem bóng đá','thỏa sức xem bóng đá'],['Trang thoại 2 chiều','đàm thoại 2 chiều'],['Nhận tu đã liền tay','nhận ưu đãi liền tay'],['Chi kèm 5 tài khoản','đi kèm 5 tài khoản']])assert.equal(fixed(heard),said,heard);
+  for(const s of ['tốc độ Wi-Fi','giá chỉ có 195K','đi kèm 3 tài khoản','Thỏa sức xem bóng đá Ngoại hạng Anh','Trang trí nhà cửa','Nhà mình lắp Wi-Fi'])assert.equal(fixed(s),cleanFptTranscript(s).toLocaleLowerCase('vi'),s),assert.ok(!/xem trọn|tốc độ cao|giá chỉ từ/.test(fixed(s))||/giá chỉ từ/.test(s),s);
+  const {musicBed,wordPauses}=require('../../src/speech/word_timing');
+  const env=(floor,peak)=>({values:Float32Array.from({length:400},(_,i)=>i%4===0?floor:peak-3*Math.random()),peak,floor});
+  assert.ok(!musicBed(env(-45,-15)),'clean speech');assert.ok(musicBed(env(-30,-13)),'voice over music');
+  const gaps=wordPauses([{startMs:0,endMs:900},{startMs:1500,endMs:2000},{startMs:2150,endMs:2600}],4000);
+  assert.ok(gaps.some(p=>p.startMs>=1000&&p.endMs<=1400),'a clear gap between words is a pause');assert.ok(!gaps.some(p=>p.startMs<2150&&p.endMs>2000),'a short gap is not');
 });

@@ -1,6 +1,6 @@
 const PATHS=require('../../config/paths.js');
 const {cleanFptTranscript,alignCleanWords,correctSubtitles}=require('./transcript_formatter');
-const {readEnvelope,alignWords,findPauses,speechRegions,findUncovered}=require('./word_timing');
+const {readEnvelope,alignWords,findPauses,speechRegions,findUncovered,musicBed,wordPauses}=require('./word_timing');
 const {refineWords,dropPhantomSpeech}=require('./speech_activity');
 const fs = require('fs');
 const { suggestKeywords, createHighlights, matchHighlights } = require('../editing/highlight_planner');
@@ -12,7 +12,7 @@ const os = require('os');
 const crypto = require('crypto');
 const LEXICON = require('../../config/lexicon.json');
 const { segment } = require('./phrase_segmenter');
-const SPEECH_CACHE_VERSION = process.env.FPT_SPEECH_CACHE || 2;
+const SPEECH_CACHE_VERSION = process.env.FPT_SPEECH_CACHE || 3;
 const STUDIO_ROOT = PATHS.root;
 const WORKSPACE_ROOT = PATHS.root;
 const FFMPEG = path.join(WORKSPACE_ROOT, 'node_modules/ffmpeg-static/ffmpeg.exe');
@@ -114,8 +114,38 @@ function speedUpAudio(inputPath, outputPath, voiceSpeed = 1.0) {
  * Fixes regional pronunciations (North/Central/South) and common Whisper homophones.
  */
 
-// One whisper-cli call: words with their own DTW time.
+// Voice over music: the recogniser also hears a copy with the music pushed down (band limited to the voice, spectral
+// noise reduction), and each phrase keeps whichever reading it is more sure of. Measured on four takes under music
+// louder than the voice: "Đàm thoại", "ưu đãi" come back right; the rest is left to the phrase corrector.
+const VOICE_FILTER = 'highpass=f=150,lowpass=f=5000,afftdn=nr=24:nf=-28:tn=1';
 function runWhisper(wav, prefix, dtwTimes = true) {
+  const words = readWhisper(wav, prefix, dtwTimes);
+  let envelope = null;try { envelope = readEnvelope(wav); } catch (_) { return words; }
+  if (!musicBed(envelope)) return words;
+  const voice = wav.replace(/\.wav$/i, '') + '_voice.wav';
+  try {
+    execFileSync(FFMPEG, ['-y', '-loglevel', 'error', '-i', wav, '-af', VOICE_FILTER, '-ar', '16000', '-ac', '1', voice]);
+    return fuseReadings(words, readWhisper(voice, prefix + '_voice', dtwTimes));
+  } catch (error) { console.warn('[SUB] Đọc lần hai bỏ qua: ' + error.message); return words; }
+  finally { for (const f of [voice, prefix + '_voice.json']) { try { fs.unlinkSync(f); } catch (_) {} } }
+}
+// Phrases are cut where the first reading pauses; a phrase takes the second reading when it is clearly surer of it.
+function fuseReadings(first, second) {
+  if (!second.length) return first;if (!first.length) return second;
+  const mean = ws => ws.reduce((s, w) => s + (Number.isFinite(w.p) ? w.p : .5), 0) / Math.max(1, ws.length);
+  const chunks = [];let chunk = [];
+  first.forEach((w, i) => { if (chunk.length && (w.startMs - first[i - 1].endMs > 180 || chunk.length >= 6)) { chunks.push(chunk); chunk = []; } chunk.push(w); });
+  if (chunk.length) chunks.push(chunk);
+  const out = [];let used = 0;
+  chunks.forEach((c, k) => {
+    const from = k ? (chunks[k - 1].at(-1).endMs + c[0].startMs) / 2 : -Infinity, to = k + 1 < chunks.length ? (c.at(-1).endMs + chunks[k + 1][0].startMs) / 2 : Infinity;
+    const alt = second.filter(w => { const mid = (w.startMs + w.endMs) / 2; return mid >= from && mid < to; });
+    if (alt.length && mean(alt) > mean(c) + .04) { out.push(...alt); used++; } else out.push(...c);
+  });
+  return out;
+}
+// One whisper-cli call: words with their own DTW time and the recogniser's confidence (mean token probability).
+function readWhisper(wav, prefix, dtwTimes = true) {
   // Use strictly ASCII prompt on Windows CLI to avoid CP1252 '?' token corruption
   const asciiPrompt = 'FPT Telecom, Modem Wi-Fi 6, FPT Play, Camera AI, Internet, combo';
   execFileSync(SHORT_WHISPER_CLI, ['-m', SHORT_WHISPER_MODEL, '-l', 'vi', '-t', String(Math.max(2, Math.min(12, os.cpus().length - 2))),
@@ -129,7 +159,8 @@ function runWhisper(wav, prefix, dtwTimes = true) {
     if (!word) continue;
     const fromMs = Number(seg.offsets?.from ?? 0);
     const dtw = (seg.tokens || []).map(t => Number(t.t_dtw)).find(t => t > 0);
-    words.push({ word, startMs: fromMs, endMs: Math.max(fromMs + 60, Number(seg.offsets?.to ?? (fromMs + 250))), dtw: dtw == null ? NaN : dtw / 100 });
+    const probs = (seg.tokens || []).filter(t => !/^\[_/.test(t.text || '') && Number.isFinite(Number(t.p))).map(t => Number(t.p));
+    words.push({ word, startMs: fromMs, endMs: Math.max(fromMs + 60, Number(seg.offsets?.to ?? (fromMs + 250))), dtw: dtw == null ? NaN : dtw / 100, p: probs.length ? probs.reduce((a, b) => a + b, 0) / probs.length : NaN });
   }
   return dropPhantomSpeech(words);
 }
@@ -223,7 +254,8 @@ function transcribeFileWordLevel(audioPath, tempDir, prefix, { reading: given = 
   const temporary = [wavPath];
   const whisper = (wav, prefix, dtwTimes = true) => { temporary.push(`${prefix}.json`); return runWhisper(wav, prefix, dtwTimes); };
   try {
-    const envelope = readEnvelope(wavPath), pauses = findPauses(envelope), totalMs = envelope.duration * 1000;
+    const envelope = readEnvelope(wavPath), totalMs = envelope.duration * 1000, music = musicBed(envelope);
+    let pauses = findPauses(envelope);
     if (pauses.length === 1 && pauses[0].startMs === 0 && pauses[0].endMs >= totalMs - 50) return { words: [], pauses, uncovered: [] };
     let raw = given || whisper(wavPath, outPrefix), aligned = alignWords(raw, envelope);
     // Whisper can stop early on difficult audio. Every long stretch of sound without words gets a second reading.
@@ -244,7 +276,9 @@ function transcribeFileWordLevel(audioPath, tempDir, prefix, { reading: given = 
         .filter(w => w.startMs >= hole.startMs - 60 && w.endMs <= hole.endMs + 150);
       aligned = [...aligned, ...extra].sort((x, y) => x.startMs - y.startMs);
     }
-    return keep({ words: aligned, pauses, uncovered: findUncovered(aligned, pauses, totalMs) });
+    // Under music the waveform never goes quiet: cut only in the clear gaps between recognised words.
+    if (music && aligned.length) pauses = [...pauses, ...wordPauses(aligned, totalMs)].sort((a, b) => a.startMs - b.startMs).reduce((out, p) => { const last = out.at(-1); if (last && p.startMs <= last.endMs) last.endMs = Math.max(last.endMs, p.endMs); else out.push({ ...p }); return out; }, []);
+    return keep({ words: aligned, pauses, uncovered: findUncovered(aligned, pauses, totalMs), music });
   } finally {
     temporary.forEach(file => { try { fs.unlinkSync(file); } catch (_) {} });
   }

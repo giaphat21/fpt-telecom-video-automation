@@ -1,5 +1,5 @@
 {
-  "note": "Từ điển của Sub và Highlight. phrases: cụm chuẩn, hệ thống tự sửa khi chỉ sai dấu. proper: luôn viết đúng hoa/thường như ở đây. compounds: cụm không bị tách dòng. foreign: từ không phải tiếng Việt được chấp nhận. Có thể thêm dòng, không cần sửa mã.",
+  "note": "Từ điển của Sub và Highlight. phrases: cụm chuẩn, hệ thống tự sửa khi chỉ sai dấu. proper: luôn viết đúng hoa/thường như ở đây. compounds: cụm không bị tách dòng. foreign: từ không phải tiếng Việt được chấp nhận. Có thể thêm dòng, không cần sửa mã. fuzzy: câu quen thuộc của video FPT; khi nhạc nền hoặc phát âm làm sai 1 âm tiết (câu ≥ 5 âm tiết: 2), hệ thống sửa về đúng câu nếu đầu hoặc cuối câu khớp.",
   "phrases": [
     "lắp đặt",
     "lắp mạng",
@@ -550,5 +550,40 @@
     "rank",
     "mobile",
     "lol"
+  ],
+  "fuzzy": [
+    "lắp đặt Internet FPT",
+    "trang bị ngay",
+    "Modem Wi-Fi 6 mới nhất",
+    "đi kèm 5 tài khoản",
+    "5 tài khoản FPT Play",
+    "thỏa sức xem bóng đá",
+    "tặng ngay Camera AI",
+    "đàm thoại 2 chiều",
+    "cực kỳ tiện lợi",
+    "giá chỉ từ",
+    "đăng ký combo ngay",
+    "nhận ưu đãi liền tay",
+    "ưu đãi liền tay",
+    "tốc độ cao",
+    "mở rộng vùng phủ",
+    "phủ sóng xuyên tường",
+    "bức tường ngăn cản",
+    "gói cước phù hợp",
+    "để được tư vấn",
+    "bình luận phía dưới",
+    "nhắn tin cho",
+    "xem phim giải trí",
+    "học online",
+    "làm việc online",
+    "không lo giật lag",
+    "kết nối ổn định",
+    "lắp mạng FPT",
+    "Wi-Fi Mesh",
+    "tham khảo bộ phát",
+    "nhiều tầng nhiều phòng",
+    "diện tích lớn",
+    "xem trọn Ngoại hạng Anh",
+    "kho phim khổng lồ"
   ]
 }

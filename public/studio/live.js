@@ -191,6 +191,8 @@ const Live=(()=>{
     for(const b of brolls)if(b.enabled!==false&&t>=b.start&&t<b.end){drawBroll(b,t);const pl=preview.brolls.find(p=>p.uid===b.uid);used.add(b.layout==='cutaway'&&pl?.portrait||pl?.url);if(pl?.matte)used.add(pl.matte.url);}
     media.forEach((el,url)=>{if(!used.has(url)&&!el.paused)el.pause();});
     if(f0&&f0.light){ctx.fillStyle=f0.light>0?'rgba(255,255,255,'+Math.min(1,f0.light)+')':'rgba(0,0,0,'+Math.min(1,-f0.light)+')';ctx.fillRect(0,0,W,H);}
+    // speed lines, burst, shock wave: the same drawing as the export, above the picture and below the titles
+    if(f0)for(const e of f0.overlays||[])window.FptEngine.fx.drawOverlay(ctx,e,t,W,H);
     const layer=typography(t);if(layer)ctx.drawImage(layer,0,window.FptEngine.typography.TOP);
     const sub=subs.find((s,i)=>t>=s.start&&t<s.end&&!plan.hiddenSubs?.includes(i));
     if(sub&&sub.text)drawSub(ctx,sub,t,sub.subStyle||subStyle,540,1580);

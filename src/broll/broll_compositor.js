@@ -98,6 +98,17 @@ const BUILT_IN_BROLLS = [
     duration: 3.8,
     description: 'Chơi game trực tuyến tốc độ cao và đa nhiệm nhiều thiết bị'
   },
+  // Watching films and working online (user samples 24/11/2026): motion graphics drawn for the project.
+  {
+    id: 'mg_movie', name: 'Xem phim FPT Play', icon: '🎬', file: 'mg_movie_browse.mp4', thumb: 'mg_movie_browse.jpg', defaultLayout: 'top_half', duration: 4,
+    keywords: ['xem phim', 'phim bộ', 'phim bo', 'phim lẻ', 'phim le', 'cày phim', 'cay phim', 'phim hay', 'bộ phim', 'bo phim', 'phim mới', 'phim truyền hình'],
+    description: 'Giao diện web FPT Play: chọn phim và phát'
+  },
+  {
+    id: 'mg_work', name: 'Làm việc, học online', icon: '💻', file: 'mg_work_online.mp4', thumb: 'mg_work_online.jpg', defaultLayout: 'top_half', duration: 4,
+    keywords: ['làm việc', 'lam viec', 'học online', 'hoc online', 'học trực tuyến', 'hoc truc tuyen', 'họp online', 'hop online', 'làm việc online', 'làm việc tại nhà', 'lam viec tai nha', 'work from home', 'học tập', 'hoc tap', 'văn phòng', 'van phong', 'họp trực tuyến'],
+    description: 'Laptop trên bàn: họp video, soạn tài liệu, tải lên'
+  },
   // Game footage supplied by the user (24/11/2026), kept in assets/broll-user under userFile.
   {
     id: 'stock_lienminh', name: 'Liên Minh Huyền Thoại', icon: '🎮', userFile: 'lien_minh.mp4', file: 'lien_minh.mp4', thumb: 'thumb_stock_lienminh.jpg', defaultLayout: 'top_half', duration: 4,

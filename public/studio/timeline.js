@@ -62,8 +62,10 @@ const TL=(()=>{
     const FX={'cut':'Zoom cảnh','broll-in':'B-roll vào','broll-out':'B-roll ra','fade':'Tối dần'},kinds=window.FptEngine.fx.KINDS;
     customFx.forEach(e=>add('fx','fx','fx:'+e.uid,'cfx'+e.uid,e.start,e.end,kinds[e.kind].name,{color:'#7a4fa3',trim:true,edited:true,min:22,title:kinds[e.kind].name+' · '+fmt(e.start)+'–'+fmt(e.end)+'s'}));
     // transitions the plan puts at picture cuts: fixed to their cut, kind can be changed or the block deleted
+    // the Hook opening: one block for its picture effects, kind can be changed or the block deleted
+    (plan?.effects||[]).filter(e=>e.kind==='opener').forEach(e=>add('fx','fx',e.key,'fx'+e.key,e.start,e.start+e.duration,'Mở đầu: '+e.name,{color:'#a2521a',fixed:true,min:30,edited:e.chosen,title:'Hiệu ứng mở đầu: '+e.name}));
     (plan?.effects||[]).filter(e=>e.kind==='transition').forEach(e=>add('fx','fx',e.key,'fx'+e.key,e.start,e.start+e.duration,kinds[e.fxKind]?.name||'Chuyển cảnh',{color:'#2f5f8a',fixed:true,min:22,edited:e.chosen,title:'Chuyển cảnh: '+(kinds[e.fxKind]?.name||'')+' · '+fmt(e.start)+'s'}));
-    (plan?.effects||[]).filter(e=>!e.custom&&e.kind!=='transition'&&!(e.kind==='cut'&&!e.on)).forEach(e=>add('fx','fx',e.key,'fx'+e.key,e.start,e.start+e.duration,FX[e.kind],{color:e.kind==='cut'?'#6b5a2e':e.kind==='fade'?'#23262d':'#4b5a6b',fixed:true,trimLeft:e.kind==='broll-out'||e.kind==='fade',trimRight:e.kind==='broll-in'||(e.kind==='cut'&&e.on),off:e.kind==='cut'&&!e.on,min:18,title:FX[e.kind]+' · '+fmt(e.start)+'s'+(e.kind==='cut'?(e.on?' · đang bật':' · đang tắt'):'')}));
+    (plan?.effects||[]).filter(e=>!e.custom&&e.kind!=='transition'&&e.kind!=='opener'&&!(e.kind==='cut'&&!e.on)).forEach(e=>add('fx','fx',e.key,'fx'+e.key,e.start,e.start+e.duration,FX[e.kind],{color:e.kind==='cut'?'#6b5a2e':e.kind==='fade'?'#23262d':'#4b5a6b',fixed:true,trimLeft:e.kind==='broll-out'||e.kind==='fade',trimRight:e.kind==='broll-in'||(e.kind==='cut'&&e.on),off:e.kind==='cut'&&!e.on,min:18,title:FX[e.kind]+' · '+fmt(e.start)+'s'+(e.kind==='cut'?(e.on?' · đang bật':' · đang tắt'):'')}));
     const lanes=[-1,-1,-1];
     [...(plan?.sfx||[]),...(plan?.mutedSfx||[])].sort((a,b)=>a.start-b.start).forEach(s=>{
       const from=Math.max(0,s.start-(s.lead||0)),to=from+Math.max(.1,s.duration||.3);
@@ -479,6 +481,14 @@ const TL=(()=>{
         bind('tlDel',()=>removeSelected(),'click');return;
       }
       const e=studioPlan?.effects.find(x=>x.key===sel.index);if(!e){selectedTimelineItem=null;return inspector();}
+      if(e.kind==='opener'){
+        const openers=window.FptEngine.fx.OPENERS;
+        box.innerHTML=head('Hiệu ứng mở đầu',(e.chosen?'bạn chọn':'tự luân phiên giữa các video'))+'<div class="tl-fields">'+field('Kiểu','<select class="w-sel" id="tlKind">'+Object.entries(openers).map(([k,o])=>'<option value="'+k+'" '+(k===e.recipe?'selected':'')+'>'+o.name+'</option>').join('')+'</select>')+'<button type="button" class="tl-btn" id="tlSee">Xem thử</button>'+(e.chosen?'<button type="button" class="tl-btn" id="tlFxAuto">Về tự luân phiên</button>':'')+del+'<span class="note">Chạy ở những khung hình đầu của Hook, kèm tiếng đập mạnh.</span></div>';
+        bind('tlKind',v=>{remember();fxState[e.key]={recipe:v};changed({now:true});setTimeout(inspector,300);});
+        bind('tlSee',()=>{seekTimeline(Math.max(0,e.start));setTimeout(()=>{if(!Live.playing)Live.toggle();setTimeout(()=>{if(Live.playing)Live.toggle();},(e.duration+1)*1000);},150);},'click');
+        bind('tlFxAuto',()=>{remember();delete fxState[e.key];changed({now:true});setTimeout(inspector,300);},'click');
+        bind('tlDel',()=>removeSelected(),'click');return;
+      }
       if(e.kind==='transition'){
         const kinds=window.FptEngine.fx.KINDS,names=Object.keys(window.FptEngine.fx.TRANSITIONS);
         box.innerHTML=head('Chuyển cảnh',(e.chosen?'bạn chọn':'tự luân phiên')+' · '+fmt(e.start)+'s')+'<div class="tl-fields">'+field('Kiểu','<select class="w-sel" id="tlKind">'+names.map(k=>'<option value="'+k+'" '+(k===e.fxKind?'selected':'')+'>'+kinds[k].name+'</option>').join('')+'</select>')+'<button type="button" class="tl-btn" id="tlSee">Xem thử</button>'+(e.chosen?'<button type="button" class="tl-btn" id="tlFxAuto">Về tự luân phiên</button>':'')+del+'<span class="note">Đi theo điểm cắt cảnh; xóa nếu muốn cắt thẳng.</span></div>';
@@ -713,7 +723,7 @@ const TL=(()=>{
     $('tlSnapBtn').onclick=()=>{snapOn=!snapOn;$('tlSnapBtn').classList.toggle('on',snapOn);};
     $('tlZoom').oninput=e=>setZoom(Math.pow(MAX_ZOOM,e.target.value/100));$('tlFit').onclick=()=>setZoom(1);
     $('tlAddHl').onclick=addHighlight;$('tlAddSub').onclick=addSub;$('tlAddSfx').onclick=addSfx;$('tlAddTitle').onclick=addTitle;$('tlFixStyles').onclick=fixStyles;
-    const fxMenu=$('tlAddFx');fxMenu.innerHTML='<option value="">+ Hiệu ứng</option>'+Object.entries(window.FptEngine.fx.KINDS).map(([k,x])=>'<option value="'+k+'">'+x.name+'</option>').join('')+'<option value="fade">Tối dần cuối video</option><option value="cuts">Bật lại zoom các cảnh</option><option value="transitions">Bật lại chuyển cảnh tự động</option>';
+    const fxMenu=$('tlAddFx');fxMenu.innerHTML='<option value="">+ Hiệu ứng</option>'+Object.entries(window.FptEngine.fx.KINDS).map(([k,x])=>'<option value="'+k+'">'+x.name+'</option>').join('')+'<option value="fade">Tối dần cuối video</option><option value="cuts">Bật lại zoom các cảnh</option><option value="transitions">Bật lại chuyển cảnh và mở đầu tự động</option>';
     fxMenu.onchange=()=>{const v=fxMenu.value;fxMenu.value='';fxMenu.blur();if(v==='fade'){remember();delete fxState.fade;changed({now:true});}else if(v==='cuts'){remember();for(const k of Object.keys(fxState))if(k.startsWith('cut:'))delete fxState[k];changed({prepare:true,now:true});}else if(v==='transitions'){remember();for(const k of Object.keys(fxState))if(k.startsWith('auto:')&&fxState[k].off)delete fxState[k];changed({now:true});}else if(v)addFx(v);};$('tlCopy').onclick=copy;$('tlPaste').onclick=()=>paste();$('tlDup').onclick=duplicate;
     const picker=$('subStyleSelect');picker.innerHTML=Object.entries(window.FptEngine.subtitle.SUB_STYLES).map(([id,s])=>'<option value="'+id+'">'+esc(s.name)+'</option>').join('');picker.value=subStyleId;
     picker.onchange=()=>{remember();subStyleId=picker.value;currentSubtitles.forEach(x=>{delete x.subStyle;});changed({now:true});if(selectedTimelineItem?.type==='sub')inspector();};$('tlAddBroll').onclick=promptAddManualBroll;$('tlShuffle').onclick=reshuffle;$('tlPlayBtn').onclick=()=>toggleTimelinePlay();
